@@ -99,6 +99,61 @@
         .bd-mode-toggle {
             z-index: 1500;
         }
+
+        .countdown-container {
+            display: flex;
+            width: 100%;
+            max-width: 70%;
+            justify-content: space-between;
+        }
+
+        .days-container,
+        .hours-container,
+        .minutes-container,
+        .seconds-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background-color: rgba(0, 0, 0, 0.1);
+            border: 5px solid rgba(255, 255, 255, 0.3);
+            width: 140px;
+            height: 140px;
+            border-radius: 99px;
+        }
+
+        .days,
+        .hours,
+        .minutes,
+        .seconds {
+            font-size: 2.5em;
+            margin: 10px 0;
+        }
+
+
+        .days-label,
+        .hours-label,
+        .minutes-label,
+        .seconds-label {
+            text-transform: uppercase;
+            margin-bottom: 5px;
+        }
+
+        @media (max-width: 800px) {
+
+            .countdown-container {
+                max-width: 90%;
+            }
+
+            .days-container,
+            .hours-container,
+            .minutes-container,
+            .seconds-container {
+                font-size: 0.8em;
+                width: 100px;
+                height: 100px;
+            }
+        }
     </style>
 
 
@@ -193,8 +248,8 @@
                 <img src="./images/smp2wonosari-shadow_white.png" alt="Logo SMPN 2 Wonosari" width="60" class="me-2">
                 <span class="fs-4">Info PPDB 2023</span>
             </a>
-            <a href="https://ppdb.pendidikan.gunungkidulkab.go.id" class="btn btn-primary" target="_blank">Daftar
-                Sekarang!</a>
+            <a href="https://s.id/PPDB-Espero23" class="btn btn-success" target="_blank">
+                Gabung WA Group</a>
         </header>
 
         <main>
@@ -202,7 +257,7 @@
             <h3 class="text-body-emphasis">Selamat Datang di Laman</h3>
             <h1 class="text-body-emphasis">Info PPDB SMPN 2 Wonosari 2023</h1>
             <p class="fs-5">
-                Selamat datang di halaman Laman Pusat Informasi Penerimaan Peserta Didik Baru (PPDB) SMP Negeri 2
+                Selamat datang di Laman Pusat Informasi Penerimaan Peserta Didik Baru (PPDB) SMP Negeri 2
                 Wonosari
                 Tahun Pelajaran 2023/2024. Segala informasi terkait PPDB akan kami infokan di halaman ini.
             </p>
@@ -211,8 +266,7 @@
 
             <div class="row g-5">
                 <div class="col-md-6">
-                    <h2 class="text-body-emphasis">Peraturan</h2>
-                    <p>Bagian ini berisi landasan hukum terkait PPDB Tahun 2023</p>
+                    <h2 id="peraturan" class="text-body-emphasis">Peraturan</h2>
                     <ul class="list-unstyled ps-0">
                         <li>
                             <a class="icon-link mb-1" target="_blank"
@@ -235,8 +289,7 @@
                 </div>
 
                 <div class="col-md-6">
-                    <h2 class="text-body-emphasis">Unduhan</h2>
-                    <p>Bagian ini berisi berkas unduhan PPDB Tahun 2023.</p>
+                    <h2 id="unduhan" class="text-body-emphasis">Unduhan</h2>
                     <ul class="list-unstyled ps-0">
                         <li>
                             <a class="icon-link mb-1" href="./files/brocure-ppdb23.pdf" target="_blank">
@@ -254,13 +307,21 @@
                                 Alur Pendaftaran PPDB 2023
                             </a>
                         </li>
+                        <li>
+                            <a class="icon-link mb-1" href="./files/edaran-pra-ppdb23.pdf" target="_blank">
+                                <svg class="bi" width="16" height="16">
+                                    <use xlink:href="#arrow-right-circle" />
+                                </svg>
+                                Edaran PPDB 2023 <span class="badge bg-danger">New</span>
+                            </a>
+                        </li>
                     </ul>
                 </div>
             </div>
 
             <hr class="col-3 col-md-2 mb-5">
 
-            <h2 class="text-body-emphasis">Pelaksanaan</h2>
+            <h2 id="pelaksanaan" class="text-body-emphasis">Pelaksanaan</h2>
             <div class="row g-5">
                 <div class="col-md-3">
                     <h5 class="text-body-emphasis ">Pendaftaran</h5>
@@ -282,7 +343,7 @@
 
             <hr class="col-3 col-md-2 mb-5">
 
-            <h2 class="text-body-emphasis">Jalur & Kuota Peserta Didik</h2>
+            <h2 id="jalur-kuota" class="text-body-emphasis">Jalur & Kuota Peserta Didik</h2>
             <h1 class="m-o text-lg-center">
                 <span class="fs-1 fw-bold badge bg-success">210</span>
             </h1>
@@ -313,7 +374,7 @@
 
             <div class="row g-5">
                 <div class="col-md-6">
-                    <h2 class="text-body-emphasis">Syarat</h2>
+                    <h2 id="syarat" class="text-body-emphasis">Syarat</h2>
 
                     <ul class="">
                         <li> Berusia paling tinggi 15 (lima belas) tahun pada tanggal 1 Juli 2023;</li>
@@ -326,7 +387,7 @@
                 </div>
 
                 <div class="col-md-6">
-                    <h2 class="text-body-emphasis">Berkas Upload</h2>
+                    <h2 id="berkas" class="text-body-emphasis">Berkas Upload</h2>
 
                     <ul class="">
                         <li>Bukti cetak pendaftaran online;</li>
@@ -354,8 +415,15 @@
 
             <div class="row g-5">
                 <div class="col">
-                    <h2 class="text-body-emphasis">Informasi</h2>
+                    <h2 id="informasi" class="text-body-emphasis">Informasi</h2>
                     <table class="table w-100 table-borderless">
+                        <tr>
+                            <td style="width: 100px;" class="text-center">07-06-2023</td>
+                            <td>Berdasarkan <a href="#unduhan">Edaran Pra PPDB 2023</a> dari Dinas Pendidikan Kabupaten
+                                Gunungkidul, pembuatan
+                                akun bagi calon peserta didik dari Luar Kabupaten Gunungkidul dilayani mulai tanggal 12
+                                Juni 2023. <span class="badge bg-danger">New</span></td>
+                        </tr>
                         <tr>
                             <td style="width: 100px;" class="text-center">06-06-2023</td>
                             <td>Kepada orangtua/wali calon peserta didik baru, silahkan bergabung dengan grup whatsapp
@@ -369,7 +437,7 @@
 
             <div class="row g-5">
                 <div class="col-md-8">
-                    <h2 class="text-body-emphasis">Link</h2>
+                    <h2 id="link" class="text-body-emphasis">Link</h2>
                     <ul class="list-unstyled ps-0">
                         <li>
                             <a class="icon-link mb-1" target="_blank"
@@ -416,10 +484,46 @@
                     </ul>
                 </div>
                 <div class="col-md-4">
-                    <h2 class="text-body-emphasis">WA Grup</h2>
+                    <h2 id="wa-group" class="text-body-emphasis">WA Grup</h2>
                     <img src="./images/wa-group.png" alt="WA Group" class="img-fluid img-thumbnail" height="150">
+                    <p>
+                        <a href="https://s.id/PPDB-Espero23" target="_blank">Klik disini untuk bergabung</a>
+                    </p>
                 </div>
             </div>
+
+            <hr class="col-3 col-md-2 mb-5">
+
+            <div class="row g-5">
+                <h2 id="countdown" class="text-body-emphasis">Countdown</h2>
+                <p class="text-lg-center fs-4    fw-bold" id="eventName"></p>
+                <div class="col d-flex justify-content-center align-items-center">
+                    <section class="countdown-container">
+
+                        <div class="days-container">
+                            <div class="days"></div>
+                            <div class="days-label">Hari</div>
+                        </div>
+
+                        <div class="hours-container">
+                            <div class="hours"></div>
+                            <div class="hours-label">Jam</div>
+                        </div>
+
+                        <div class="minutes-container">
+                            <div class="minutes"></div>
+                            <div class="minutes-label">Menit</div>
+                        </div>
+
+                        <div class="seconds-container">
+                            <div class="seconds"></div>
+                            <div class="seconds-label">Detik</div>
+                        </div>
+
+                    </section>
+                </div>
+            </div>
+
         </main>
 
         <footer class="pt-5 my-5 text-body-secondary border-top">
@@ -431,6 +535,89 @@
     <script src="./assets/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"
         crossorigin="anonymous"></script>
+    <script>
+        const dataEvent = [
+            /*
+                ['event name', 'end date']
+            */
+            ['Pendaftaran PPDB', '2023-06-19T08:00:00'],
+            ['Akhir Pendaftaran', '2023-06-21T15:30:00'],
+            ['Seleksi Akhir', '2023-06-21T15:45:00'],
+            ['Pengumuman PPDB', '2023-06-23T10:00:00'],
+            ['Daftar Ulang', '2023-06-27T14:00:00'],
+
+        ];
+
+
+        const countDownClock = (number = 100, format = 'seconds') => {
+
+            const d = document;
+            const daysElement = d.querySelector('.days');
+            const hoursElement = d.querySelector('.hours');
+            const minutesElement = d.querySelector('.minutes');
+            const secondsElement = d.querySelector('.seconds');
+            let countdown;
+            convertFormat(format);
+
+
+            function convertFormat(format) {
+                switch (format) {
+                    case 'seconds':
+                        return timer(number);
+                    case 'minutes':
+                        return timer(number * 60);
+                    case 'hours':
+                        return timer(number * 60 * 60);
+                    case 'days':
+                        return timer(number * 60 * 60 * 24);
+                }
+            }
+
+            function timer(seconds) {
+                const now = Date.now();
+                const then = now + seconds * 1000;
+
+                countdown = setInterval(() => {
+                    const secondsLeft = Math.round((then - Date.now()) / 1000);
+
+                    if (secondsLeft <= 0) {
+                        clearInterval(countdown);
+                        return;
+                    };
+
+                    displayTimeLeft(secondsLeft);
+
+                }, 1000);
+            }
+
+            function displayTimeLeft(seconds) {
+                daysElement.textContent = Math.floor(seconds / 86400);
+                hoursElement.textContent = Math.floor((seconds % 86400) / 3600);
+                minutesElement.textContent = Math.floor((seconds % 86400) % 3600 / 60);
+                secondsElement.textContent = seconds % 60 < 10 ? `0${seconds % 60}` : seconds % 60;
+            }
+        }
+
+
+        /*
+          start countdown
+          enter number and format
+          days, hours, minutes or seconds
+        */
+
+        let i;
+        var eventName = document.querySelector('#eventName');
+        var today = new Date();
+        for (i = 0; i < dataEvent.length; i++) {
+            var target = new Date(dataEvent[i][1]);
+            var diff = (target.getTime() - today.getTime()) / 1000;
+            if (diff > 0) {
+                countDownClock(diff, 'seconds');
+                eventName.textContent = dataEvent[i][0];
+                break;
+            }
+        }
+    </script>
 
 </body>
 
