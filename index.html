@@ -18,6 +18,9 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
     <link rel="stylesheet" href="//cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
 
+    <link rel="stylesheet" type="text/css"
+        href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.css">
+
     <!-- Favicons -->
     <link rel="apple-touch-icon" href="./images/smp2wonosari-shadow_black.png" sizes="180x180">
     <link rel="icon" href="./images/smp2wonosari-shadow_black.png" sizes="32x32" type="image/png">
@@ -390,7 +393,10 @@
                                                 persyaratan yg sdh diupload</li>
                                         </ol>
                                     </blockquote>
-                                    <img src="./images/ss-0001.png" alt="Gambaran PPDB" class="img-fluid">
+                                    <a href="./images/ss-0001.png" class="fancybox" data-fancybox>
+                                        <img src="./images/ss-0001.png" alt="Gambaran PPDB"
+                                            class="img-fluid img-thumbnail">
+                                    </a>
                                 </td>
                             </tr>
                             <tr>
@@ -694,6 +700,9 @@
         integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"
         crossorigin="anonymous"></script>
     <script src="//cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.umd.js"></script>
+
     <script>
         const dataEvent = [
             /*
@@ -776,22 +785,28 @@
         }
     </script>
     <script>
-        $('#table').DataTable({
-            lengthMenu: [
-                [5, 25, 50, -1],
-                [5, 25, 50, 'All'],
-            ],
-            order: [[0, 'desc']],
-            language: {
-                'paginate': {
-                    'previous': 'Newest',
-                    'next': 'Olders'
-                }
-            },
-            columnDefs: [{
-                targets: [1],
-                orderable: false
-            }]
+        Fancybox.bind("[data-fancybox]", {
+            // Your custom options
+        });
+        $(document).ready(function () {
+
+            $('#table').DataTable({
+                lengthMenu: [
+                    [5, 25, 50, -1],
+                    [5, 25, 50, 'All'],
+                ],
+                order: [[0, 'desc']],
+                language: {
+                    'paginate': {
+                        'previous': 'Newest',
+                        'next': 'Olders'
+                    }
+                },
+                columnDefs: [{
+                    targets: [1],
+                    orderable: false
+                }]
+            });
         });
     </script>
 
