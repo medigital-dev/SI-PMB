@@ -348,12 +348,49 @@
                         </thead>
                         <tbody>
                             <tr>
+                                <td style="width: 100px;" class="text-center">2023-06-17 16:25</td>
+                                <td>
+                                    TUTORIAL CARA PPENDAFTARAN PPDB JENJANG TK, SD, DAN SMP TAHUN 2023 DINAS PENDIDIKAN
+                                    KAB. GUNUNGKIDUL
+                                    <span class="badge bg-danger mx-1">New</span>
+                                    <a data-fancybox href="https://www.youtube.com/watch?v=iF6ePH2DWh8">
+                                        <img src="./images/ss-0002.png" alt="Video Thumbnail"
+                                            class="img-fluid img-thumbnail">
+                                    </a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="width: 100px;" class="text-center">2023-06-17 16:25</td>
+                                <td>
+                                    Pastikan data anda sudah diverifikasi oleh sekolah asal, jika belum segera
+                                    menghubungi sekolah asal.
+                                    <span class="badge bg-danger mx-1">New</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="width: 100px;" class="text-center">2023-06-16 10:58</td>
+                                <td>
+                                    Hasil rapat koordinasi Panitia PPDB SMPN 2 Wonosari:
+                                    <span class="badge bg-danger mx-1">New</span>
+                                    <ol>
+                                        <li>
+                                            Kartu Keluarga berlaku satu tahun dari mulai pendaftaran yaitu sebelum
+                                            <strong>19 Juni 2022</strong>
+                                        </li>
+                                        <li>
+                                            Piagam Prestasi berlaku paling singkat 6 bulan dan paling lama 3 tahun dari
+                                            mulai pendaftaran. Yaitu paling singkat sebelum tanggal <strong>22 Desember
+                                                2022</strong> dan paling lama tanggal <strong>19 Juni 2020</strong>
+                                        </li>
+                                    </ol>
+                                </td>
+                            </tr>
+                            <tr>
                                 <td style="width: 100px;" class="text-center">2023-06-13 13:58</td>
                                 <td>
                                     Bapak/Ibu Orangtua/Wali Calon Peserta Didik yang berasal dari Luar Kabupaten
                                     Gunungkidul, pengajuan akun PPDB dilayani di SMPN 2 Wonosari pada Setiap hari kerja
                                     mulai pukul 08.00-13.00 WIB dengan membawa berkas pendaftaran lengkap.
-                                    <span class="badge bg-danger mx-1">New</span>
                                 </td>
                             </tr>
                             <tr>
@@ -362,7 +399,6 @@
                                     <p>
                                         Gambaran Pendaftaran PPDB dari salah satu orangtua/wali (terimakasih atas
                                         informasinya bu indah BKPPD GK):
-                                        <span class="badge bg-danger mx-1">New</span>
                                     </p>
                                     <blockquote class="blockquote fs-6">
                                         <p>
@@ -789,7 +825,12 @@
             // Your custom options
         });
         $(document).ready(function () {
-
+            $('[data-fancybox]').fancybox({
+                type: 'iframe',
+                iframe: {
+                    preload: false
+                }
+            });
             $('#table').DataTable({
                 lengthMenu: [
                     [5, 25, 50, -1],
