@@ -226,18 +226,18 @@ if (!isset($_SESSION["login"])) {
                                     <input type="text" class="form-control" id="searchTabelInformasi" placeholder="Cari Informasi">
                                 </div>
                             </div>
-
-                            <table class="table table-bordered w-100" id="tabelInformasi">
-                                <thead>
-                                    <tr>
-                                        <th class="text-bg-primary text-center align-middle" style="width: 10px;">No</th>
-                                        <th class="text-bg-primary text-center align-middle">Tanggal</th>
-                                        <th class="text-bg-primary text-center align-middle">Isi</th>
-                                        <th class="text-bg-primary text-center align-middle">Aksi</th>
-                                    </tr>
-                                </thead>
-                                <tbody></tbody>
-                            </table>
+                            <div class="table-responsive">
+                                <table class="table table-bordered w-100" id="tabelInformasi">
+                                    <thead>
+                                        <tr>
+                                            <th class="text-bg-primary text-center align-middle" style="width: 10px;">No</th>
+                                            <th class="text-bg-primary text-center align-middle">Tanggal</th>
+                                            <th class="text-bg-primary text-center align-middle">Isi</th>
+                                            <th class="text-bg-primary text-center align-middle">Aksi</th>
+                                        </tr>
+                                    </thead>
+                                </table>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -275,12 +275,14 @@ if (!isset($_SESSION["login"])) {
     </div>
     <script src="./assets/js/jquery.min.js"></script>
     <script src="./assets/js/bootstrap.bundle.min.js"></script>
-    <script src="./assets/js/datatables.js"></script>
+    <script src="./assets/js/datatables.min.js"></script>
     <script src="./assets/js/fancybox.umd.js"></script>
     <script src="./assets/js/summernote-bs4.js"></script>
     <script>
         function reloadWidget() {
-
+            $.post('./api/widget.php', res => {
+                $('#totalInfo').text(res.info);
+            })
         }
     </script>
     <script>
@@ -295,9 +297,12 @@ if (!isset($_SESSION["login"])) {
                 responsive: true,
                 ordering: false,
                 ajax: {
-                    url: './ajax/getInfo.php',
+                    url: './api/info.php',
                     method: 'POST',
-                    dataSrc: ''
+                    dataSrc: '',
+                    data: {
+                        getTable: true
+                    }
                 },
                 columns: [{
                     data: 'no',
@@ -335,7 +340,7 @@ if (!isset($_SESSION["login"])) {
                             tabelInformasi.ajax.reload(null, false);
                         })
                 });
-
+                reloadWidget();
             });
 
             $('#btnReloadTabelInformasi').on('click', () => tabelInformasi.ajax.reload(null, false));

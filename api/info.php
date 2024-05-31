@@ -12,7 +12,7 @@ switch ($method) {
         if ($id == null) {
             $sql = "SELECT info_id as id, created_at, judul, isi FROM informasi ORDER BY created_at DESC";
             $result = query($sql);
-            echo json_encode($request);
+            echo json_encode($result);
         } else {
             $sql = "SELECT info_id as id, created_at, judul, isi FROM informasi WHERE info_id = '$id'";
             $query = query($sql);
@@ -29,21 +29,45 @@ switch ($method) {
         $judul = isset($_POST['judul']) ? $_POST['judul'] : null;
         $isi = isset($_POST['isi']) ? $_POST['isi'] : null;
         $delete = isset($_POST['delete']) ? true : false;
+        $tabel = isset($_POST['getTable']) ? true : false;
         $timestamp = date('Y-m-d H:i:s', time());
 
         if ($id == null) {
-            do {
-                $unique = random_string();
-            } while (count(query("SELECT * FROM informasi WHERE info_id = '$unique'")) > 0);
+            if ($tabel) {
+                $sql = "SELECT info_id as id, created_at, judul, isi FROM informasi ORDER BY created_at DESC";
+                $result = query($sql);
+                $res = [];
+                $no = 1;
+                foreach ($result as $row) {
+                    $temp = [
+                        'no' => $no++,
+                        'tanggal' => date('d-m-Y H:i:s', strtotime($row['created_at'])) . ' WIB',
+                        'isi' => '<h5 class="m-0">' . $row['judul'] . '</h5><p class="m-0">' . $row['isi'] . '</p>',
+                        'aksi' => '
+                            <div class="btn-group btn-group-sm">
+                                <button type="button" class="btn btn-primary btnEditInfo" data-id="' . $row['id'] . '"><i class="bi bi-pencil-square"></i></button>
+                                <button type="button" class="btn btn-danger btnHapusInfo" data-id="' . $row['id'] . '"><i class="bi bi-trash-fill"></i></button>
+                            </div>
+                        '
+                    ];
+                    array_push($res, $temp);
+                }
+                echo json_encode($res);
+                die;
+            } else {
+                do {
+                    $unique = random_string();
+                } while (count(query("SELECT * FROM informasi WHERE info_id = '$unique'")) > 0);
 
-            $sql = "INSERT INTO informasi VALUES (NULL, '$unique', '$timestamp', '$judul', '$isi')";
-            $message = 'Informasi berhasil ditambahkan.';
-            $data = [
-                'info_id' => $unique,
-                'created' => $timestamp,
-                'judul' => $judul,
-                'isi' => $isi
-            ];
+                $sql = "INSERT INTO informasi VALUES (NULL, '$unique', '$timestamp', '$judul', '$isi')";
+                $message = 'Informasi berhasil ditambahkan.';
+                $data = [
+                    'info_id' => $unique,
+                    'created' => $timestamp,
+                    'judul' => $judul,
+                    'isi' => $isi
+                ];
+            }
         } else {
             if ($delete) {
                 $sql = "DELETE FROM informasi WHERE info_id = '$id'";
