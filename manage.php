@@ -154,7 +154,7 @@ if (!isset($_SESSION["login"])) {
 
     <nav class="navbar navbar-expand-lg bg-body-tertiary sticky-top">
         <div class="container">
-            <a class="navbar-brand" href="./manage.php">CMS-Admin</a>
+            <a class="navbar-brand" href="./manage.php">CMS-Info PPDB</a>
             <div class="dropdown">
                 <button class="btn btn-outline-primary" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                     <i class="bi bi-person-circle"></i>
@@ -184,15 +184,6 @@ if (!isset($_SESSION["login"])) {
                     </div>
                 </div>
                 <div class="col">
-                    <div class="card card-body shadow text-bg-success bg-gradient">
-                        <h6 class="card-title">Total Berkas</h6>
-                        <div class="d-flex justify-content-between">
-                            <span class="h1 fs-1 m-0" id="totalPd">0</span>
-                            <i class="fa-solid fa-users text-opacity-25 text-white fa-3x"></i>
-                        </div>
-                    </div>
-                </div>
-                <div class="col">
                     <div class="card card-body shadow text-bg-danger bg-gradient">
                         <h6 class="card-title">Jumlah Banner</h6>
                         <div class="d-flex justify-content-between">
@@ -210,33 +201,50 @@ if (!isset($_SESSION["login"])) {
                         </div>
                     </div>
                 </div>
+                <div class="col">
+                    <div class="card card-body shadow text-bg-success bg-gradient">
+                        <h6 class="card-title">Total Berkas</h6>
+                        <div class="d-flex justify-content-between">
+                            <span class="h1 fs-1 m-0" id="totalPd">0</span>
+                            <i class="fa-solid fa-users text-opacity-25 text-white fa-3x"></i>
+                        </div>
+                    </div>
+                </div>
             </div>
 
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="card shadow mb-4">
-                        <div class="card-header text-bg-success">Data Informasi</div>
-                        <div class="card-body">
-                            <div class="btn-toolbar justify-content-between mb-4">
-                                <div class="btn-group btn-group-sm">
-                                    <button type="button" class="btn btn-primary" title="Reload Tabel" id="btnReloadTabelInformasi"><i class="bi bi-arrow-repeat"></i></button>
-                                    <button type="button" class="btn btn-primary" title="Tambah Informasi" id="btnTambahInformasi" data-bs-toggle="modal" data-bs-target="#modalTambahInformasi"><i class="bi bi-plus-circle"></i></button>
+            <div class="d-block d-lg-flex align-items-start">
+                <div class="nav flex-lg-column nav-pills me-lg-3 justify-content-center mb-4 py-2 border-top border-bottom" role="tablist" aria-orientation="vertical">
+                    <button class="nav-link text-start active" id="v-pills-info-tab" data-bs-toggle="pill" data-bs-target="#v-pills-info" type="button" role="tab" aria-controls="v-pills-info" aria-selected="true">Informasi</button>
+                    <button class="nav-link text-start" id="v-pills-banner-tab" data-bs-toggle="pill" data-bs-target="#v-pills-banner" type="button" role="tab" aria-controls="v-pills-banner" aria-selected="true">Banner</button>
+                    <button class="nav-link text-start" id="v-pills-event-tab" data-bs-toggle="pill" data-bs-target="#v-pills-event" type="button" role="tab" aria-controls="v-pills-event" aria-selected="true">Event</button>
+                    <button class="nav-link text-start" id="v-pills-berkas-tab" data-bs-toggle="pill" data-bs-target="#v-pills-berkas" type="button" role="tab" aria-controls="v-pills-berkas" aria-selected="true">Berkas</button>
+                </div>
+                <div class="tab-content">
+                    <div class="tab-pane fade show active" id="v-pills-info" role="tabpanel" aria-labelledby="v-pills-info-tab" tabindex="0">
+                        <div class="card shadow mb-4">
+                            <div class="card-header text-bg-primary">Data Informasi</div>
+                            <div class="card-body">
+                                <div class="btn-toolbar justify-content-between mb-4">
+                                    <div class="btn-group btn-group-sm">
+                                        <button type="button" class="btn btn-primary" title="Reload Tabel" id="btnReloadTabelInformasi"><i class="bi bi-arrow-repeat"></i></button>
+                                        <button type="button" class="btn btn-primary" title="Tambah Informasi" id="btnTambahInformasi" data-bs-toggle="modal" data-bs-target="#modalTambahInformasi"><i class="bi bi-plus-circle"></i></button>
+                                    </div>
+                                    <div class="input-group input-group-sm">
+                                        <input type="text" class="form-control" id="searchTabelInformasi" placeholder="Cari Informasi">
+                                    </div>
                                 </div>
-                                <div class="input-group input-group-sm">
-                                    <input type="text" class="form-control" id="searchTabelInformasi" placeholder="Cari Informasi">
+                                <div class="table-responsive">
+                                    <table class="table table-bordered w-100" id="tabelInformasi">
+                                        <thead>
+                                            <tr>
+                                                <th class="text-bg-primary text-center align-middle" style="width: 10px;">No</th>
+                                                <th class="text-bg-primary text-center align-middle">Tanggal</th>
+                                                <th class="text-bg-primary text-center align-middle">Isi</th>
+                                                <th class="text-bg-primary text-center align-middle">Aksi</th>
+                                            </tr>
+                                        </thead>
+                                    </table>
                                 </div>
-                            </div>
-                            <div class="table-responsive">
-                                <table class="table table-bordered w-100" id="tabelInformasi">
-                                    <thead>
-                                        <tr>
-                                            <th class="text-bg-primary text-center align-middle" style="width: 10px;">No</th>
-                                            <th class="text-bg-primary text-center align-middle">Tanggal</th>
-                                            <th class="text-bg-primary text-center align-middle">Isi</th>
-                                            <th class="text-bg-primary text-center align-middle">Aksi</th>
-                                        </tr>
-                                    </thead>
-                                </table>
                             </div>
                         </div>
                     </div>
