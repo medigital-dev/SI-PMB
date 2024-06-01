@@ -219,7 +219,7 @@ if (!isset($_SESSION["login"])) {
                     <button class="nav-link text-start" id="v-pills-event-tab" data-bs-toggle="pill" data-bs-target="#v-pills-event" type="button" role="tab" aria-controls="v-pills-event" aria-selected="true">Event</button>
                     <button class="nav-link text-start" id="v-pills-berkas-tab" data-bs-toggle="pill" data-bs-target="#v-pills-berkas" type="button" role="tab" aria-controls="v-pills-berkas" aria-selected="true">Berkas</button>
                 </div>
-                <div class="tab-content">
+                <div class="tab-content w-100">
                     <div class="tab-pane fade show active" id="v-pills-info" role="tabpanel" aria-labelledby="v-pills-info-tab" tabindex="0">
                         <div class="card shadow mb-4">
                             <div class="card-header text-bg-primary">Data Informasi</div>
