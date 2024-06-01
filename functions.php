@@ -68,5 +68,22 @@ function updateProfil($data)
     $newPassword = $data['newPassword'];
     $newPassword2 = $data['newPassword2'];
 
-    $data
+    $data = query("SELECT * FROM admin");
+    if (count($data) < 1) return 'Data admin tidak ditemukan.';
+    $data = $data[0];
+    $id = $data['id'];
+
+    if ($oldPassword !== '') {
+        if (!password_verify($oldPassword, $data['password']))
+            return 'Password lama tidak cocok';
+        if ($newPassword == '' || $newPassword2 == '')
+            return 'Password baru harap diisi.';
+        if ($newPassword !== $newPassword2)
+            return 'Password baru tidak sama dengan konfirmasi password.';
+        $hash = password_hash($newPassword, PASSWORD_DEFAULT);
+        $sql = "UPDATE admin SET name = '$nama', username = '$username', password = '$hash' WHERE id = '$id'";
+    } else $sql = "UPDATE admin SET name = '$nama', username = '$username' WHERE id = '$id'";
+
+    if (!mysqli_query($conn, $sql)) return 'Database error!';
+    return mysqli_affected_rows($conn);
 }

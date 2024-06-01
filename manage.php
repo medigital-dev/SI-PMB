@@ -14,7 +14,8 @@ $nama = $data['user'] ? $data['user'][0]['name'] : '';
 $username = $data['user'] ? $data['user'][0]['username'] : '';
 
 if (isset($_POST['saveProfil'])) {
-    if (updateProfil($_POST) > 0) {
+    $result = updateProfil($_POST);
+    if ($result == 1) {
         echo "
 			<script>
 				alert('Data profil berhasil diperbaharui.');
@@ -22,11 +23,11 @@ if (isset($_POST['saveProfil'])) {
 			</script>
 		";
     } else {
-        echo "
+        echo '
 			<script>
-				alert('Data profil gagal diperbaharui.');
+				alert("' . $result . '");
 			</script>
-			";
+			';
     }
 }
 
@@ -179,17 +180,20 @@ if (isset($_POST['saveProfil'])) {
     <nav class="navbar navbar-expand-lg bg-body-tertiary sticky-top">
         <div class="container">
             <a class="navbar-brand" href="./manage.php">CMS-Info PPDB</a>
-            <div class="dropdown">
-                <button class="btn btn-outline-primary" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                    <i class="bi bi-person-circle"></i>
-                </button>
-                <ul class="dropdown-menu dropdown-menu-end">
-                    <li><a class="dropdown-item" type="button" data-bs-toggle="modal" data-bs-target="#modalProfil">Profil</a></li>
-                    <li>
-                        <hr class="dropdown-divider">
-                    </li>
-                    <li><a class="dropdown-item" href="./logout.php">Logout</a></li>
-                </ul>
+            <div class="btn-group">
+                <a href="./index.php" class="btn btn-outline-primary" title="Homepage"><i class="bi bi-box-arrow-up-right"></i></a>
+                <div class="btn-group">
+                    <button class="btn btn-outline-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="bi bi-person-circle"></i>
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li><a class="dropdown-item" type="button" data-bs-toggle="modal" data-bs-target="#modalProfil">Profil</a></li>
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
+                        <li><a class="dropdown-item" href="./logout.php">Logout</a></li>
+                    </ul>
+                </div>
             </div>
         </div>
     </nav>
