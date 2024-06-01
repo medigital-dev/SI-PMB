@@ -57,3 +57,16 @@ function random_string($length = 8)
 
     return $randomString;
 }
+
+function updateProfil($data)
+{
+    global $conn;
+
+    $nama = $data['nama'];
+    $username = $data['username'];
+    $oldPassword = $data['oldPassword'];
+    $newPassword = $data['newPassword'];
+    $newPassword2 = $data['newPassword2'];
+
+    $data
+}

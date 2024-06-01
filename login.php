@@ -148,15 +148,27 @@ if (isset($_POST["signin"])) {
                 <input type="text" class="form-control" id="floatingInput" placeholder="Input Username" name="username">
                 <label for="floatingInput">Username</label>
             </div>
-            <div class="form-floating">
-                <input type="password" class="form-control" id="floatingPassword" placeholder="Password" name="password">
+            <div class="form-floating mb-3">
+                <input type="password" class="form-control password" id="floatingPassword" placeholder="Password" name="password">
                 <label for="floatingPassword">Password</label>
             </div>
-            <div class="form-check text-start my-3">
-                <input class="form-check-input" type="checkbox" value="remember-me" name="remember" id="flexCheckDefault">
-                <label class="form-check-label" for="flexCheckDefault">
-                    Remember me
-                </label>
+            <div class="row row-cols-2">
+                <div class="col">
+                    <div class="form-check text-start mb-3">
+                        <input class="form-check-input" type="checkbox" value="remember-me" name="remember" id="flexCheckDefault">
+                        <label class="form-check-label" for="flexCheckDefault">
+                            Ingat saya
+                        </label>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="form-check text-start mb-3">
+                        <input class="form-check-input" type="checkbox" id="showPass">
+                        <label class="form-check-label" for="showPass">
+                            Lihat Password
+                        </label>
+                    </div>
+                </div>
             </div>
             <?php if (isset($error)) : ?>
                 <div class="alert alert-danger alert-dismissible fade show" role="alert">
@@ -176,8 +188,16 @@ if (isset($_POST["signin"])) {
 
         <a href="./" class="small text-decoration-none">Back</a>
     </main>
+    <script src="./assets/js/jquery.min.js"></script>
     <script src="./assets/js/bootstrap.bundle.min.js"></script>
-
+    <script>
+        $(document).ready(function() {
+            $('#showPass').on('click', function() {
+                if ($(this).is(':checked')) $('.password').attr('type', 'text');
+                else $('.password').attr('type', 'password');
+            });
+        });
+    </script>
 </body>
 
 </html>

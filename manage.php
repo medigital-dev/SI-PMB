@@ -6,6 +6,30 @@ if (!isset($_SESSION["login"])) {
     exit;
 }
 
+include 'functions.php';
+
+$data['user'] = query("SELECT * FROM admin");
+
+$nama = $data['user'] ? $data['user'][0]['name'] : '';
+$username = $data['user'] ? $data['user'][0]['username'] : '';
+
+if (isset($_POST['saveProfil'])) {
+    if (updateProfil($_POST) > 0) {
+        echo "
+			<script>
+				alert('Data profil berhasil diperbaharui.');
+				document.location.href = 'manage.php';
+			</script>
+		";
+    } else {
+        echo "
+			<script>
+				alert('Data profil gagal diperbaharui.');
+			</script>
+			";
+    }
+}
+
 ?>
 
 <!doctype html>
@@ -160,12 +184,11 @@ if (!isset($_SESSION["login"])) {
                     <i class="bi bi-person-circle"></i>
                 </button>
                 <ul class="dropdown-menu dropdown-menu-end">
-                    <li><a class="dropdown-item" href="#">Profil</a></li>
-                    <li><a class="dropdown-item" href="#">Password</a></li>
+                    <li><a class="dropdown-item" type="button" data-bs-toggle="modal" data-bs-target="#modalProfil">Profil</a></li>
                     <li>
                         <hr class="dropdown-divider">
                     </li>
-                    <li><a class="dropdown-item" href="#">Logout</a></li>
+                    <li><a class="dropdown-item" href="./logout.php">Logout</a></li>
                 </ul>
             </div>
         </div>
@@ -254,28 +277,74 @@ if (!isset($_SESSION["login"])) {
     </section>
     <div class="modal fade" id="modalTambahInformasi" tabindex="-1" aria-labelledby="modalTambahInformasiLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-scrollable">
-            <form action="" method="POST">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="modalTambahInformasiLabel">Tambah Informasi</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" id="idInformasi">
+                    <div class="mb-3">
+                        <label class="form-label" for="judul">Judul</label>
+                        <input type="text" class="form-control" name="judul" id="judul">
+                        <div class="invalid-feedback">Input ini diperlukan!</div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="isi">Isi</label>
+                        <textarea name="isi" id="isi" rows="10" class="form-control"></textarea>
+                        <div class="invalid-feedback">Input ini diperlukan!</div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+                    <button type="button" class="btn btn-primary" id="btnSaveInfo">Simpan</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="modalProfil" tabindex="-1" aria-labelledby="modalProfilLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-scrollable">
+            <form action="" method="post">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h1 class="modal-title fs-5" id="modalTambahInformasiLabel">Tambah Informasi</h1>
+                        <h1 class="modal-title fs-5" id="modalProfilLabel">Tambah Informasi</h1>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        <input type="hidden" id="idInformasi">
                         <div class="mb-3">
-                            <label class="form-label" for="judul">Judul</label>
-                            <input type="text" class="form-control" name="judul" id="judul">
-                            <div class="invalid-feedback">Input ini diperlukan!</div>
+                            <label for="nama" class="form-label">Nama User</label>
+                            <input type="text" class="form-control" name="nama" id="nama" value="<?= $nama; ?>">
                         </div>
                         <div class="mb-3">
-                            <label class="form-label" for="isi">Isi</label>
-                            <textarea name="isi" id="isi" rows="10" class="form-control"></textarea>
-                            <div class="invalid-feedback">Input ini diperlukan!</div>
+                            <label for="username" class="form-label">Username</label>
+                            <input type="text" class="form-control" name="username" id="username" value="<?= $username; ?>">
+                        </div>
+                        <hr>
+                        <div class="mb-3">
+                            <label for="oldPassword" class="form-label">Password Lama</label>
+                            <input type="password" class="form-control password" name="oldPassword" id="oldPassword">
+                            <div class="form-text">Input password lama jika ingin mengganti password.</div>
+                        </div>
+                        <div class="row row-cols-2">
+                            <div class="col-12 col-md-6 mb-3">
+                                <label for="newPassword" class="form-label">Password Baru</label>
+                                <input type="password" class="form-control password" name="newPassword" id="newPassword">
+                            </div>
+                            <div class="col-12 col-md-6 mb-3">
+                                <label for="newPassword2" class="form-label">Konfirmasi Password</label>
+                                <input type="password" class="form-control password" name="newPassword2" id="newPassword2">
+                            </div>
+                        </div>
+                        <div class="form-check text-start mb-3">
+                            <input class="form-check-input" type="checkbox" id="showPass">
+                            <label class="form-check-label" for="showPass">
+                                Lihat Password
+                            </label>
                         </div>
                     </div>
-                    <div class="modal-footer">
+                    <div class="modal-footer d-flex justify-content-start">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
-                        <button type="button" class="btn btn-primary" id="btnSaveInfo">Simpan</button>
+                        <button type="submit" class="btn btn-primary" name="saveProfil" id="btnSaveProfil">Simpan</button>
                     </div>
                 </div>
             </form>
@@ -295,6 +364,11 @@ if (!isset($_SESSION["login"])) {
     </script>
     <script>
         $(document).ready(function() {
+            $('#showPass').on('click', function() {
+                if ($(this).is(':checked')) $('.password').attr('type', 'text');
+                else $('.password').attr('type', 'password');
+            });
+
             $('#isi').summernote({
                 dialogsInBody: true,
                 height: 200
