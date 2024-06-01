@@ -128,9 +128,6 @@ $data['informasi'] = query('SELECT * FROM informasi ORDER BY created_at DESC LIM
             <li>
               <a class="dropdown-item" href="#informasi">Informasi</a>
             </li>
-            <li>
-              <a class="dropdown-item" href="#peraturan">Peraturan</a>
-            </li>
             <li><a class="dropdown-item" href="#unduhan">Unduhan</a></li>
             <li>
               <a class="dropdown-item" href="#pelaksanaan">Pelaksanaan</a>
@@ -216,30 +213,34 @@ $data['informasi'] = query('SELECT * FROM informasi ORDER BY created_at DESC LIM
               </h2>
             </div>
             <div class="col-auto">
-              <input type="text" id="seach" placeholder="Cari" class="form-control">
+              <input type="text" id="cariInfo" placeholder="Cari" class="form-control">
             </div>
           </div>
-          <div class="list-group mb-4">
-            <?php foreach ($data['informasi'] as $row) : ?>
-              <a type="button" class="list-group-item list-group-item-action" aria-current="true">
-                <div class="d-flex w-100 justify-content-between">
-                  <h5 class="mb-1"><?= $row['judul']; ?></h5>
-                  <small class="text-muted"><?= timeAgo($row['created_at']); ?></small>
-                </div>
-                <p class="mb-1"><?= $row['isi']; ?></p>
-              </a>
-            <?php endforeach; ?>
-
-          </div>
-          <div class="btn-group btn-group-sm">
-            <button type="button" href="#" class="btn btn-outline-secondary"><i class="bi bi-chevron-left"></i></button>
-            <button type="button" href="#" class="btn btn-outline-secondary"><i class="bi bi-chevron-right"></i></button>
-          </div>
+          <table class="table table-hover" id="tabelInfoPublic">
+            <thead>
+              <tr>
+                <th>Daftar Informasi</th>
+              </tr>
+            </thead>
+            <tbody>
+              <?php foreach ($data['informasi'] as $row) : ?>
+                <tr>
+                  <td>
+                    <div class="d-flex w-100 justify-content-between">
+                      <h5 class="mb-1"><?= $row['judul']; ?></h5>
+                      <small class="text-muted"><?= timeAgo($row['created_at']); ?></small>
+                    </div>
+                    <p class="mb-1"><?= $row['isi']; ?></p>
+                  </td>
+                </tr>
+              <?php endforeach; ?>
+            </tbody>
+          </table>
           <hr class="col-3 col-md-2 mb-2" />
         </div>
         <div class="col-md-4">
-          <h2 id="peraturan" class="text-body-emphasis" style="padding-top: 7rem">
-            Peraturan
+          <h2 id="unduhan" class="text-body-emphasis" style="padding-top: 7rem">
+            Unduhan
           </h2>
           <ul class="list-unstyled ps-0">
             <li>
@@ -250,28 +251,7 @@ $data['informasi'] = query('SELECT * FROM informasi ORDER BY created_at DESC LIM
                 Permendikbud No 1 Tahun 2021
               </a>
             </li>
-            <li>
-              <a class="icon-link mb-1" target="_blank" href="files/Perbup_PPDB_2024.pdf">
-                <svg class="bi" width="16" height="16">
-                  <use xlink:href="#arrow-right-circle" />
-                </svg>
-                Peraturan Bupati GK - PPDB
-              </a>
-            </li>
-            <li>
-              <a class="icon-link mb-1" target="_blank" href="files/pedoman_ppdb_2024-2025.pdf">
-                <svg class="bi" width="16" height="16">
-                  <use xlink:href="#arrow-right-circle" />
-                </svg>
-                Pedoman PPDB 2024-2025
-              </a>
-            </li>
           </ul>
-          <hr class="col-3 col-md-2 mb-2" />
-          <h2 id="unduhan" class="text-body-emphasis" style="padding-top: 7rem">
-            Unduhan
-          </h2>
-
           <hr class="col-3 col-md-2 mb-2" />
         </div>
       </div>
@@ -636,25 +616,23 @@ $data['informasi'] = query('SELECT * FROM informasi ORDER BY created_at DESC LIM
       // Your custom options
     });
     $(document).ready(function() {
-      $("#table").DataTable({
+      const tabelInfo = $("#tabelInfoPublic").DataTable({
+        dom: '<"mb-2"t><"d-flex justify-content-center"p>',
+        ordering: false,
+        pagingType: 'simple',
         lengthMenu: [
           [5, 25, 50, -1],
           [5, 25, 50, "All"],
         ],
-        order: [
-          [0, "desc"]
-        ],
         language: {
           paginate: {
-            previous: "Newest",
-            next: "Olders",
+            previous: '<i class="bi bi-chevron-left"></i>',
+            next: '<i class="bi bi-chevron-right"></i>',
           },
         },
-        columnDefs: [{
-          targets: [1],
-          orderable: false,
-        }, ],
       });
+
+      $('#cariInfo').on('keyup', e => tabelInfo.search(e.target.value).draw());
     });
   </script>
 </body>

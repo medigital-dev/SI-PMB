@@ -182,7 +182,7 @@ if (isset($_POST['saveProfil'])) {
             <a class="navbar-brand" href="./manage.php">CMS-Info PPDB</a>
             <div class="btn-group">
                 <a href="./index.php" class="btn btn-outline-primary" title="Homepage"><i class="bi bi-box-arrow-up-right"></i></a>
-                <div class="btn-group">
+                <div class="btn-group btn-group-sm">
                     <button class="btn btn-outline-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                         <i class="bi bi-person-circle"></i>
                     </button>
