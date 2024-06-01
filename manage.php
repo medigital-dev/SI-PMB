@@ -355,11 +355,137 @@ if (isset($_POST['saveProfil'])) {
     <script src="./assets/js/datatables.min.js"></script>
     <script src="./assets/js/fancybox.umd.js"></script>
     <script src="./assets/js/summernote-bs4.js"></script>
+    <script src="./assets/js/summernote-file.js"></script>
     <script>
         function reloadWidget() {
             $.post('./api/widget.php', res => {
                 $('#totalInfo').text(res.info);
             })
+        }
+
+        function uploadMedia(file) {
+            let data = new FormData();
+
+            data.append("file", file);
+            $.ajax({
+                data: data,
+                type: "POST",
+                url: "./ajax/upload.php", //Your own back-end uploader
+                cache: false,
+                contentType: false,
+                processData: false,
+                xhr: function() {
+                    //Handle progress upload
+                    let myXhr = $.ajaxSettings.xhr();
+                    if (myXhr.upload)
+                        myXhr.upload.addEventListener(
+                            "progress",
+                            progressHandlingFunction,
+                            false
+                        );
+                    return myXhr;
+                },
+                success: function(reponse) {
+                    if (reponse.status === true) {
+                        let listMimeImg = [
+                            "image/png",
+                            "image/jpeg",
+                            "image/webp",
+                            "image/gif",
+                            "image/svg",
+                        ];
+                        let listMimeAudio = ["audio/mpeg", "audio/ogg"];
+                        let listMimeVideo = ["video/mpeg", "video/mp4", "video/webm"];
+                        let elem;
+                        let childElem;
+                        let elemFancy;
+
+                        if (listMimeImg.indexOf(file.type) > -1) {
+                            //Picture
+                            elem = document.createElement("a");
+                            elem.setAttribute("href", reponse.src);
+                            childElem = document.createElement("img");
+                            childElem.setAttribute("class", "img-thumbnail");
+                            childElem.setAttribute("src", reponse.src);
+                            childElem.style.width = "240px";
+                            childElem.style.height = "180px";
+                            childElem.style.objectFit = "cover";
+                            elem.appendChild(childElem);
+                            $("textarea#isi").summernote("insertNode", elem);
+                        } else if (listMimeAudio.indexOf(file.type) > -1) {
+                            //Audio
+                            elem = document.createElement("audio");
+                            elem.setAttribute("src", reponse.src);
+                            elem.setAttribute("controls", "controls");
+                            elem.setAttribute("preload", "metadata");
+                            $("textarea#isi").summernote("insertNode", elem);
+                        } else if (listMimeVideo.indexOf(file.type) > -1) {
+                            //Video
+                            elemFancy = document.createElement("a");
+                            elemFancy.setAttribute("href", reponse.src);
+                            elemFancy.setAttribute("data-fancybox", "");
+                            elem = document.createElement("video");
+                            elem.setAttribute("src", reponse.src);
+                            elem.setAttribute("controls", "controls");
+                            elem.setAttribute("preload", "metadata");
+                            elem.setAttribute("class", "img-thumbnail");
+                            elem.setAttribute("width", 480);
+                            elemFancy.appendChild(elem);
+                            $("textarea#isi").summernote("insertNode", elemFancy);
+                        } else {
+                            //Other file type
+                            elem = document.createElement("a");
+                            let linkText = document.createTextNode(file.name);
+                            elem.appendChild(linkText);
+                            elem.title = file.name;
+                            elem.href = reponse.src;
+                            elem.target = "_blank";
+                            $("textarea#isi").summernote("insertNode", elem);
+                        }
+                    }
+                },
+            });
+        }
+
+        function progressHandlingFunction(e) {
+            if (e.lengthComputable) {
+                if (e.total > 2097152) {
+                    const current = Math.round((e.loaded / e.total) * 100);
+                    $("#loadingModal").modal("show");
+                    $("#currentPercent").text(current);
+
+                    //Reset progress on complete
+                    if (e.loaded === e.total) {
+                        $("#loadingModal").modal("hide");
+                        toast("success", "Upload selesai!");
+                    }
+                }
+            }
+        }
+
+        function deleteMedia(file) {
+            const id = file.dataset.id_unik;
+            $.post(
+                "/cms-admin/files/delete/" + id,
+                (r) => {
+                    toast("success", r.messages);
+                    var content = $("textarea#isi");
+                    var temp = document.createElement("div");
+                    temp.innerHTML = content.summernote("code");
+                    var elm = temp.querySelectorAll('a[data-id_unik="' + id + '"]');
+                    elm.forEach((e) => e.parentNode.removeChild(e));
+                    content.summernote("code", temp.innerHTML);
+                },
+                "json"
+            ).fail((rf) => toast("error", rf.responseJSON.message));
+        }
+
+        function getFileExtension(filename) {
+            const parts = filename.split(".");
+            if (parts.length === 1 || (parts[0] === "" && parts.length === 2)) {
+                return "";
+            }
+            return parts.pop().toLowerCase();
         }
     </script>
     <script>
@@ -371,7 +497,23 @@ if (isset($_POST['saveProfil'])) {
 
             $('#isi').summernote({
                 dialogsInBody: true,
-                height: 200
+                height: 200,
+                toolbar: [
+                    ['misc', ['undo', 'redo']],
+                    ['style', ['bold', 'italic', 'underline', 'clear']],
+                    ['color', ['color']],
+                    ['para', ['ul', 'ol', 'paragraph']],
+                    ['insert', ['link', 'table', 'file']],
+                    ['view', ['fullscreen', 'codeview', 'help']],
+                ],
+                callbacks: {
+                    onFileUpload: (file) => {
+                        for (let i = 0; i < file.length; i++) {
+                            uploadMedia(file[i]);
+                        }
+                    },
+                    onMediaDelete: (file) => deleteMedia(file[0]),
+                },
             });
 
             const tabelInformasi = $('#tabelInformasi').DataTable({
