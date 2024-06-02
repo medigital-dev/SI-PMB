@@ -361,6 +361,8 @@ if (isset($_POST['saveProfil'])) {
     <script src="./assets/js/summernote-bs4.js"></script>
     <script src="./assets/js/summernote-file.js"></script>
     <script>
+        Fancybox.bind("[data-fancybox]");
+
         function reloadWidget() {
             $.post('./api/widget.php', res => {
                 $('#totalInfo').text(res.info);
@@ -369,12 +371,12 @@ if (isset($_POST['saveProfil'])) {
 
         function uploadMedia(file) {
             let data = new FormData();
-
+            data.append('type', 'info');
             data.append("file", file);
             $.ajax({
                 data: data,
                 type: "POST",
-                url: "./ajax/upload.php", //Your own back-end uploader
+                url: "./api/upload.php", //Your own back-end uploader
                 cache: false,
                 contentType: false,
                 processData: false,
@@ -408,6 +410,7 @@ if (isset($_POST['saveProfil'])) {
                             //Picture
                             elem = document.createElement("a");
                             elem.setAttribute("href", reponse.src);
+                            elem.setAttribute("data-fancybox", '');
                             childElem = document.createElement("img");
                             childElem.setAttribute("class", "img-thumbnail");
                             childElem.setAttribute("src", reponse.src);
@@ -490,6 +493,34 @@ if (isset($_POST['saveProfil'])) {
                 return "";
             }
             return parts.pop().toLowerCase();
+        }
+
+        function getFileIcon(extension) {
+            const iconMappings = {
+                pdf: "fa-file-pdf",
+                doc: "fa-file-word",
+                docx: "fa-file-word",
+                xls: "fa-file-excel",
+                xlsx: "fa-file-excel",
+                ppt: "fa-file-powerpoint",
+                pptx: "fa-file-powerpoint",
+                txt: "fa-file-alt",
+                jpg: "fa-file-image",
+                jpeg: "fa-file-image",
+                png: "fa-file-image",
+                gif: "fa-file-image",
+                zip: "fa-file-archive",
+                tar: "fa-file-archive",
+                rar: "fa-file-archive",
+                mp4: "fa-file-video",
+                avi: "fa-file-video",
+                mkv: "fa-file-video",
+                default: "fa-file",
+            };
+
+            const iconClass =
+                iconMappings[extension.toLowerCase()] || iconMappings["default"];
+            return `<i class="fas ${iconClass}"></i>`;
         }
     </script>
     <script>
