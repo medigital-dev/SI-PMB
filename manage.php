@@ -181,7 +181,7 @@ if (isset($_POST['saveProfil'])) {
         <div class="container">
             <a class="navbar-brand" href="./manage.php">CMS-Info PPDB</a>
             <div class="btn-group">
-                <a href="./index.php" class="btn btn-outline-primary" title="Homepage"><i class="bi bi-box-arrow-up-right"></i></a>
+                <a href="./index.php" class="btn btn-outline-primary" target="_blank" title="Homepage"><i class="bi bi-box-arrow-up-right"></i></a>
                 <div class="btn-group btn-group-sm">
                     <button class="btn btn-outline-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                         <i class="bi bi-person-circle"></i>
@@ -232,7 +232,7 @@ if (isset($_POST['saveProfil'])) {
                     <div class="card card-body shadow text-bg-success bg-gradient">
                         <h6 class="card-title">Total Berkas</h6>
                         <div class="d-flex justify-content-between">
-                            <span class="h1 fs-1 m-0" id="totalPd">0</span>
+                            <span class="h1 fs-1 m-0" id="totalBerkas">0</span>
                             <i class="fa-solid fa-users text-opacity-25 text-white fa-3x"></i>
                         </div>
                     </div>
@@ -267,6 +267,34 @@ if (isset($_POST['saveProfil'])) {
                                                 <th class="text-bg-primary text-center align-middle" style="width: 10px;">No</th>
                                                 <th class="text-bg-primary text-center align-middle">Tanggal</th>
                                                 <th class="text-bg-primary text-center align-middle">Isi</th>
+                                                <th class="text-bg-primary text-center align-middle">Aksi</th>
+                                            </tr>
+                                        </thead>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="v-pills-berkas" role="tabpanel" aria-labelledby="v-pills-berkas-tab" tabindex="0">
+                        <div class="card shadow mb-4">
+                            <div class="card-header text-bg-primary">Data Unduhan</div>
+                            <div class="card-body">
+                                <div class="btn-toolbar justify-content-between mb-4">
+                                    <div class="btn-group btn-group-sm">
+                                        <button type="button" class="btn btn-primary" title="Reload Tabel" id="btnReloadTabelBerkas"><i class="bi bi-arrow-repeat"></i></button>
+                                        <button type="button" class="btn btn-primary" title="Tambah Berkas" id="btnTambahBerkas" data-bs-toggle="modal" data-bs-target="#modalTambahBerkas"><i class="bi bi-plus-circle"></i></button>
+                                    </div>
+                                    <div class="input-group input-group-sm">
+                                        <input type="text" class="form-control" id="searchTabelBerkas" placeholder="Cari Berkas">
+                                    </div>
+                                </div>
+                                <div class="table-responsive">
+                                    <table class="table table-bordered w-100" id="tabelBerkas">
+                                        <thead>
+                                            <tr>
+                                                <th class="text-bg-primary text-center align-middle" style="width: 10px;">No</th>
+                                                <th class="text-bg-primary text-center align-middle">Tanggal</th>
+                                                <th class="text-bg-primary text-center align-middle">Nama File</th>
                                                 <th class="text-bg-primary text-center align-middle">Aksi</th>
                                             </tr>
                                         </thead>
@@ -354,6 +382,32 @@ if (isset($_POST['saveProfil'])) {
             </form>
         </div>
     </div>
+    <div class="modal fade" id="modalTambahBerkas" tabindex="-1" aria-labelledby="modalTambahBerkasLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="modalTambahBerkasLabel">Tambah Berkas Unduhan</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="titleFile" class="form-label">Judul File</label>
+                        <input type="text" class="form-control" name="title" id="titleFile">
+                        <div class="invalid-feedback">Wajib.</div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="fileBerkas" class="form-label">Pilih file</label>
+                        <input class="form-control" type="file" id="fileBerkas">
+                        <div class="invalid-feedback">Wajib.</div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+                    <button type="button" class="btn btn-primary" id="btnSaveBerkas">Simpan</button>
+                </div>
+            </div>
+        </div>
+    </div>
     <script src="./assets/js/jquery.min.js"></script>
     <script src="./assets/js/bootstrap.bundle.min.js"></script>
     <script src="./assets/js/datatables.min.js"></script>
@@ -366,17 +420,19 @@ if (isset($_POST['saveProfil'])) {
         function reloadWidget() {
             $.post('./api/widget.php', res => {
                 $('#totalInfo').text(res.info);
+                $('#totalBerkas').text(res.berkas);
             })
         }
 
         function uploadMedia(file) {
             let data = new FormData();
+            data.append('title', file.name);
             data.append('type', 'info');
             data.append("file", file);
             $.ajax({
                 data: data,
                 type: "POST",
-                url: "./api/upload.php", //Your own back-end uploader
+                url: "./api/berkas.php", //Your own back-end uploader
                 cache: false,
                 contentType: false,
                 processData: false,
@@ -597,7 +653,52 @@ if (isset($_POST['saveProfil'])) {
                         $.post('./api/info.php?id=' + id, data, res => {
                             alert(res.message);
                             tabelInformasi.ajax.reload(null, false);
+                            reloadWidget();
                         })
+                });
+                reloadWidget();
+            });
+
+            const tabelBerkas = $('#tabelBerkas').DataTable({
+                dom: '<"mb-2"t><"d-flex justify-content-between"ip>',
+                responsive: true,
+                ordering: false,
+                ajax: {
+                    url: './api/berkas.php',
+                    method: 'POST',
+                    dataSrc: '',
+                    data: {
+                        getTable: true
+                    }
+                },
+                columns: [{
+                    data: 'no',
+                    className: 'text-center'
+                }, {
+                    data: 'tanggal',
+                    className: 'text-center'
+                }, {
+                    data: 'judul'
+                }, {
+                    data: 'aksi',
+                    className: 'text-center'
+                }]
+            });
+
+            tabelBerkas.on('draw', () => {
+                $('.btnHapusBerkas').on('click', function() {
+                    const id = $(this).data('id');
+                    const data = {
+                        delete: true
+                    }
+                    const action = confirm('Informasi akan dihapus permanen. Yakin?');
+                    if (action)
+                        $.post('./api/berkas.php?id=' + id, data, res => {
+                            console.log(res);
+                            alert(res.message);
+                            tabelBerkas.ajax.reload(null, false);
+                            reloadWidget()
+                        }).fail(err => console.log(err));
                 });
                 reloadWidget();
             });
@@ -640,6 +741,58 @@ if (isset($_POST['saveProfil'])) {
             });
 
             $('#searchTabelInformasi').on('keyup', e => tabelInformasi.columns(2).search(e.target.value).draw());
+            $('#searchTabelBerkas').on('keyup', e => tabelBerkas.columns(2).search(e.target.value).draw());
+
+            $('#btnSaveBerkas').on('click', function() {
+                const btnElm = $(this);
+                const fileElm = $('#fileBerkas');
+                const titleElm = $('#titleFile');
+
+                if (fileElm.val() == '' || titleElm.val() == '') {
+                    if (fileElm.val() == '') fileElm.addClass('is-invalid');
+                    else fileElm.removeClass('is-invalid');
+                    if (titleElm.val() == '') titleElm.addClass('is-invalid');
+                    else titleElm.removeClass('is-invalid');
+                    return;
+                }
+                $('is-invalid').removeClass('is-invalid');
+                btnElm.html('<div class="spinner-border spinner-border-sm" role="status"><span class="visually-hidden">Loading...</span></div>').prop('disabled', true);
+                const file = fileElm.prop('files');
+                let data = new FormData();
+                data.append('title', titleElm.val());
+                data.append('file', file[0]);
+                data.append('type', 'unduhan');
+                $.ajax({
+                    data: data,
+                    type: "POST",
+                    url: "./api/berkas.php", //Your own back-end uploader
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                    xhr: function() {
+                        //Handle progress upload
+                        let myXhr = $.ajaxSettings.xhr();
+                        if (myXhr.upload)
+                            myXhr.upload.addEventListener(
+                                "progress",
+                                progressHandlingFunction,
+                                false
+                            );
+                        return myXhr;
+                    },
+                    success: res => {
+                        btnElm.text('Simpan').prop('disabled', false);
+                        fileElm.val('');
+                        titleElm.val('');
+                        $('#modalTambahBerkas').modal('hide');
+                        tabelBerkas.ajax.reload(null, false);
+                    },
+                    error: err => {
+                        console.log(err);
+                        btnElm.text('Simpan').prop('disabled', false);
+                    }
+                });
+            });
         });
     </script>
 </body>

@@ -1,6 +1,7 @@
 <?php
 include 'functions.php';
 $data['informasi'] = query('SELECT * FROM informasi ORDER BY created_at DESC LIMIT 8');
+$data['unduhan'] = query("SELECT * FROM berkas WHERE type = 'unduhan' ORDER BY created_at ASC");
 ?>
 <!doctype html>
 <html lang="en" data-bs-theme="auto">
@@ -243,14 +244,16 @@ $data['informasi'] = query('SELECT * FROM informasi ORDER BY created_at DESC LIM
             Unduhan
           </h2>
           <ul class="list-unstyled ps-0">
-            <li>
-              <a class="icon-link mb-1" target="_blank" href="files/permendikbud-1-2021.pdf">
-                <svg class="bi" width="16" height="16">
-                  <use xlink:href="#arrow-right-circle" />
-                </svg>
-                Permendikbud No 1 Tahun 2021
-              </a>
-            </li>
+            <?php foreach ($data['unduhan'] as $row) : ?>
+              <li>
+                <a class="icon-link mb-1" target="_blank" href="<?= $row['src']; ?>">
+                  <svg class="bi" width="16" height="16">
+                    <use xlink:href="#arrow-right-circle" />
+                  </svg>
+                  <?= $row['title']; ?>
+                </a>
+              </li>
+            <?php endforeach; ?>
           </ul>
           <hr class="col-3 col-md-2 mb-2" />
         </div>

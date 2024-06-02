@@ -22,6 +22,7 @@ final class Db002 extends AbstractMigration
         $berkas = $this->table('berkas', ['id' => 'id']);
         $berkas->addColumn('berkas_id', 'string', ['limit' => 64, 'null' => false])
             ->addColumn('filename', 'string', ['limit' => 64, 'null' => false])
+            ->addColumn('title', 'string', ['limit' => 64, 'null' => false])
             ->addColumn('src', 'string', ['limit' => 256, 'null' => false])
             ->addColumn('type', 'string', ['limit' => 64, 'null' => false])
             ->addColumn('created_at', 'datetime', ['null' => false])

@@ -8,6 +8,7 @@ global $conn;
 
 $response = [
     'info' => count(query("SELECT * FROM informasi")),
+    'berkas' => count(query("SELECT * FROM berkas WHERE type = 'unduhan'")),
 ];
 
 echo json_encode($response);
