@@ -7,3 +7,4 @@ $pass     = "";
 $database = "ppdb";
 
 $conn = mysqli_connect($server, $user, $pass, $database);
+if (!$conn) die('Database Error');
