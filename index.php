@@ -2,6 +2,7 @@
 include 'functions.php';
 $data['informasi'] = query('SELECT * FROM informasi ORDER BY created_at DESC LIMIT 8');
 $data['unduhan'] = query("SELECT * FROM berkas WHERE type = 'unduhan' ORDER BY created_at ASC");
+$data['banner'] = query("SELECT * FROM berkas WHERE type = 'banner' ORDER BY created_at ASC")
 ?>
 <!doctype html>
 <html lang="en" data-bs-theme="auto">
@@ -23,11 +24,11 @@ $data['unduhan'] = query("SELECT * FROM berkas WHERE type = 'unduhan' ORDER BY c
   <link href="./assets/css/style.css" rel="stylesheet" />
 
   <!-- Favicons -->
-  <link rel="apple-touch-icon" href="./assets/images/smp2wonosari-shadow_black.png" sizes="180x180" />
-  <link rel="icon" href="./assets/images/smp2wonosari-shadow_black.png" sizes="32x32" type="image/png" />
-  <link rel="icon" href="./assets/images/smp2wonosari-shadow_black.png" sizes="16x16" type="image/png" />
+  <link rel="apple-touch-icon" href="./assets/images/logo2.png" sizes="180x180" />
+  <link rel="icon" href="./assets/images/logo2.png" sizes="32x32" type="image/png" />
+  <link rel="icon" href="./assets/images/logo2.png" sizes="16x16" type="image/png" />
   <link rel="manifest" href="./assets/manifest.json" />
-  <link rel="icon" href="./assets/images/smp2wonosari-shadow_black.png" />
+  <link rel="icon" href="./assets/images/logo2.png" />
   <meta name="theme-color" content="#712cf9" />
 
 </head>
@@ -107,8 +108,8 @@ $data['unduhan'] = query("SELECT * FROM berkas WHERE type = 'unduhan' ORDER BY c
   <section class="sticky-top">
     <div class="col-lg-8 mx-auto">
       <header class="d-flex p-3 align-items-center justify-content-between border-bottom">
-        <a href="/" class="d-flex align-items-center text-body-emphasis text-decoration-none">
-          <img src="./assets/images/smp2wonosari-shadow_black.png" alt="Logo SMPN 2 Wonosari" width="60" class="me-2" />
+        <a href="./" class="d-flex align-items-center text-body-emphasis text-decoration-none">
+          <img src="./assets/images/logo2.png" alt="Logo SMPN 2 Wonosari" width="60" class="me-2" />
           <p class="m-0 p-0 lh-1">
             <span class="fs-4 fw-bold text-uppercase d-block">Info PPDB 2024</span>
             <span class="fs-5 fw-bold d-block">SMPN 2 Wonosari</span>
@@ -153,11 +154,18 @@ $data['unduhan'] = query("SELECT * FROM berkas WHERE type = 'unduhan' ORDER BY c
   </section>
   <div class="col-lg-8 mx-auto p-4 py-md-5">
     <main>
-      <div id="carouselExampleSlidesOnly" class="carousel slide carousel-fade mb-3" data-bs-ride="carousel">
+
+      <div id="carousel" class="carousel slide carousel-fade mb-3" data-bs-ride="carousel">
         <div class="carousel-inner">
-          <div class="carousel-item active">
-            <img src="./assets/images/banner-welcome.jpg" class="d-block img-fluid img-thumbnail" alt="banner 1" />
-          </div>
+          <?php $i = 0;
+          foreach ($data['banner'] as $banner) : ?>
+            <div class="carousel-item <?= $i == 0 ? 'active' : ''; ?>">
+              <a href="<?= $banner['src']; ?>" data-fancybox="banner">
+                <img src="<?= $banner['src']; ?>" class="d-block img-fluid img-thumbnail" />
+              </a>
+            </div>
+            <?php $i++; ?>
+          <?php endforeach; ?>
         </div>
       </div>
       <h3 class="text-body-emphasis">Selamat Datang di Laman</h3>
@@ -511,12 +519,12 @@ $data['unduhan'] = query("SELECT * FROM berkas WHERE type = 'unduhan' ORDER BY c
       </div>
     </main>
 
-    <footer class="pt-5 my-5 text-body-secondary border-top justify-content-lg-between d-lg-flex d-block text-center text-lg-start">
+    <footer class="pt-5 my-5 text-body-secondary border-top d-flex flex-column flex-lg-row justify-content-between align-items-center text-center text-lg-start">
       <span class="m-0">
-        &copy; 2023-2024 Dibuat dan dikembangkan oleh
+        &copy; 2024 Dibuat dan dikembangkan oleh
         <a href="https://muhsaidlg.my.id" target="_blank" class="text-decoration-none">Muhammad Said Latif Ghofari</a>
       </span>
-      <span class="m-0 text-muted text-end">v2024.01</span>
+      <a href="https://github.com/medigital-dev/PPDB_SMP-2-Wonosari" target="_blank" class="text-muted text-center text-lg-end text-decoration-none"><i class="bi bi-github me-1"></i></a>
     </footer>
   </div>
 
@@ -618,6 +626,7 @@ $data['unduhan'] = query("SELECT * FROM berkas WHERE type = 'unduhan' ORDER BY c
     Fancybox.bind("[data-fancybox]", {
       // Your custom options
     });
+
     $(document).ready(function() {
       const tabelInfo = $("#tabelInfoPublic").DataTable({
         dom: '<"mb-2"t><"d-flex justify-content-center"p>',

@@ -42,7 +42,7 @@ switch ($method) {
                     $temp = [
                         'no' => $no++,
                         'tanggal' => date('d-m-Y H:i:s', strtotime($row['created_at'])) . ' WIB',
-                        'isi' => '<h5 class="m-0">' . $row['judul'] . '</h5><p class="m-0">' . $row['isi'] . '</p>',
+                        'isi' => '<h5 class="m-0">' . $row['judul'] . '</h5><p class="small text-muted">' . date('d-m-Y H:i:s', strtotime($row['created_at'])) . ' WIB  </p><p class="m-0">' . $row['isi'] . '</p>',
                         'aksi' => '
                             <div class="btn-group btn-group-sm">
                                 <button type="button" class="btn btn-primary btnEditInfo" data-id="' . $row['id'] . '"><i class="bi bi-pencil-square"></i></button>

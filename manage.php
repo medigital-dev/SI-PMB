@@ -240,11 +240,16 @@ if (isset($_POST['saveProfil'])) {
             </div>
 
             <div class="d-block d-lg-flex align-items-start">
-                <div class="nav flex-lg-column nav-pills me-lg-3 justify-content-center mb-4 py-2 border-top border-bottom" role="tablist" aria-orientation="vertical">
-                    <button class="nav-link text-start active" id="v-pills-info-tab" data-bs-toggle="pill" data-bs-target="#v-pills-info" type="button" role="tab" aria-controls="v-pills-info" aria-selected="true">Informasi</button>
-                    <button class="nav-link text-start" id="v-pills-banner-tab" data-bs-toggle="pill" data-bs-target="#v-pills-banner" type="button" role="tab" aria-controls="v-pills-banner" aria-selected="true">Banner</button>
-                    <button class="nav-link text-start" id="v-pills-event-tab" data-bs-toggle="pill" data-bs-target="#v-pills-event" type="button" role="tab" aria-controls="v-pills-event" aria-selected="true">Event</button>
-                    <button class="nav-link text-start" id="v-pills-berkas-tab" data-bs-toggle="pill" data-bs-target="#v-pills-berkas" type="button" role="tab" aria-controls="v-pills-berkas" aria-selected="true">Berkas</button>
+                <div class="card shadow mb-4 me-lg-4">
+                    <div class="card-header text-bg-primary">Menu</div>
+                    <div class="card-body p-2">
+                        <div class="nav flex-lg-column nav-pills justify-content-center pe-lg-4" role="tablist" aria-orientation="vertical">
+                            <button class="nav-link text-start active" id="v-pills-info-tab" data-bs-toggle="pill" data-bs-target="#v-pills-info" type="button" role="tab" aria-controls="v-pills-info" aria-selected="true">Informasi</button>
+                            <button class="nav-link text-start" id="v-pills-banner-tab" data-bs-toggle="pill" data-bs-target="#v-pills-banner" type="button" role="tab" aria-controls="v-pills-banner" aria-selected="true">Banner</button>
+                            <button class="nav-link text-start" id="v-pills-event-tab" data-bs-toggle="pill" data-bs-target="#v-pills-event" type="button" role="tab" aria-controls="v-pills-event" aria-selected="true">Event</button>
+                            <button class="nav-link text-start" id="v-pills-berkas-tab" data-bs-toggle="pill" data-bs-target="#v-pills-berkas" type="button" role="tab" aria-controls="v-pills-berkas" aria-selected="true">Berkas</button>
+                        </div>
+                    </div>
                 </div>
                 <div class="tab-content w-100">
                     <div class="tab-pane fade show active" id="v-pills-info" role="tabpanel" aria-labelledby="v-pills-info-tab" tabindex="0">
@@ -265,7 +270,6 @@ if (isset($_POST['saveProfil'])) {
                                         <thead>
                                             <tr>
                                                 <th class="text-bg-primary text-center align-middle" style="width: 10px;">No</th>
-                                                <th class="text-bg-primary text-center align-middle">Tanggal</th>
                                                 <th class="text-bg-primary text-center align-middle">Isi</th>
                                                 <th class="text-bg-primary text-center align-middle">Aksi</th>
                                             </tr>
@@ -294,6 +298,34 @@ if (isset($_POST['saveProfil'])) {
                                             <tr>
                                                 <th class="text-bg-primary text-center align-middle" style="width: 10px;">No</th>
                                                 <th class="text-bg-primary text-center align-middle">Tanggal</th>
+                                                <th class="text-bg-primary text-center align-middle">Nama File</th>
+                                                <th class="text-bg-primary text-center align-middle">Aksi</th>
+                                            </tr>
+                                        </thead>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="v-pills-banner" role="tabpanel" aria-labelledby="v-pills-banner-tab" tabindex="0">
+                        <div class="card shadow mb-4">
+                            <div class="card-header text-bg-primary">Data Banner Hero</div>
+                            <div class="card-body">
+                                <div class="btn-toolbar justify-content-between mb-4">
+                                    <div class="btn-group btn-group-sm">
+                                        <button type="button" class="btn btn-primary" title="Reload Tabel" id="btnReloadTabelBanner"><i class="bi bi-arrow-repeat"></i></button>
+                                        <button type="button" class="btn btn-primary" title="Tambah Banner" id="btnTambahBanner" data-bs-toggle="modal" data-bs-target="#modalTambahBanner"><i class="bi bi-plus-circle"></i></button>
+                                    </div>
+                                    <div class="input-group input-group-sm">
+                                        <input type="text" class="form-control" id="searchTabelBanner" placeholder="Cari Banner">
+                                    </div>
+                                </div>
+                                <div class="table-responsive">
+                                    <table class="table table-bordered w-100" id="tabelBanner">
+                                        <thead>
+                                            <tr>
+                                                <th class="text-bg-primary text-center align-middle" style="width: 10px;">Urut</th>
+                                                <th class="text-bg-primary text-center align-middle">Preview</th>
                                                 <th class="text-bg-primary text-center align-middle">Nama File</th>
                                                 <th class="text-bg-primary text-center align-middle">Aksi</th>
                                             </tr>
@@ -408,6 +440,34 @@ if (isset($_POST['saveProfil'])) {
             </div>
         </div>
     </div>
+    <div class="modal fade" id="modalTambahBanner" tabindex="-1" aria-labelledby="modalTambahBannerLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="modalTambahBannerLabel">Tambah Banner Hero</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="titleFileBanner" class="form-label">Judul File</label>
+                        <input type="text" class="form-control" name="title" id="titleFileBanner">
+                        <div class="invalid-feedback">Wajib.</div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="fileBanner" class="form-label">Pilih file</label>
+                        <input class="form-control" type="file" id="fileBanner" accept="image/*">
+                        <div class="form-text">Gambar dengan perbandingan dimensi panjang : lebar = 3 : 1</div>
+                        <div class="invalid-feedback">Wajib.</div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+                    <button type="button" class="btn btn-primary" id="btnSaveBanner">Simpan</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script src="./assets/js/jquery.min.js"></script>
     <script src="./assets/js/bootstrap.bundle.min.js"></script>
     <script src="./assets/js/datatables.min.js"></script>
@@ -623,9 +683,6 @@ if (isset($_POST['saveProfil'])) {
                     data: 'no',
                     className: 'text-center'
                 }, {
-                    data: 'tanggal',
-                    className: 'text-center'
-                }, {
                     data: 'isi'
                 }, {
                     data: 'aksi',
@@ -668,7 +725,8 @@ if (isset($_POST['saveProfil'])) {
                     method: 'POST',
                     dataSrc: '',
                     data: {
-                        getTable: true
+                        getTable: true,
+                        type: 'unduhan'
                     }
                 },
                 columns: [{
@@ -781,6 +839,7 @@ if (isset($_POST['saveProfil'])) {
                         return myXhr;
                     },
                     success: res => {
+                        alert(res.message);
                         btnElm.text('Simpan').prop('disabled', false);
                         fileElm.val('');
                         titleElm.val('');
@@ -792,6 +851,120 @@ if (isset($_POST['saveProfil'])) {
                         btnElm.text('Simpan').prop('disabled', false);
                     }
                 });
+            });
+
+            $('#btnSaveBanner').on('click', function() {
+                const btnElm = $(this);
+                const fileElm = $('#fileBanner');
+                const titleElm = $('#titleFileBanner');
+
+                if (fileElm.val() == '' || titleElm.val() == '') {
+                    if (fileElm.val() == '') fileElm.addClass('is-invalid');
+                    else fileElm.removeClass('is-invalid');
+                    if (titleElm.val() == '') titleElm.addClass('is-invalid');
+                    else titleElm.removeClass('is-invalid');
+                    return;
+                }
+
+                const file = fileElm.prop('files')[0];
+                const img = new Image();
+
+                img.onload = function() {
+                    const width = img.width;
+                    const height = img.height;
+                    const aspectRatio = width / height;
+                    const tolerance = 0.1;
+                    const targetRatio = 3;
+                    console.log(aspectRatio);
+                    if (Math.abs(aspectRatio - targetRatio) > tolerance) {
+                        fileElm.parent().append('<div class="invalid-feedback">Aspek rasio pada gambar yang diupload harus 3:1.</div>');
+                        fileElm.addClass('is-invalid');
+                        return;
+                    }
+                    $('is-invalid').removeClass('is-invalid');
+                    btnElm.html('<div class="spinner-border spinner-border-sm" role="status"><span class="visually-hidden">Loading...</span></div>').prop('disabled', true);
+                    let data = new FormData();
+                    data.append('title', titleElm.val());
+                    data.append('file', file);
+                    data.append('type', 'banner');
+                    $.ajax({
+                        data: data,
+                        type: "POST",
+                        url: "./api/berkas.php", //Your own back-end uploader
+                        cache: false,
+                        contentType: false,
+                        processData: false,
+                        xhr: function() {
+                            //Handle progress upload
+                            let myXhr = $.ajaxSettings.xhr();
+                            if (myXhr.upload)
+                                myXhr.upload.addEventListener(
+                                    "progress",
+                                    progressHandlingFunction,
+                                    false
+                                );
+                            return myXhr;
+                        },
+                        success: res => {
+                            btnElm.text('Simpan').prop('disabled', false);
+                            fileElm.val('');
+                            titleElm.val('');
+                            $('#modalTambahBanner').modal('hide');
+                            tabelBanner.ajax.reload(null, false);
+                            alert(res.message);
+                        },
+                        error: err => {
+                            console.log(err);
+                            btnElm.text('Simpan').prop('disabled', false);
+                        }
+                    });
+                }
+                img.src = URL.createObjectURL(file);
+            });
+
+            const tabelBanner = $('#tabelBanner').DataTable({
+                dom: '<"mb-2"t><"d-flex justify-content-between"ip>',
+                responsive: true,
+                ordering: false,
+                ajax: {
+                    url: './api/berkas.php',
+                    method: 'POST',
+                    dataSrc: '',
+                    data: {
+                        getTable: true,
+                        type: 'banner'
+                    }
+                },
+                columns: [{
+                    data: 'no',
+                    className: 'text-center'
+                }, {
+                    data: 'preview',
+                    className: 'text-center'
+                }, {
+                    data: 'filename'
+                }, {
+                    data: 'aksi',
+                    className: 'text-center'
+                }]
+            });
+
+            tabelBanner.on('draw', () => {
+                $('.btnHapusBerkas').on('click', function() {
+                    const id = $(this).data('id');
+                    const data = {
+                        delete: true
+                    }
+                    const action = confirm('Informasi akan dihapus permanen. Yakin?');
+                    if (action)
+                        $.post('./api/berkas.php?id=' + id, data, res => {
+                            console.log(res);
+                            alert(res.message);
+                            tabelBanner.ajax.reload(null, false);
+                            reloadWidget()
+                        }).fail(err => console.log(err));
+                });
+                reloadWidget();
             });
         });
     </script>

@@ -33,7 +33,8 @@ switch ($method) {
 
         if ($id == null) {
             if ($tabel) {
-                $sql = "SELECT berkas_id as id, created_at, title, filename, src FROM berkas WHERE type = 'unduhan' ORDER BY created_at DESC";
+                $type = $_POST['type'];
+                $sql = "SELECT berkas_id as id, created_at, title, filename, src FROM berkas WHERE type = '$type' ORDER BY created_at DESC";
                 $result = query($sql);
                 $res = [];
                 $no = 1;
@@ -44,6 +45,11 @@ switch ($method) {
                         'filename' => $row['filename'],
                         'judul' => $row['title'],
                         'src' => $row['src'],
+                        'preview' => '
+                            <a href="' . $row['src'] . '" data-fancybox>
+                                <img class="img-thumbnail" width="" src="' . $row['src'] . '">
+                            </a>
+                        ',
                         'aksi' => '
                             <div class="btn-group btn-group-sm">
                                 <a href="' . $row['src'] . '" class="btn btn-primary" target="_blank"><i class="bi bi-download"></i></a>
