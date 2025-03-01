@@ -65,7 +65,7 @@ if (isset($_POST['saveProfil'])) {
     <meta name="theme-color" content="#712cf9" />
 </head>
 
-<body>
+<body class="bg-body-tertiary">
     <svg xmlns="http://www.w3.org/2000/svg" class="d-none">
         <symbol id="check2" viewBox="0 0 16 16">
             <path d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0z" />
@@ -199,7 +199,7 @@ if (isset($_POST['saveProfil'])) {
     </nav>
 
     <section>
-        <div class="container">
+        <div class="container bg-body">
             <div class="row row-cols-2 row-cols-md-4 g-4 mb-4">
                 <div class="col">
                     <div class="card card-body shadow text-bg-primary bg-gradient">
@@ -256,21 +256,22 @@ if (isset($_POST['saveProfil'])) {
                         <div class="card shadow mb-4">
                             <div class="card-header text-bg-primary">Data Informasi</div>
                             <div class="card-body">
-                                <div class="btn-toolbar justify-content-between mb-4">
-                                    <div class="btn-group btn-group-sm">
-                                        <button type="button" class="btn btn-primary" title="Reload Tabel" id="btnReloadTabelInformasi"><i class="bi bi-arrow-repeat"></i></button>
-                                        <button type="button" class="btn btn-primary" title="Tambah Informasi" id="btnTambahInformasi" data-bs-toggle="modal" data-bs-target="#modalTambahInformasi"><i class="bi bi-plus-circle"></i></button>
-                                    </div>
-                                    <div class="input-group input-group-sm">
-                                        <input type="text" class="form-control" id="searchTabelInformasi" placeholder="Cari Informasi">
+                                <div class="sticky-top  bg-body">
+                                    <div class="btn-toolbar justify-content-between py-2">
+                                        <div class="btn-group btn-group-sm">
+                                            <button type="button" class="btn btn-primary" title="Reload Tabel" id="btnReloadTabelInformasi"><i class="bi bi-arrow-repeat"></i></button>
+                                            <button type="button" class="btn btn-primary" title="Tambah Informasi" id="btnTambahInformasi" data-bs-toggle="modal" data-bs-target="#modalTambahInformasi"><i class="bi bi-plus-circle"></i></button>
+                                        </div>
+                                        <div class="input-group input-group-sm">
+                                            <input type="text" class="form-control" id="searchTabelInformasi" placeholder="Cari Informasi">
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="table-responsive">
-                                    <table class="table table-bordered w-100" id="tabelInformasi">
+                                    <table class="table table-bordered table-hover w-100" id="tabelInformasi">
                                         <thead>
                                             <tr>
-                                                <th class="text-bg-primary text-center align-middle" style="width: 10px;">No</th>
-                                                <th class="text-bg-primary text-center align-middle">Isi</th>
+                                                <th class="text-bg-primary text-center align-middle">Informasi</th>
                                                 <th class="text-bg-primary text-center align-middle">Aksi</th>
                                             </tr>
                                         </thead>
@@ -339,7 +340,7 @@ if (isset($_POST['saveProfil'])) {
             </div>
         </div>
     </section>
-    <div class="modal fade" id="modalTambahInformasi" tabindex="-1" aria-labelledby="modalTambahInformasiLabel" aria-hidden="true">
+    <div class="modal fade" data-bs-backdrop="static" data-bs-keyboard="false" id="modalTambahInformasi" tabindex="-1" aria-labelledby="modalTambahInformasiLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-scrollable">
             <div class="modal-content">
                 <div class="modal-header">
@@ -366,7 +367,7 @@ if (isset($_POST['saveProfil'])) {
             </div>
         </div>
     </div>
-    <div class="modal fade" id="modalProfil" tabindex="-1" aria-labelledby="modalProfilLabel" aria-hidden="true">
+    <div class="modal fade" data-bs-backdrop="static" data-bs-keyboard="false" id="modalProfil" tabindex="-1" aria-labelledby="modalProfilLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-scrollable">
             <form action="" method="post">
                 <div class="modal-content">
@@ -414,7 +415,7 @@ if (isset($_POST['saveProfil'])) {
             </form>
         </div>
     </div>
-    <div class="modal fade" id="modalTambahBerkas" tabindex="-1" aria-labelledby="modalTambahBerkasLabel" aria-hidden="true">
+    <div class="modal fade" data-bs-backdrop="static" data-bs-keyboard="false" id="modalTambahBerkas" tabindex="-1" aria-labelledby="modalTambahBerkasLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-scrollable">
             <div class="modal-content">
                 <div class="modal-header">
@@ -440,7 +441,7 @@ if (isset($_POST['saveProfil'])) {
             </div>
         </div>
     </div>
-    <div class="modal fade" id="modalTambahBanner" tabindex="-1" aria-labelledby="modalTambahBannerLabel" aria-hidden="true">
+    <div class="modal fade" data-bs-backdrop="static" data-bs-keyboard="false" id="modalTambahBanner" tabindex="-1" aria-labelledby="modalTambahBannerLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-scrollable">
             <div class="modal-content">
                 <div class="modal-header">
@@ -474,6 +475,8 @@ if (isset($_POST['saveProfil'])) {
     <script src="./assets/js/fancybox.umd.js"></script>
     <script src="./assets/js/summernote-bs4.js"></script>
     <script src="./assets/js/summernote-file.js"></script>
+    <script src="./assets/js/fetchData.js"></script>
+    <script src="./assets/js/simple-notif.js"></script>
     <script>
         Fancybox.bind("[data-fancybox]");
 
@@ -671,49 +674,68 @@ if (isset($_POST['saveProfil'])) {
                 dom: '<"mb-2"t><"d-flex justify-content-between"ip>',
                 responsive: true,
                 ordering: false,
+                processing: true,
                 ajax: {
                     url: './api/info.php',
-                    method: 'POST',
                     dataSrc: '',
-                    data: {
-                        getTable: true
-                    }
                 },
                 columns: [{
-                    data: 'no',
-                    className: 'text-center'
+                    data: 'judul',
+                    render: (data, type, rows, meta) => {
+                        return ('<a class="text-decoration-none" role="button" data-bs-toggle="collapse" href="#collapse-' + rows.id + '"><h6 class="m-0">' + data + '</h6></a>' +
+                            '<span class="text-muted small">' + rows.tanggal + '</span>' +
+                            '<div class="collapse" id="collapse-' + rows.id + '"><hr class="my-2">' + rows.isi + '</div>');
+                    }
                 }, {
-                    data: 'isi'
-                }, {
-                    data: 'aksi',
-                    className: 'text-center'
+                    data: 'id',
+                    className: 'text-center',
+                    width: '70px',
+                    render: (data, type, rows, meta) => {
+                        return ('<div class="btn-group btn-group-sm">' +
+                            '<button type="button" class="btn btn-primary btnEditInfo" data-id="' + data +
+                            '"><i class="bi bi-pencil-square"></i></button>' +
+                            '<button type="button" class="btn btn-danger btnHapusInfo" data-id="' + data +
+                            '"><i class="bi bi-trash-fill"></i></button>' +
+                            '</div>');
+                    }
                 }]
             });
 
             tabelInformasi.on('draw', () => {
-                $('.btnEditInfo').on('click', function() {
-                    const id = $(this).data('id');
-                    $.get('./api/info.php?id=' + id, res => {
-                        $('#idInformasi').val(res[0].id);
-                        $('#judul').val(res[0].judul);
-                        $('#isi').summernote('code', res[0].isi);
-                        $('#modalTambahInformasi').modal('show');
-                    })
-                });
-                $('.btnHapusInfo').on('click', function() {
-                    const id = $(this).data('id');
-                    const data = {
-                        delete: true
-                    }
-                    const action = confirm('Informasi akan dihapus permanen. Yakin?');
-                    if (action)
-                        $.post('./api/info.php?id=' + id, data, res => {
-                            alert(res.message);
-                            tabelInformasi.ajax.reload(null, false);
-                            reloadWidget();
-                        })
-                });
                 reloadWidget();
+
+                $('.btnEditInfo').on('click', async function() {
+                    const id = $(this).data('id');
+                    const res = await fetchData('./api/info.php?id=' + id);
+                    if (!res) return toast('Informasi dengan id <strong>' + id + '</strong> tidak ditemukan.', 'error');
+
+                    $('#idInformasi').val(res.id)
+                    $('#judul').val(res.judul);
+                    $('#isi').summernote('code', res.isi);
+                    $('#modalTambahInformasi').modal('show');
+                });
+
+                $('.btnHapusInfo').on('click', async function() {
+                    const id = $(this).data('id');
+                    const data = await fetchData('./api/info.php?id=' + id);
+                    if (!data) return toast('Informasi dengan id <strong>' + id + '</strong> tidak ditemukan.', 'error');
+                    const action = confirm('Informasi: ' + data.judul + ' akan dihapus permanen. Yakin?');
+                    if (action) {
+                        const res = await fetchData({
+                            url: './api/info.php?id=' + id,
+                            type: 'DELETE'
+                        });
+                        if (!res) return toast('Informasi: <strong>' + data.judul + '</strong> gagal dihapus.');
+                        toast({
+                            message: 'Informasi: <strong>' + data.judul + '</strong> berhasil dihapus.',
+                            delay: 5000,
+                            icon: 'success'
+                        });
+                        tabelInformasi.ajax.reload(null, false);
+                    } else {
+                        toast('Informasi: <strong>' + data.judul + '</strong> batal dihapus permanen.')
+                    }
+                });
             });
 
             const tabelBerkas = $('#tabelBerkas').DataTable({
@@ -763,7 +785,7 @@ if (isset($_POST['saveProfil'])) {
 
             $('#btnReloadTabelInformasi').on('click', () => tabelInformasi.ajax.reload(null, false));
 
-            $('#btnSaveInfo').on('click', function() {
+            $('#btnSaveInfo').on('click', async function() {
                 const btnElm = $(this);
                 const judulElm = $('#judul');
                 const isiElm = $('#isi');
@@ -774,31 +796,46 @@ if (isset($_POST['saveProfil'])) {
                     else judulElm.removeClass('is-invalid');
                     if (isiElm.val() == '') isiElm.addClass('is-invalid');
                     else isiElm.removeClass('is-invalid');
+                    toast('Lengkapi form.', 'info');
                     return
                 }
 
                 $('.is-invalid').removeClass('is-invalid');
                 btnElm.html('<div class="spinner-border spinner-border-sm" role="status"><span class="visually-hidden">Loading...</span></div>').prop('disabled', true);
                 const idVal = id.val();
-                const data = {
-                    judul: judulElm.val(),
-                    isi: isiElm.val(),
-                }
-                $.post('./api/info.php?id=' + idVal, data, res => {
-                    alert('Informasi berhasil disimpan.');
-                    tabelInformasi.ajax.reload(null, false);
-                    id.val('');
-                    judulElm.val('');
-                    isiElm.summernote('code', '');
-                    btnElm.text('Simpan').prop('disabled', false);
-                    $('#modalTambahInformasi').modal('hide');
-                }).fail(err => {
-                    console.log(err);
-                    btnElm.text('Simpan').prop('disabled', false);
-                })
+                let data = new FormData();
+                data.append('judul', judulElm.val());
+                data.append('isi', isiElm.val());
+                const res = await fetchData({
+                    url: './api/info.php?id=' + id.val(),
+                    data: data,
+                    type: 'POST'
+                });
+                if (!res) return toast('Informasi dengan judul: <strong>' + judulElm.val() + '</strong> gagal disimpan.');
+                toast({
+                    message: 'Informasi dengan judul: <strong>' + judulElm.val() + '</strong> berhasil disimpan.',
+                    icon: 'success',
+                    delay: 5000,
+                });
+                tabelInformasi.ajax.reload(null, false);
+                btnElm.text('Simpan').prop('disabled', false);
+                $('#modalTambahInformasi').modal('hide');
             });
 
-            $('#searchTabelInformasi').on('keyup', e => tabelInformasi.columns(2).search(e.target.value).draw());
+            $('#modalTambahInformasi').on('hide.bs.modal', function() {
+                $('#judul,#idInformasi').val('');
+                $('#isi').summernote('code', '');
+            });
+
+            $('#searchTabelInformasi').on('keyup', e => {
+                const keyword = e.target.value;
+                if (keyword !== '') {
+                    $('.collapse').collapse('show');
+                    tabelInformasi.search(keyword).draw();
+                } else
+                    $('.collapse').collapse('hide');
+            });
+
             $('#searchTabelBerkas').on('keyup', e => tabelBerkas.columns(2).search(e.target.value).draw());
 
             $('#btnSaveBerkas').on('click', function() {

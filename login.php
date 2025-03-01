@@ -45,6 +45,8 @@ if (isset($_POST["signin"])) {
 
     $error = true;
 }
+
+$admin = query('SELECT * FROM admin');
 ?>
 <!doctype html>
 <html lang="en" data-bs-theme="auto">
@@ -139,7 +141,7 @@ if (isset($_POST["signin"])) {
         </ul>
     </div>
 
-    <main class="form-signin w-100 m-auto">
+    <main class="form-signin w-100 m-auto bg-body rounded rounded-4 shadow">
         <form class="mb-3" action="" method="post">
             <img class="mb-4" src="./assets/images/smp2wonosari-shadow_black.png" alt="" width="100">
             <h1 class="h3 fw-bold">Manage Website</h1>
@@ -180,6 +182,12 @@ if (isset($_POST["signin"])) {
                 <div class="alert alert-danger alert-dismissible fade show" role="alert">
                     Koneksi Database ERROR.<br>Cek dbconn.php
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            <?php endif; ?>
+
+            <?php if (!$admin): ?>
+                <div class="alert alert-primary">
+                    Administrator tidak ditemukan. Silahkan <a href="/registrasi.php">registrasi</a> terlebih dahulu.
                 </div>
             <?php endif; ?>
 

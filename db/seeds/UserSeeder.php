@@ -19,7 +19,7 @@ class UserSeeder extends AbstractSeed
         $data = [
             [
                 'username' => 'admin',
-                'password' => '$2y$10$N94kT/LSuCtnFFDKvD6CbeC0M3t4hw1yL6SsxVrk9rlDq1aFyN4T.',
+                'password' => password_hash('admin', PASSWORD_DEFAULT),
                 'created_at' => date('Y-m-d H:i:s', time()),
                 'name' => 'Administrator'
             ]

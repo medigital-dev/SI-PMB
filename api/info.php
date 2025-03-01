@@ -5,19 +5,24 @@ global $conn;
 
 $method = $_SERVER['REQUEST_METHOD'];
 
-$id = isset($_GET['id']) ? $_GET['id'] : null;
+$id = isset($_GET['id']) ? mysqli_real_escape_string($conn, $_GET['id']) : null;
 
 switch ($method) {
     case 'GET':
         if ($id == null) {
-            $sql = "SELECT info_id as id, created_at, judul, isi FROM informasi ORDER BY created_at DESC";
+            $sql = "SELECT info_id as id, created_at as tanggal, judul, isi FROM informasi ORDER BY created_at DESC";
             $result = query($sql);
-            echo json_encode($result);
+            echo json_encode($result, JSON_PRETTY_PRINT);
         } else {
-            $sql = "SELECT info_id as id, created_at, judul, isi FROM informasi WHERE info_id = '$id'";
-            $query = query($sql);
-            if ($query) {
-                echo json_encode($query);
+            $sql = "SELECT info_id as id, created_at, judul, isi FROM informasi WHERE info_id = ?";
+            $stmt = mysqli_prepare($conn, $sql);
+            mysqli_stmt_bind_param($stmt, "s", $id);
+            mysqli_stmt_execute($stmt);
+            $query = mysqli_stmt_get_result($stmt);
+            $data = mysqli_fetch_assoc($query);
+
+            if ($data) {
+                echo json_encode($data, JSON_PRETTY_PRINT);
             } else {
                 http_response_code(404);
                 echo json_encode(['message' => 'Item not found']);
@@ -25,80 +30,97 @@ switch ($method) {
         }
         break;
 
-    case 'POST':
-        $judul = isset($_POST['judul']) ? $_POST['judul'] : null;
-        $isi = isset($_POST['isi']) ? $_POST['isi'] : null;
-        $delete = isset($_POST['delete']) ? true : false;
-        $tabel = isset($_POST['getTable']) ? true : false;
-        $timestamp = date('Y-m-d H:i:s', time());
+    case 'POST': // Bisa untuk INSERT atau UPDATE
+        $judul = $_POST['judul'] ?? null;
+        $isi = $_POST['isi'] ?? null;
 
-        if ($id == null) {
-            if ($tabel) {
-                $sql = "SELECT info_id as id, created_at, judul, isi FROM informasi ORDER BY created_at DESC";
-                $result = query($sql);
-                $res = [];
-                $no = 1;
-                foreach ($result as $row) {
-                    $temp = [
-                        'no' => $no++,
-                        'tanggal' => date('d-m-Y H:i:s', strtotime($row['created_at'])) . ' WIB',
-                        'isi' => '<h5 class="m-0">' . $row['judul'] . '</h5><p class="small text-muted">' . date('d-m-Y H:i:s', strtotime($row['created_at'])) . ' WIB  </p><p class="m-0">' . $row['isi'] . '</p>',
-                        'aksi' => '
-                            <div class="btn-group btn-group-sm">
-                                <button type="button" class="btn btn-primary btnEditInfo" data-id="' . $row['id'] . '"><i class="bi bi-pencil-square"></i></button>
-                                <button type="button" class="btn btn-danger btnHapusInfo" data-id="' . $row['id'] . '"><i class="bi bi-trash-fill"></i></button>
-                            </div>
-                        '
-                    ];
-                    array_push($res, $temp);
-                }
-                echo json_encode($res);
+        if (!$judul || !$isi) {
+            http_response_code(400);
+            echo json_encode(['message' => 'Judul dan isi tidak boleh kosong.']);
+            die;
+        }
+
+        if ($id && $id !== '') {
+            $sql = "UPDATE informasi SET judul = ?, isi = ? WHERE info_id = ?";
+            $stmt = mysqli_prepare($conn, $sql);
+            mysqli_stmt_bind_param($stmt, "sss", $judul, $isi, $id);
+            $result = mysqli_stmt_execute($stmt);
+
+            if (!$result || mysqli_affected_rows($conn) == 0) {
+                http_response_code(404);
+                echo json_encode(['message' => 'Data tidak ditemukan atau gagal diperbarui.']);
                 die;
-            } else {
-                do {
-                    $unique = random_string();
-                } while (count(query("SELECT * FROM informasi WHERE info_id = '$unique'")) > 0);
+            }
 
-                $sql = "INSERT INTO informasi VALUES (NULL, '$unique', '$timestamp', '$judul', '$isi')";
-                $message = 'Informasi berhasil ditambahkan.';
-                $data = [
+            $response = [
+                'status' => true,
+                'message' => 'Informasi berhasil diperbarui.',
+                'data' => [
+                    'info_id' => $id,
+                    'judul' => $judul,
+                    'isi' => $isi
+                ]
+            ];
+            http_response_code(200);
+        } else {
+            $timestamp = date('Y-m-d H:i:s');
+
+            do {
+                $unique = random_string();
+            } while (count(query("SELECT * FROM informasi WHERE info_id = '$unique'")) > 0);
+
+            $sql = "INSERT INTO informasi (info_id, created_at, judul, isi) VALUES (?, ?, ?, ?)";
+            $stmt = mysqli_prepare($conn, $sql);
+            mysqli_stmt_bind_param($stmt, "ssss", $unique, $timestamp, $judul, $isi);
+            $result = mysqli_stmt_execute($stmt);
+
+            if (!$result) {
+                http_response_code(500);
+                echo json_encode(['message' => 'Database error.', 'error' => mysqli_error($conn)]);
+                die;
+            }
+
+            $response = [
+                'status' => true,
+                'message' => 'Informasi berhasil ditambahkan.',
+                'data' => [
                     'info_id' => $unique,
                     'created' => $timestamp,
                     'judul' => $judul,
                     'isi' => $isi
-                ];
-            }
-        } else {
-            if ($delete) {
-                $sql = "DELETE FROM informasi WHERE info_id = '$id'";
-                $message = 'Informasi berhasil dihapus permanen.';
-                $data = ['id' => $id];
-            } else {
-                $sql = "UPDATE informasi SET judul = '$judul', isi = '$isi' WHERE info_id = '$id'";
-                $message = 'Informasi berhasil diperbaharui.';
-                $data = [
-                    'info_id' => $id,
-                    'created' => $timestamp,
-                    'judul' => $judul,
-                    'isi' => $isi
-                ];
-            }
+                ]
+            ];
+            http_response_code(201);
         }
 
-        $result = mysqli_query($conn, $sql);
+        echo json_encode($response, JSON_PRETTY_PRINT);
+        break;
 
-        if (!$result) {
-            http_response_code(500);
-            echo json_encode(['message' => 'Database error.', 'error' => mysqli_error($conn)]);
+    case 'DELETE':
+        if (!$id) {
+            http_response_code(400);
+            echo json_encode(['message' => 'ID tidak boleh kosong.']);
             die;
         }
+
+        $sql = "DELETE FROM informasi WHERE info_id = ?";
+        $stmt = mysqli_prepare($conn, $sql);
+        mysqli_stmt_bind_param($stmt, "s", $id);
+        $result = mysqli_stmt_execute($stmt);
+
+        if (!$result || mysqli_affected_rows($conn) == 0) {
+            http_response_code(404);
+            echo json_encode(['message' => 'Data tidak ditemukan atau gagal dihapus.']);
+            die;
+        }
+
         $response = [
             'status' => true,
-            'message' => $message,
-            'data' => $data
+            'message' => 'Informasi berhasil dihapus permanen.',
+            'data' => ['id' => $id]
         ];
         http_response_code(200);
-        echo json_encode($response);
+        echo json_encode($response, JSON_PRETTY_PRINT);
 
         break;
 

@@ -1,21 +1,26 @@
 <?php
 require 'dbconn.php';
 
-function query($query)
+function query($query): array
 {
     global $conn;
-    $result = mysqli_query($conn, $query);
-    $rows = [];
-    if (!$result)
-        return $rows;
+    if (!$conn) {
+        return ['error' => 'Koneksi database tidak tersedia'];
+    }
 
+    $result = mysqli_query($conn, $query);
+    if (!$result) {
+        return ['error' => 'Query error: ' . mysqli_error($conn)];
+    }
+
+    $rows = [];
     while ($row = mysqli_fetch_assoc($result))
         $rows[] = $row;
 
     return $rows;
 }
 
-function timeAgo($datetime, $full = false)
+function timeAgo($datetime, $full = false): string
 {
     $now = new DateTime;
     $ago = new DateTime($datetime);
@@ -45,7 +50,7 @@ function timeAgo($datetime, $full = false)
     return $string ? implode(', ', $string) . ' yang lalu' : 'baru saja';
 }
 
-function random_string($length = 8)
+function random_string($length = 8): string
 {
     $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
     $charactersLength = strlen($characters);
@@ -58,7 +63,7 @@ function random_string($length = 8)
     return $randomString;
 }
 
-function updateProfil($data)
+function updateProfil($data): int
 {
     global $conn;
 
