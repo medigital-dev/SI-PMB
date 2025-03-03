@@ -127,7 +127,9 @@
           '<div class="invalid-feedback">Pilih file terlebih dahulu!</div>',
           "</div>",
           '<ul class="list-group mb-3" id="multiFile"></ul>',
-          '<div class="d-flex justify-content-center"><button type="button" class="btn btn-outline-primary note-file-upload">Upload</button></div>',
+          '<div class="d-flex justify-content-between">' +
+            '<button type="button" class="btn btn-sm btn-secondary" onclick="clearFiles()">Bersihkan</button>' +
+            '<button type="button" class="btn btn-sm btn-outline-primary note-file-upload">Upload</button></div>',
           fileLimitation,
           '</div></div></div><div class="accordion-item"><h2 class="accordion-header"><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseTwo" aria-expanded="false" aria-controls="flush-collapseTwo">Insert Link</button></h2><div id="flush-collapseTwo" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample"><div class="accordion-body">',
           '<label class="note-form-label form-label">' +
@@ -344,8 +346,8 @@
                     const element = berkas[i];
                     const tipe = element.type.split("/");
                     const ext = getFileExtension(element.name);
-                    const icon = getFileIcon(ext);
-                    const size = (element.size / (1024 * 1024)).toFixed(2);
+                    const icon = getFileIcon(element.type);
+                    const size = fileSize(parseInt(element.size));
                     const isPdf = ext == "pdf" ? 'data-type="pdf"' : "";
                     const preview =
                       '<a href="' +
@@ -355,17 +357,17 @@
                       ">" +
                       icon +
                       "</a>";
+                    let random = randomString(4);
                     const newElemen =
-                      '<li class="list-group-item list-group-item-action d-flex gap-3 py-3">' +
+                      '<li class="list-group-item list-group-item-action d-flex gap-3 py-3" id="' +
+                      random +
+                      '">' +
                       preview +
                       '<div class="d-flex gap-2 w-100 justify-content-between">' +
                       "[" +
                       size +
-                      "Mb] " +
+                      "] " +
                       element.name +
-                      '<a class="text-decoration-none text-danger" type="button" onclick="removeFileInput(' +
-                      i +
-                      ')"><i class="fas fa-times-circle"></i></a>' +
                       "</div>" +
                       "</li>";
                     $("#multiFile").append(newElemen);

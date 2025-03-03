@@ -177,10 +177,10 @@ if (isset($_POST['saveProfil'])) {
         </symbol>
     </svg>
 
-    <nav class="navbar navbar-expand-lg bg-body-tertiary sticky-top">
+    <nav class="navbar navbar-expand-lg sticky-top">
         <div class="container">
             <a class="navbar-brand" href="./manage.php">CMS-Info PPDB</a>
-            <div class="btn-group">
+            <div class="btn-group btn-group-sm">
                 <a href="./index.php" class="btn btn-outline-primary" target="_blank" title="Homepage"><i class="bi bi-box-arrow-up-right"></i></a>
                 <div class="btn-group btn-group-sm">
                     <button class="btn btn-outline-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -199,7 +199,7 @@ if (isset($_POST['saveProfil'])) {
     </nav>
 
     <section>
-        <div class="container bg-body">
+        <div class="container">
             <div class="row row-cols-2 row-cols-md-4 g-4 mb-4">
                 <div class="col">
                     <div class="card card-body shadow text-bg-primary bg-gradient">
@@ -214,7 +214,7 @@ if (isset($_POST['saveProfil'])) {
                     <div class="card card-body shadow text-bg-danger bg-gradient">
                         <h6 class="card-title">Jumlah Banner</h6>
                         <div class="d-flex justify-content-between">
-                            <span class="h1 fs-1 m-0" id="totalPd">0</span>
+                            <span class="h1 fs-1 m-0" id="totalBanner">0</span>
                             <i class="fa-solid fa-users text-opacity-25 text-white fa-3x"></i>
                         </div>
                     </div>
@@ -223,7 +223,7 @@ if (isset($_POST['saveProfil'])) {
                     <div class="card card-body shadow text-bg-warning bg-gradient">
                         <h6 class="card-title">Event</h6>
                         <div class="d-flex justify-content-between">
-                            <span class="h1 fs-1 m-0" id="totalPd">0</span>
+                            <span class="h1 fs-1 m-0" id="totalEvent">0</span>
                             <i class="fa-solid fa-users text-opacity-25 text-white fa-3x"></i>
                         </div>
                     </div>
@@ -241,7 +241,7 @@ if (isset($_POST['saveProfil'])) {
 
             <div class="d-block d-lg-flex align-items-start">
                 <div class="card shadow mb-4 me-lg-4">
-                    <div class="card-header text-bg-primary">Menu</div>
+                    <div class="card-header text-bg-primary text-center">Menu</div>
                     <div class="card-body p-2">
                         <div class="nav flex-lg-column nav-pills justify-content-center pe-lg-4" role="tablist" aria-orientation="vertical">
                             <button class="nav-link text-start active" id="v-pills-info-tab" data-bs-toggle="pill" data-bs-target="#v-pills-info" type="button" role="tab" aria-controls="v-pills-info" aria-selected="true">Informasi</button>
@@ -256,13 +256,16 @@ if (isset($_POST['saveProfil'])) {
                         <div class="card shadow mb-4">
                             <div class="card-header text-bg-primary">Data Informasi</div>
                             <div class="card-body">
-                                <div class="sticky-top  bg-body">
-                                    <div class="btn-toolbar justify-content-between py-2">
-                                        <div class="btn-group btn-group-sm">
+                                <div class="sticky-top py-2">
+                                    <div class="btn-toolbar">
+                                        <div class="btn-group btn-group-sm my-1 me-1">
                                             <button type="button" class="btn btn-primary" title="Reload Tabel" id="btnReloadTabelInformasi"><i class="bi bi-arrow-repeat"></i></button>
                                             <button type="button" class="btn btn-primary" title="Tambah Informasi" id="btnTambahInformasi" data-bs-toggle="modal" data-bs-target="#modalTambahInformasi"><i class="bi bi-plus-circle"></i></button>
                                         </div>
-                                        <div class="input-group input-group-sm">
+                                        <div class="btn-group btn-group-sm my-1 me-1">
+                                            <button type="button" class="btn btn-primary" title="Toggle Expand" id="btnExpandTabelInformasi"><i class="bi bi-chevron-expand"></i></button>
+                                        </div>
+                                        <div class="input-group input-group-sm my-1 ms-auto">
                                             <input type="text" class="form-control" id="searchTabelInformasi" placeholder="Cari Informasi">
                                         </div>
                                     </div>
@@ -282,7 +285,7 @@ if (isset($_POST['saveProfil'])) {
                     </div>
                     <div class="tab-pane fade" id="v-pills-berkas" role="tabpanel" aria-labelledby="v-pills-berkas-tab" tabindex="0">
                         <div class="card shadow mb-4">
-                            <div class="card-header text-bg-primary">Data Unduhan</div>
+                            <div class="card-header text-bg-primary">Berkas Upload</div>
                             <div class="card-body">
                                 <div class="btn-toolbar justify-content-between mb-4">
                                     <div class="btn-group btn-group-sm">
@@ -297,9 +300,7 @@ if (isset($_POST['saveProfil'])) {
                                     <table class="table table-bordered w-100" id="tabelBerkas">
                                         <thead>
                                             <tr>
-                                                <th class="text-bg-primary text-center align-middle" style="width: 10px;">No</th>
-                                                <th class="text-bg-primary text-center align-middle">Tanggal</th>
-                                                <th class="text-bg-primary text-center align-middle">Nama File</th>
+                                                <th class="text-bg-primary text-center align-middle">Data</th>
                                                 <th class="text-bg-primary text-center align-middle">Aksi</th>
                                             </tr>
                                         </thead>
@@ -325,9 +326,7 @@ if (isset($_POST['saveProfil'])) {
                                     <table class="table table-bordered w-100" id="tabelBanner">
                                         <thead>
                                             <tr>
-                                                <th class="text-bg-primary text-center align-middle" style="width: 10px;">Urut</th>
-                                                <th class="text-bg-primary text-center align-middle">Preview</th>
-                                                <th class="text-bg-primary text-center align-middle">Nama File</th>
+                                                <th class="text-bg-primary text-center align-middle">Data</th>
                                                 <th class="text-bg-primary text-center align-middle">Aksi</th>
                                             </tr>
                                         </thead>
@@ -372,7 +371,7 @@ if (isset($_POST['saveProfil'])) {
             <form action="" method="post">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h1 class="modal-title fs-5" id="modalProfilLabel">Tambah Informasi</h1>
+                        <h1 class="modal-title fs-5" id="modalProfilLabel">Profil Pengguna</h1>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
@@ -449,16 +448,29 @@ if (isset($_POST['saveProfil'])) {
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <div class="mb-3">
-                        <label for="titleFileBanner" class="form-label">Judul File</label>
-                        <input type="text" class="form-control" name="title" id="titleFileBanner">
-                        <div class="invalid-feedback">Wajib.</div>
+                    <div class="row mb-3">
+                        <label for="titleFileBanner" class="col-form-label col-sm-3">Judul</label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control" name="title" id="titleFileBanner">
+                            <div class="invalid-feedback">Wajib.</div>
+                        </div>
                     </div>
-                    <div class="mb-3">
-                        <label for="fileBanner" class="form-label">Pilih file</label>
-                        <input class="form-control" type="file" id="fileBanner" accept="image/*">
-                        <div class="form-text">Gambar dengan perbandingan dimensi panjang : lebar = 3 : 1</div>
-                        <div class="invalid-feedback">Wajib.</div>
+                    <div class="row mb-3">
+                        <label for="bannerDescription" class="col-form-label col-sm-3">Deskripsi</label>
+                        <div class="col-sm-9">
+                            <textarea rows="4" class="form-control" name="description" id="bannerDescription"></textarea>
+                            <div class="invalid-feedback">Wajib.</div>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <label for="fileBanner" class="col-form-label col-sm-3">Pilih file</label>
+                        <div class="col-sm-9">
+                            <input class="form-control" type="file" id="fileBanner" accept="image/*">
+                            <div class="invalid-feedback">Wajib.</div>
+                            <a href="" data-fancybox>
+                                <img id="previewBanner" class="img-fluid mt-2">
+                            </a>
+                        </div>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -477,170 +489,9 @@ if (isset($_POST['saveProfil'])) {
     <script src="./assets/js/summernote-file.js"></script>
     <script src="./assets/js/fetchData.js"></script>
     <script src="./assets/js/simple-notif.js"></script>
+    <script src="./assets/js/functions.js"></script>
     <script>
         Fancybox.bind("[data-fancybox]");
-
-        function reloadWidget() {
-            $.post('./api/widget.php', res => {
-                $('#totalInfo').text(res.info);
-                $('#totalBerkas').text(res.berkas);
-            })
-        }
-
-        function uploadMedia(file) {
-            let data = new FormData();
-            data.append('title', file.name);
-            data.append('type', 'info');
-            data.append("file", file);
-            $.ajax({
-                data: data,
-                type: "POST",
-                url: "./api/berkas.php", //Your own back-end uploader
-                cache: false,
-                contentType: false,
-                processData: false,
-                xhr: function() {
-                    //Handle progress upload
-                    let myXhr = $.ajaxSettings.xhr();
-                    if (myXhr.upload)
-                        myXhr.upload.addEventListener(
-                            "progress",
-                            progressHandlingFunction,
-                            false
-                        );
-                    return myXhr;
-                },
-                success: function(reponse) {
-                    if (reponse.status === true) {
-                        let listMimeImg = [
-                            "image/png",
-                            "image/jpeg",
-                            "image/webp",
-                            "image/gif",
-                            "image/svg",
-                        ];
-                        let listMimeAudio = ["audio/mpeg", "audio/ogg"];
-                        let listMimeVideo = ["video/mpeg", "video/mp4", "video/webm"];
-                        let elem;
-                        let childElem;
-                        let elemFancy;
-
-                        if (listMimeImg.indexOf(file.type) > -1) {
-                            //Picture
-                            elem = document.createElement("a");
-                            elem.setAttribute("href", reponse.src);
-                            elem.setAttribute("data-fancybox", '');
-                            childElem = document.createElement("img");
-                            childElem.setAttribute("class", "img-thumbnail");
-                            childElem.setAttribute("src", reponse.src);
-                            childElem.style.width = "240px";
-                            childElem.style.height = "180px";
-                            childElem.style.objectFit = "cover";
-                            elem.appendChild(childElem);
-                            $("textarea#isi").summernote("insertNode", elem);
-                        } else if (listMimeAudio.indexOf(file.type) > -1) {
-                            //Audio
-                            elem = document.createElement("audio");
-                            elem.setAttribute("src", reponse.src);
-                            elem.setAttribute("controls", "controls");
-                            elem.setAttribute("preload", "metadata");
-                            $("textarea#isi").summernote("insertNode", elem);
-                        } else if (listMimeVideo.indexOf(file.type) > -1) {
-                            //Video
-                            elemFancy = document.createElement("a");
-                            elemFancy.setAttribute("href", reponse.src);
-                            elemFancy.setAttribute("data-fancybox", "");
-                            elem = document.createElement("video");
-                            elem.setAttribute("src", reponse.src);
-                            elem.setAttribute("controls", "controls");
-                            elem.setAttribute("preload", "metadata");
-                            elem.setAttribute("class", "img-thumbnail");
-                            elem.setAttribute("width", 480);
-                            elemFancy.appendChild(elem);
-                            $("textarea#isi").summernote("insertNode", elemFancy);
-                        } else {
-                            //Other file type
-                            elem = document.createElement("a");
-                            let linkText = document.createTextNode(file.name);
-                            elem.appendChild(linkText);
-                            elem.title = file.name;
-                            elem.href = reponse.src;
-                            elem.target = "_blank";
-                            $("textarea#isi").summernote("insertNode", elem);
-                        }
-                    }
-                },
-            });
-        }
-
-        function progressHandlingFunction(e) {
-            if (e.lengthComputable) {
-                if (e.total > 2097152) {
-                    const current = Math.round((e.loaded / e.total) * 100);
-                    $("#loadingModal").modal("show");
-                    $("#currentPercent").text(current);
-
-                    //Reset progress on complete
-                    if (e.loaded === e.total) {
-                        $("#loadingModal").modal("hide");
-                        toast("success", "Upload selesai!");
-                    }
-                }
-            }
-        }
-
-        function deleteMedia(file) {
-            const id = file.dataset.id_unik;
-            $.post(
-                "/cms-admin/files/delete/" + id,
-                (r) => {
-                    toast("success", r.messages);
-                    var content = $("textarea#isi");
-                    var temp = document.createElement("div");
-                    temp.innerHTML = content.summernote("code");
-                    var elm = temp.querySelectorAll('a[data-id_unik="' + id + '"]');
-                    elm.forEach((e) => e.parentNode.removeChild(e));
-                    content.summernote("code", temp.innerHTML);
-                },
-                "json"
-            ).fail((rf) => toast("error", rf.responseJSON.message));
-        }
-
-        function getFileExtension(filename) {
-            const parts = filename.split(".");
-            if (parts.length === 1 || (parts[0] === "" && parts.length === 2)) {
-                return "";
-            }
-            return parts.pop().toLowerCase();
-        }
-
-        function getFileIcon(extension) {
-            const iconMappings = {
-                pdf: "fa-file-pdf",
-                doc: "fa-file-word",
-                docx: "fa-file-word",
-                xls: "fa-file-excel",
-                xlsx: "fa-file-excel",
-                ppt: "fa-file-powerpoint",
-                pptx: "fa-file-powerpoint",
-                txt: "fa-file-alt",
-                jpg: "fa-file-image",
-                jpeg: "fa-file-image",
-                png: "fa-file-image",
-                gif: "fa-file-image",
-                zip: "fa-file-archive",
-                tar: "fa-file-archive",
-                rar: "fa-file-archive",
-                mp4: "fa-file-video",
-                avi: "fa-file-video",
-                mkv: "fa-file-video",
-                default: "fa-file",
-            };
-
-            const iconClass =
-                iconMappings[extension.toLowerCase()] || iconMappings["default"];
-            return `<i class="fas ${iconClass}"></i>`;
-        }
     </script>
     <script>
         $(document).ready(function() {
@@ -672,9 +523,14 @@ if (isset($_POST['saveProfil'])) {
 
             const tabelInformasi = $('#tabelInformasi').DataTable({
                 dom: '<"mb-2"t><"d-flex justify-content-between"ip>',
+                lengthMenu: [
+                    [5, 10, 25, 50, 100, -1],
+                    [5, 10, 25, 50, 100, "All"],
+                ],
                 responsive: true,
                 ordering: false,
                 processing: true,
+                pagingType: 'simple',
                 ajax: {
                     url: './api/info.php',
                     dataSrc: '',
@@ -740,50 +596,77 @@ if (isset($_POST['saveProfil'])) {
 
             const tabelBerkas = $('#tabelBerkas').DataTable({
                 dom: '<"mb-2"t><"d-flex justify-content-between"ip>',
+                lengthMenu: [
+                    [5, 10, 25, 50, 100, -1],
+                    [5, 10, 25, 50, 100, "All"],
+                ],
                 responsive: true,
                 ordering: false,
+                processing: true,
+                pagingType: 'simple',
                 ajax: {
                     url: './api/berkas.php',
-                    method: 'POST',
                     dataSrc: '',
-                    data: {
-                        getTable: true,
-                        type: 'unduhan'
-                    }
                 },
                 columns: [{
-                    data: 'no',
-                    className: 'text-center'
-                }, {
-                    data: 'tanggal',
-                    className: 'text-center'
-                }, {
-                    data: 'judul'
-                }, {
-                    data: 'aksi',
-                    className: 'text-center'
-                }]
+                        data: 'id',
+                        className: 'w-100',
+                        render: (data, type, rows, meta) => {
+                            return ('<div class="d-flex justify-content-start">' +
+                                '<div class="px-2 d-flex" style="width: 75px; height: 75px;"><a title="Preview" href="' + rows.src + '" data-fancybox class="mx-auto fs-1">' +
+                                getFileIcon(rows.type) +
+                                '</a></div>' +
+                                '<div class="w-100"><div class="d-flex justify-content-between"><h6 class="m-0">' + rows.title + '</h6><span class="text-muted small">' + timeAgo(rows.tanggal) + '</span></div><p class="m-0 small text-muted">[' + fileSize(parseInt(rows.size)) + '] ' + rows.filename + '</p>' +
+                                '<div class="form-check form-switch">' +
+                                '<input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault">' +
+                                '<label class="form-check-label small text-muted" for="flexSwitchCheckDefault">Tampilkan pada unduhan</label>' +
+                                '</div>' +
+                                '</div>' +
+                                '</div>');
+                        }
+                    },
+                    {
+                        data: 'id',
+                        width: '70px',
+                        className: 'text-center',
+                        render: (data, type, rows, meta) => {
+                            return ('<div class="btn-group btn-group-sm">' +
+                                '<a href="' + rows.src +
+                                '" class="btn btn-primary" download title="Unduh berkas"><i class="bi bi-download"></i></a>' +
+                                '<button type="button" class="btn btn-danger btnHapusBerkas" data-id="' + rows.id +
+                                '" title="Hapus berkas"><i class="bi bi-trash-fill"></i></button>' +
+                                '</div>');
+                        }
+                    },
+                ]
             });
 
             tabelBerkas.on('draw', () => {
-                $('.btnHapusBerkas').on('click', function() {
-                    const id = $(this).data('id');
-                    const data = {
-                        delete: true
-                    }
-                    const action = confirm('Informasi akan dihapus permanen. Yakin?');
-                    if (action)
-                        $.post('./api/berkas.php?id=' + id, data, res => {
-                            console.log(res);
-                            alert(res.message);
-                            tabelBerkas.ajax.reload(null, false);
-                            reloadWidget()
-                        }).fail(err => console.log(err));
-                });
                 reloadWidget();
+
+                $('.btnHapusBerkas').on('click', async function() {
+                    const id = $(this).data('id');
+                    const data = await fetchData('./api/berkas.php?id=' + id);
+                    if (!data) return taost('Berkas dengan id: <strong>' + id + '</strong> tidak ditemukan', 'error');
+                    const action = await confirm('Berkas: ' + data.title + ' akan dihapus permanen. Yakin?');
+                    if (action) {
+                        const result = await fetchData({
+                            url: './api/berkas.php?id=' + id,
+                            type: 'DELETE'
+                        });
+                        if (!result) return toast('Berkas: ' + data.title + ' gagal dihapus permanen.', 'error');
+                        toast({
+                            message: 'Berkas: ' + data.title + ' berhasil dihapus permanen?',
+                            icon: 'success',
+                            delay: 5000
+                        });
+                    }
+                    tabelBerkas.ajax.reload(null, false);
+                });
             });
 
             $('#btnReloadTabelInformasi').on('click', () => tabelInformasi.ajax.reload(null, false));
+            $('#btnReloadTabelBerkas').on('click', () => tabelBerkas.ajax.reload(null, false));
 
             $('#btnSaveInfo').on('click', async function() {
                 const btnElm = $(this);
@@ -809,7 +692,7 @@ if (isset($_POST['saveProfil'])) {
                 const res = await fetchData({
                     url: './api/info.php?id=' + id.val(),
                     data: data,
-                    type: 'POST'
+                    method: 'POST'
                 });
                 if (!res) return toast('Informasi dengan judul: <strong>' + judulElm.val() + '</strong> gagal disimpan.');
                 toast({
@@ -827,6 +710,8 @@ if (isset($_POST['saveProfil'])) {
                 $('#isi').summernote('code', '');
             });
 
+            $('#btnExpandTabelInformasi').on('click', e => $('#tabelInformasi .collapse').collapse('toggle'));
+
             $('#searchTabelInformasi').on('keyup', e => {
                 const keyword = e.target.value;
                 if (keyword !== '') {
@@ -836,9 +721,9 @@ if (isset($_POST['saveProfil'])) {
                     $('.collapse').collapse('hide');
             });
 
-            $('#searchTabelBerkas').on('keyup', e => tabelBerkas.columns(2).search(e.target.value).draw());
+            $('#searchTabelBerkas').on('keyup', e => tabelBerkas.columns(0).search(e.target.value).draw());
 
-            $('#btnSaveBerkas').on('click', function() {
+            $('#btnSaveBerkas').on('click', async function() {
                 const btnElm = $(this);
                 const fileElm = $('#fileBerkas');
                 const titleElm = $('#titleFile');
@@ -848,6 +733,7 @@ if (isset($_POST['saveProfil'])) {
                     else fileElm.removeClass('is-invalid');
                     if (titleElm.val() == '') titleElm.addClass('is-invalid');
                     else titleElm.removeClass('is-invalid');
+                    toast('Lengkapi form terlebih dahulu', 'error');
                     return;
                 }
                 $('is-invalid').removeClass('is-invalid');
@@ -856,152 +742,172 @@ if (isset($_POST['saveProfil'])) {
                 let data = new FormData();
                 data.append('title', titleElm.val());
                 data.append('file', file[0]);
-                data.append('type', 'unduhan');
-                $.ajax({
+                const res = await fetchData({
+                    url: './api/berkas.php',
                     data: data,
-                    type: "POST",
-                    url: "./api/berkas.php", //Your own back-end uploader
-                    cache: false,
-                    contentType: false,
-                    processData: false,
-                    xhr: function() {
-                        //Handle progress upload
-                        let myXhr = $.ajaxSettings.xhr();
-                        if (myXhr.upload)
-                            myXhr.upload.addEventListener(
-                                "progress",
-                                progressHandlingFunction,
-                                false
-                            );
-                        return myXhr;
-                    },
-                    success: res => {
-                        alert(res.message);
-                        btnElm.text('Simpan').prop('disabled', false);
-                        fileElm.val('');
-                        titleElm.val('');
-                        $('#modalTambahBerkas').modal('hide');
-                        tabelBerkas.ajax.reload(null, false);
-                    },
-                    error: err => {
-                        console.log(err);
-                        btnElm.text('Simpan').prop('disabled', false);
-                    }
+                    method: 'POST'
                 });
-            });
-
-            $('#btnSaveBanner').on('click', function() {
-                const btnElm = $(this);
-                const fileElm = $('#fileBanner');
-                const titleElm = $('#titleFileBanner');
-
-                if (fileElm.val() == '' || titleElm.val() == '') {
-                    if (fileElm.val() == '') fileElm.addClass('is-invalid');
-                    else fileElm.removeClass('is-invalid');
-                    if (titleElm.val() == '') titleElm.addClass('is-invalid');
-                    else titleElm.removeClass('is-invalid');
-                    return;
-                }
-
-                const file = fileElm.prop('files')[0];
-                const img = new Image();
-
-                img.onload = function() {
-                    const width = img.width;
-                    const height = img.height;
-                    const aspectRatio = width / height;
-                    const tolerance = 0.1;
-                    const targetRatio = 3;
-                    console.log(aspectRatio);
-                    if (Math.abs(aspectRatio - targetRatio) > tolerance) {
-                        fileElm.parent().append('<div class="invalid-feedback">Aspek rasio pada gambar yang diupload harus 3:1.</div>');
-                        fileElm.addClass('is-invalid');
-                        return;
-                    }
-                    $('is-invalid').removeClass('is-invalid');
-                    btnElm.html('<div class="spinner-border spinner-border-sm" role="status"><span class="visually-hidden">Loading...</span></div>').prop('disabled', true);
-                    let data = new FormData();
-                    data.append('title', titleElm.val());
-                    data.append('file', file);
-                    data.append('type', 'banner');
-                    $.ajax({
-                        data: data,
-                        type: "POST",
-                        url: "./api/berkas.php", //Your own back-end uploader
-                        cache: false,
-                        contentType: false,
-                        processData: false,
-                        xhr: function() {
-                            //Handle progress upload
-                            let myXhr = $.ajaxSettings.xhr();
-                            if (myXhr.upload)
-                                myXhr.upload.addEventListener(
-                                    "progress",
-                                    progressHandlingFunction,
-                                    false
-                                );
-                            return myXhr;
-                        },
-                        success: res => {
-                            btnElm.text('Simpan').prop('disabled', false);
-                            fileElm.val('');
-                            titleElm.val('');
-                            $('#modalTambahBanner').modal('hide');
-                            tabelBanner.ajax.reload(null, false);
-                            alert(res.message);
-                        },
-                        error: err => {
-                            console.log(err);
-                            btnElm.text('Simpan').prop('disabled', false);
-                        }
-                    });
-                }
-                img.src = URL.createObjectURL(file);
+                if (!res) return toast('Upload berkas gagal.');
+                console.log(res);
+                btnElm.text('Simpan').prop('disabled', false);
+                fileElm.val('');
+                titleElm.val('');
+                $('#modalTambahBerkas').modal('hide');
+                tabelBerkas.ajax.reload(null, false);
             });
 
             const tabelBanner = $('#tabelBanner').DataTable({
                 dom: '<"mb-2"t><"d-flex justify-content-between"ip>',
+                lengthMenu: [
+                    [5, 10, 25, 50, 100, -1],
+                    [5, 10, 25, 50, 100, "All"],
+                ],
                 responsive: true,
                 ordering: false,
+                processing: true,
                 ajax: {
-                    url: './api/berkas.php',
-                    method: 'POST',
+                    url: './api/banner.php',
                     dataSrc: '',
-                    data: {
-                        getTable: true,
-                        type: 'banner'
-                    }
                 },
+                deferRender: true,
                 columns: [{
-                    data: 'no',
-                    className: 'text-center'
+                    data: 'id',
+                    className: 'w-100',
+                    render: (data, type, rows, meta) => {
+                        return ('<div class="d-flex justify-content-start">' +
+                            '<div class="px-2 d-flex" style="width: 150px; height: 50px;"><a title="Preview" href="#" data-fancybox class="mx-auto placeholder-image" data-id="' + rows.berkas_id + '">' +
+                            '<img src="#" class="img-thumbnail" style="object-fit: cover; height: 100%;">' +
+                            '</a></div>' +
+                            '<div><h6 class="m-0">' + rows.title + '</h6><p class="m-0 small text-muted">' + rows.description + '</p></div>' +
+                            '</div>');
+                    }
                 }, {
-                    data: 'preview',
-                    className: 'text-center'
-                }, {
-                    data: 'filename'
-                }, {
-                    data: 'aksi',
-                    className: 'text-center'
-                }]
+                    data: 'id',
+                    className: 'text-center',
+                    width: '70px',
+                    render: (data, type, rows, meta) => {
+                        return ('<div class="btn-group btn-group-sm">' +
+                            '<button type="button" class="btn btn-danger btnHapusBanner" data-id="' + data +
+                            '" title="Hapus Banner"><i class="bi bi-trash-fill"></i></button>' +
+                            '</div>');
+                    }
+                }],
+                drawCallback: async function(settings) {
+                    const placeholders = $('.placeholder-image');
+                    placeholders.each(async function() {
+                        const id = $(this).data('id');
+                        const imgData = await fetchData('/api/berkas.php?id=' + id);
+                        if (imgData) {
+                            $(this).attr('href', imgData.src).find('img').attr('src', imgData.src);
+                        }
+                    });
+                }
             });
 
             tabelBanner.on('draw', () => {
-                $('.btnHapusBerkas').on('click', function() {
-                    const id = $(this).data('id');
-                    const data = {
-                        delete: true
-                    }
-                    const action = confirm('Informasi akan dihapus permanen. Yakin?');
-                    if (action)
-                        $.post('./api/berkas.php?id=' + id, data, res => {
-                            console.log(res);
-                            alert(res.message);
-                            tabelBanner.ajax.reload(null, false);
-                            reloadWidget()
-                        }).fail(err => console.log(err));
-                });
                 reloadWidget();
+                $('.btnHapusBanner').on('click', async function() {
+                    const id = $(this).data('id');
+                    const data = await fetchData('/api/banner.php?id=' + id);
+                    if (!data) return toast('Data banner dengan id <strong>' + id + '</strong> tidak ditemukan', 'error');
+                    const action = await confirm('Data banner: ' + data.title + ' akan dihapus permanen.');
+                    if (action) {
+                        const res = await fetchData({
+                            url: '/api/banner.php?id=' + id,
+                            type: 'DELETE'
+                        });
+                        if (!res) return toast('Data banner: <strong>' + data.title + '</strong> gagal dihapus.', 'error');
+                        toast({
+                            message: 'Data banner: <strong>' + data.title + '</strong> berhasil dihapus.',
+                            icon: 'success',
+                            delay: 5000,
+                        });
+                        tabelBanner.ajax.reload(null, false);
+                    }
+                });
+            });
+
+            $('#fileBanner').on('change', function() {
+                const file = $(this).prop('files')[0];
+                const inputElm = $(this);
+                const previewElm = $('#previewBanner');
+
+                inputElm.next('.invalid-feedback').remove();
+                inputElm.removeClass('is-invalid');
+
+                if (!file) return;
+
+                const img = new Image();
+                img.onload = function() {
+                    const width = img.width;
+                    const height = img.height;
+                    const aspectRatio = width / height;
+                    const tolerance = 0.5;
+                    const targetRatio = 3;
+
+                    if (Math.abs(aspectRatio - targetRatio) > tolerance) {
+                        inputElm.addClass('is-invalid').after('<div class="invalid-feedback">Aspek rasio pada gambar yang diupload harus 3:1.</div>');
+                        previewElm.attr('src', '').parent('a').attr('href', '').hide();
+                        $('#btnSaveBanner').prop('disabled', true);
+                    } else {
+                        previewElm.attr('src', img.src).parent('a').attr('href', img.src).show();
+                        $('#btnSaveBanner').prop('disabled', false);
+                    }
+                };
+                img.src = URL.createObjectURL(file);
+            });
+
+
+            $('#btnSaveBanner').on('click', async function() {
+                const btnElm = $(this);
+                const fileElm = $('#fileBanner');
+                const titleElm = $('#titleFileBanner');
+                const description = $('#bannerDescription');
+
+                if (!fileElm.val().trim() || !titleElm.val().trim() || fileElm.hasClass('is-invalid')) {
+                    if (!fileElm.val().trim())
+                        fileElm.addClass('is-invalid');
+                    else fileElm.removeClass('is-invalid');
+                    if (!titleElm.val().trim()) titleElm.addClass('is-invalid');
+                    else titleElm.removeClass('is-invalid');
+
+                    toast('Form isian belum valid.', 'error');
+                    return;
+                }
+                $('.is-invalid').removeClass('is-invalid');
+                btnElm.html('<div class="spinner-border spinner-border-sm" role="status"><span class="visually-hidden">Loading...</span></div>').prop('disabled', true);
+
+                const file = fileElm.prop('files')[0];
+                let image = new FormData();
+                image.append('file', file);
+                image.append('title', titleElm.val());
+
+                const sendImage = await fetchData({
+                    url: '/api/berkas.php',
+                    data: image,
+                    method: 'POST'
+                });
+
+                if (!sendImage) return toast('File gambar gagal diupload', 'error');
+
+                let data = new FormData();
+                data.append('title', titleElm.val());
+                data.append('description', description.val());
+                data.append('idBerkas', sendImage.data.id);
+
+                const setData = await fetchData({
+                    url: '/api/banner.php',
+                    data: data,
+                    method: 'POST'
+                });
+                if (!setData) return toast('Error dalam menyimpan data banner', 'error');
+
+                btnElm.text('Simpan').prop('disabled', false);
+                fileElm.val('');
+                titleElm.val('');
+                $('#modalTambahBanner').modal('hide');
+                toast('Data banner berhasil ditambahkan.', 'success');
+                tabelBanner.ajax.reload(null, false);
             });
         });
     </script>

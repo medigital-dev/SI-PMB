@@ -14,7 +14,7 @@ switch ($method) {
             $result = query($sql);
             echo json_encode($result, JSON_PRETTY_PRINT);
         } else {
-            $sql = "SELECT info_id as id, created_at, judul, isi FROM informasi WHERE info_id = ?";
+            $sql = "SELECT info_id as id, created_at as tanggal, judul, isi FROM informasi WHERE info_id = ?";
             $stmt = mysqli_prepare($conn, $sql);
             mysqli_stmt_bind_param($stmt, "s", $id);
             mysqli_stmt_execute($stmt);
@@ -30,7 +30,7 @@ switch ($method) {
         }
         break;
 
-    case 'POST': // Bisa untuk INSERT atau UPDATE
+    case 'POST':
         $judul = $_POST['judul'] ?? null;
         $isi = $_POST['isi'] ?? null;
 

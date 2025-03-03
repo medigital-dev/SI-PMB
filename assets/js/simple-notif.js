@@ -169,7 +169,7 @@ function toast(messageOrConfig, ...params) {
         break;
 
       default:
-        return "top-0 end-0";
+        return "bottom-0 start-50 translate-middle-x";
         break;
     }
   }

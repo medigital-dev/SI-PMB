@@ -92,3 +92,39 @@ function updateProfil($data): int
     if (!mysqli_query($conn, $sql)) return 'Database error!';
     return mysqli_affected_rows($conn);
 }
+
+function uploadFile($file): array|false
+{
+    $oldName = $file['name'];
+    $mime_type = mime_content_type($file['tmp_name']);
+    $ext = strtolower(pathinfo($oldName, PATHINFO_EXTENSION));
+    $size = $file['size'];
+
+    $filename = date('ymd-') . strtolower(random_string(8)) . '.' . $ext;
+    $dir = '../uploads/';
+    if (!file_exists($dir)) {
+        mkdir($dir, 0777, true);
+        chmod($dir, 0777);
+    }
+
+    $path = $dir . $filename;
+    $loc = './uploads/' . $filename;
+
+    if (!move_uploaded_file($file['tmp_name'], $path)) {
+        return ['message' => 'Upload error', 'status' => false, 'data' => null];
+        die;
+    }
+
+    return [
+        'status' => true,
+        'message' => 'Upload berhasil',
+        'data' => [
+            'filename' => $filename,
+            'oldName' => $oldName,
+            'mime' => $mime_type,
+            'ext' => $ext,
+            'size' => $size,
+            'src' => $loc
+        ]
+    ];
+}

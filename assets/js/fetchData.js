@@ -5,7 +5,7 @@
  * @param {string|Object} urlOrConfig - URL request atau objek konfigurasi.
  * @param {Object} [data={}] - Data yang dikirim (opsional, abaikan jika pakai objek konfigurasi).
  * @param {string} [dataType="json"] - Tipe data yang dikembalikan (opsional, abaikan jika pakai objek konfigurasi).
- * @param {string} [type="GET"] - Metode request (opsional, abaikan jika pakai objek konfigurasi).
+ * @param {string} [method="GET"] - Metode request (opsional, abaikan jika pakai objek konfigurasi).
  * @returns {Promise<any>} - Promise yang mengembalikan hasil response AJAX.
  * @throws {Error} - Jika terjadi error selama request.
  */
@@ -22,14 +22,14 @@ async function fetchData(urlOrConfig, ...restParams) {
       url: urlOrConfig.url,
       data: urlOrConfig.data || {},
       dataType: urlOrConfig.dataType || "json",
-      type: urlOrConfig.type || "GET",
+      method: urlOrConfig.method || "GET",
     };
   } else {
     config = {
       url: urlOrConfig,
       data: restParams[0] || {},
-      dataType: restParams[1] || "json",
-      type: restParams[2] || "GET",
+      method: restParams[1] || "GET",
+      dataType: restParams[2] || "json",
     };
   }
 
@@ -38,7 +38,7 @@ async function fetchData(urlOrConfig, ...restParams) {
 
     let options = {
       url: config.url,
-      type: config.type,
+      method: config.method,
       dataType: config.dataType,
     };
 
@@ -54,7 +54,7 @@ async function fetchData(urlOrConfig, ...restParams) {
           : "application/x-www-form-urlencoded";
 
       options.data =
-        config.type === "GET"
+        config.method === "GET"
           ? $.param(config.data)
           : config.dataType === "json"
           ? JSON.stringify(config.data)

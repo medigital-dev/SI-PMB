@@ -17,8 +17,33 @@ final class Db003 extends AbstractMigration
      * Remember to call "create()" or "update()" and NOT "save()" when working
      * with the Table class.
      */
-    public function change(): void
+    public function up(): void
     {
 
+        $table = $this->table('banner', ['id' => 'id']);
+        if (!$table->exists())
+            $table->addColumn('banner_id', 'string', ['limit' => 64, 'null' => false])
+                ->addColumn('title', 'string', ['limit' => 64, 'null' => false])
+                ->addColumn('description', 'string', ['limit' => 512, 'null' => false])
+                ->addColumn('order', 'integer')
+                ->addColumn('created_at', 'datetime', ['null' => false])
+                ->addColumn('berkas_id', 'string', ['limit' => 64, 'null' => false])
+                ->addIndex('banner_id', ['unique' => true])
+                ->create();
+
+        $table = $this->table('berkas');
+        $table
+            ->changeColumn('type', 'string', ['limit' => 128])
+            ->addColumn('size', 'integer', ['null' => false])
+            ->save();
+    }
+
+    public function down(): void
+    {
+        $this->table('banner')->drop()->save();
+        $this->table('berkas')
+            ->changeColumn('type', 'string', ['limit' => 64])
+            ->removeColumn('size')
+            ->save();
     }
 }
