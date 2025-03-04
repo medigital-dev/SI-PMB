@@ -8,8 +8,8 @@ global $conn;
 
 $response = [
     'info' => count(query("SELECT * FROM informasi")),
-    'berkas' => count(query("SELECT * FROM berkas")),
+    'berkas' => count(query("SELECT * FROM berkas")) . '/' . count(query("SELECT * FROM berkas WHERE status = 1")),
     'banner' => count(query("SELECT * FROM banner")),
 ];
 
-echo json_encode($response);
+echo json_encode($response, JSON_PRETTY_PRINT);

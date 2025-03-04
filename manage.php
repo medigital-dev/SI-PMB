@@ -177,23 +177,33 @@ if (isset($_POST['saveProfil'])) {
         </symbol>
     </svg>
 
-    <nav class="navbar navbar-expand-lg sticky-top">
+    <nav class="navbar navbar-expand-lg sticky-top bg-body-tertiary shadow">
         <div class="container">
             <a class="navbar-brand" href="./manage.php">CMS-Info PPDB</a>
-            <div class="btn-group btn-group-sm">
-                <a href="./index.php" class="btn btn-outline-primary" target="_blank" title="Homepage"><i class="bi bi-box-arrow-up-right"></i></a>
-                <div class="btn-group btn-group-sm">
-                    <button class="btn btn-outline-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        <i class="bi bi-person-circle"></i>
-                    </button>
-                    <ul class="dropdown-menu dropdown-menu-end">
-                        <li><a class="dropdown-item" type="button" data-bs-toggle="modal" data-bs-target="#modalProfil">Profil</a></li>
-                        <li>
-                            <hr class="dropdown-divider">
-                        </li>
-                        <li><a class="dropdown-item" href="./logout.php">Logout</a></li>
-                    </ul>
-                </div>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#main-menu" aria-controls="main-menu" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="main-menu">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="/manage.php">Manage</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Content</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            User
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" type="button" data-bs-toggle="modal" data-bs-target="#modalProfil">Profil</a></li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                            <li><a class="dropdown-item" href="./logout.php">Logout</a></li>
+                        </ul>
+                    </li>
+                </ul>
             </div>
         </div>
     </nav>
@@ -203,7 +213,7 @@ if (isset($_POST['saveProfil'])) {
             <div class="row row-cols-2 row-cols-md-4 g-4 mb-4">
                 <div class="col">
                     <div class="card card-body shadow text-bg-primary bg-gradient">
-                        <h6 class="card-title">Total Informasi</h6>
+                        <h6 class="card-title">Informasi</h6>
                         <div class="d-flex justify-content-between">
                             <span class="h1 fs-1 m-0" id="totalInfo">0</span>
                             <i class="fa-solid fa-users text-opacity-25 text-white fa-3x"></i>
@@ -212,7 +222,7 @@ if (isset($_POST['saveProfil'])) {
                 </div>
                 <div class="col">
                     <div class="card card-body shadow text-bg-danger bg-gradient">
-                        <h6 class="card-title">Jumlah Banner</h6>
+                        <h6 class="card-title">Banner</h6>
                         <div class="d-flex justify-content-between">
                             <span class="h1 fs-1 m-0" id="totalBanner">0</span>
                             <i class="fa-solid fa-users text-opacity-25 text-white fa-3x"></i>
@@ -230,9 +240,9 @@ if (isset($_POST['saveProfil'])) {
                 </div>
                 <div class="col">
                     <div class="card card-body shadow text-bg-success bg-gradient">
-                        <h6 class="card-title">Total Berkas</h6>
+                        <h6 class="card-title">Berkas/Unduhan</h6>
                         <div class="d-flex justify-content-between">
-                            <span class="h1 fs-1 m-0" id="totalBerkas">0</span>
+                            <span class="h1 fs-1 m-0" id="totalBerkas">0/0</span>
                             <i class="fa-solid fa-users text-opacity-25 text-white fa-3x"></i>
                         </div>
                     </div>
@@ -256,14 +266,11 @@ if (isset($_POST['saveProfil'])) {
                         <div class="card shadow mb-4">
                             <div class="card-header text-bg-primary">Data Informasi</div>
                             <div class="card-body">
-                                <div class="sticky-top py-2">
+                                <div class="sticky-top py-2 bg-body">
                                     <div class="btn-toolbar">
                                         <div class="btn-group btn-group-sm my-1 me-1">
                                             <button type="button" class="btn btn-primary" title="Reload Tabel" id="btnReloadTabelInformasi"><i class="bi bi-arrow-repeat"></i></button>
                                             <button type="button" class="btn btn-primary" title="Tambah Informasi" id="btnTambahInformasi" data-bs-toggle="modal" data-bs-target="#modalTambahInformasi"><i class="bi bi-plus-circle"></i></button>
-                                        </div>
-                                        <div class="btn-group btn-group-sm my-1 me-1">
-                                            <button type="button" class="btn btn-primary" title="Toggle Expand" id="btnExpandTabelInformasi"><i class="bi bi-chevron-expand"></i></button>
                                         </div>
                                         <div class="input-group input-group-sm my-1 ms-auto">
                                             <input type="text" class="form-control" id="searchTabelInformasi" placeholder="Cari Informasi">
@@ -287,13 +294,15 @@ if (isset($_POST['saveProfil'])) {
                         <div class="card shadow mb-4">
                             <div class="card-header text-bg-primary">Berkas Upload</div>
                             <div class="card-body">
-                                <div class="btn-toolbar justify-content-between mb-4">
-                                    <div class="btn-group btn-group-sm">
-                                        <button type="button" class="btn btn-primary" title="Reload Tabel" id="btnReloadTabelBerkas"><i class="bi bi-arrow-repeat"></i></button>
-                                        <button type="button" class="btn btn-primary" title="Tambah Berkas" id="btnTambahBerkas" data-bs-toggle="modal" data-bs-target="#modalTambahBerkas"><i class="bi bi-plus-circle"></i></button>
-                                    </div>
-                                    <div class="input-group input-group-sm">
-                                        <input type="text" class="form-control" id="searchTabelBerkas" placeholder="Cari Berkas">
+                                <div class="sticky-top py-2 bg-body">
+                                    <div class="btn-toolbar">
+                                        <div class="btn-group btn-group-sm my-1 me-1">
+                                            <button type="button" class="btn btn-primary" title="Reload Tabel" id="btnReloadTabelBerkas"><i class="bi bi-arrow-repeat"></i></button>
+                                            <button type="button" class="btn btn-primary" title="Tambah Berkas" id="btnTambahBerkas" data-bs-toggle="modal" data-bs-target="#modalTambahBerkas"><i class="bi bi-plus-circle"></i></button>
+                                        </div>
+                                        <div class="input-group input-group-sm ms-auto my-1">
+                                            <input type="text" class="form-control" id="searchTabelBerkas" placeholder="Cari Berkas">
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="table-responsive">
@@ -313,13 +322,15 @@ if (isset($_POST['saveProfil'])) {
                         <div class="card shadow mb-4">
                             <div class="card-header text-bg-primary">Data Banner Hero</div>
                             <div class="card-body">
-                                <div class="btn-toolbar justify-content-between mb-4">
-                                    <div class="btn-group btn-group-sm">
-                                        <button type="button" class="btn btn-primary" title="Reload Tabel" id="btnReloadTabelBanner"><i class="bi bi-arrow-repeat"></i></button>
-                                        <button type="button" class="btn btn-primary" title="Tambah Banner" id="btnTambahBanner" data-bs-toggle="modal" data-bs-target="#modalTambahBanner"><i class="bi bi-plus-circle"></i></button>
-                                    </div>
-                                    <div class="input-group input-group-sm">
-                                        <input type="text" class="form-control" id="searchTabelBanner" placeholder="Cari Banner">
+                                <div class="sticky-top py-2 bg-body">
+                                    <div class="btn-toolbar">
+                                        <div class="btn-group btn-group-sm my-1 me-1">
+                                            <button type="button" class="btn btn-primary" title="Reload Tabel" id="btnReloadTabelBanner"><i class="bi bi-arrow-repeat"></i></button>
+                                            <button type="button" class="btn btn-primary" title="Tambah Banner" id="btnTambahBanner" data-bs-toggle="modal" data-bs-target="#modalTambahBanner"><i class="bi bi-plus-circle"></i></button>
+                                        </div>
+                                        <div class="input-group input-group-sm my-1 ms-auto">
+                                            <input type="text" class="form-control" id="searchTabelBanner" placeholder="Cari Banner">
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="table-responsive">
@@ -612,14 +623,17 @@ if (isset($_POST['saveProfil'])) {
                         data: 'id',
                         className: 'w-100',
                         render: (data, type, rows, meta) => {
+                            const checked = rows.status == '1' ? 'checked' : '';
+                            const label = rows.status == '1' ? 'Ditampilkan' : 'Tidak ditampilkan';
+
                             return ('<div class="d-flex justify-content-start">' +
                                 '<div class="px-2 d-flex" style="width: 75px; height: 75px;"><a title="Preview" href="' + rows.src + '" data-fancybox class="mx-auto fs-1">' +
                                 getFileIcon(rows.type) +
                                 '</a></div>' +
                                 '<div class="w-100"><div class="d-flex justify-content-between"><h6 class="m-0">' + rows.title + '</h6><span class="text-muted small">' + timeAgo(rows.tanggal) + '</span></div><p class="m-0 small text-muted">[' + fileSize(parseInt(rows.size)) + '] ' + rows.filename + '</p>' +
                                 '<div class="form-check form-switch">' +
-                                '<input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault">' +
-                                '<label class="form-check-label small text-muted" for="flexSwitchCheckDefault">Tampilkan pada unduhan</label>' +
+                                '<input class="form-check-input btnSwitchBerkas" data-id="' + data + '" type="checkbox" role="switch" id="' + data + '" ' + checked + '>' +
+                                '<label class="form-check-label small text-muted" for="' + data + '">' + label + ' pada unduhan</label>' +
                                 '</div>' +
                                 '</div>' +
                                 '</div>');
@@ -663,10 +677,41 @@ if (isset($_POST['saveProfil'])) {
                     }
                     tabelBerkas.ajax.reload(null, false);
                 });
+
+                $('.btnSwitchBerkas').on('click', async function() {
+                    const id = $(this).data('id');
+                    const state = $(this).is(':checked') ? 1 : 0;
+                    const data = await fetchData('/api/berkas.php?id=' + id);
+                    if (!data) {
+                        toast('Berkas ID: <strong>' + id + '</strong> tidak ditemukan.', 'error');
+                        return
+                    }
+
+                    let set = new FormData();
+                    set.append('title', data.title);
+                    set.append('status', state)
+                    const res = await fetchData({
+                        url: '/api/berkas.php?id=' + id,
+                        data: set,
+                        method: 'POST'
+                    });
+                    if (!res) {
+                        toast('Berkas: <strong>' + data.title + '</strong> gagal diubah.', 'error');
+                        $(this).prop('checked', !state);
+                        return;
+                    }
+                    toast({
+                        message: 'Data berkas: <strong>' + data.title + '</strong> berhasil diubah.',
+                        icon: 'success',
+                        delay: 5000,
+                    });
+                    tabelBerkas.ajax.reload(null, false);
+                });
             });
 
             $('#btnReloadTabelInformasi').on('click', () => tabelInformasi.ajax.reload(null, false));
             $('#btnReloadTabelBerkas').on('click', () => tabelBerkas.ajax.reload(null, false));
+            $('#btnReloadTabelBanner').on('click', () => tabelBanner.ajax.reload(null, false));
 
             $('#btnSaveInfo').on('click', async function() {
                 const btnElm = $(this);
@@ -710,8 +755,6 @@ if (isset($_POST['saveProfil'])) {
                 $('#isi').summernote('code', '');
             });
 
-            $('#btnExpandTabelInformasi').on('click', e => $('#tabelInformasi .collapse').collapse('toggle'));
-
             $('#searchTabelInformasi').on('keyup', e => {
                 const keyword = e.target.value;
                 if (keyword !== '') {
@@ -720,8 +763,8 @@ if (isset($_POST['saveProfil'])) {
                 } else
                     $('.collapse').collapse('hide');
             });
-
             $('#searchTabelBerkas').on('keyup', e => tabelBerkas.columns(0).search(e.target.value).draw());
+            $('#searchTabelBanner').on('keyup', e => tabelBanner.columns(0).search(e.target.value).draw());
 
             $('#btnSaveBerkas').on('click', async function() {
                 const btnElm = $(this);

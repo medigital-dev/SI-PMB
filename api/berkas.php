@@ -10,11 +10,11 @@ $id = isset($_GET['id']) ? mysqli_real_escape_string($conn, $_GET['id']) : null;
 switch ($method) {
     case 'GET':
         if ($id == null) {
-            $sql = "SELECT berkas_id as id, created_at as tanggal, filename, title, type, src, size FROM berkas ORDER BY created_at DESC";
+            $sql = "SELECT berkas_id as id, created_at as tanggal, `filename`, title, `type`, src, `size`, `status` FROM berkas ORDER BY created_at DESC";
             $result = query($sql);
             echo json_encode($result, JSON_PRETTY_PRINT);
         } else {
-            $sql = "SELECT berkas_id as id, created_at as tanggal, filename, title, type, src, size FROM berkas WHERE berkas_id = ?";
+            $sql = "SELECT berkas_id as id, created_at as tanggal, `filename`, title, `type`, src, `size`, `status` FROM berkas WHERE berkas_id = ?";
             $stmt = mysqli_prepare($conn, $sql);
             mysqli_stmt_bind_param($stmt, "s", $id);
             mysqli_stmt_execute($stmt);
@@ -32,6 +32,7 @@ switch ($method) {
 
     case 'POST':
         $title = $_POST['title'] ?? null;
+        $status = $_POST['status'] ?? null;
         $file = $_FILES['file'] ?? null;
         $timestamp = date('Y-m-d H:i:s');
 
@@ -67,7 +68,7 @@ switch ($method) {
                 $unique = random_string();
             } while (count(query("SELECT * FROM berkas WHERE berkas_id = '$unique'")) > 0);
 
-            $sql = "INSERT INTO berkas (berkas_id, filename, title, src, created_at, type, size) 
+            $sql = "INSERT INTO berkas (berkas_id, `filename`, title, src, created_at, `type`, `size`) 
                     VALUES (?,?,?,?,?,?,?)";
             $stmt = mysqli_prepare($conn, $sql);
             mysqli_stmt_bind_param($stmt, "sssssss", $unique, $filename, $title, $loc, $timestamp, $mime_type, $size);
@@ -94,9 +95,9 @@ switch ($method) {
             ];
             http_response_code(201);
         } else {
-            $sql = "UPDATE berkas SET title = ? WHERE berkas_id = ?";
+            $sql = "UPDATE berkas SET title = ?, `status` = ? WHERE berkas_id = ?";
             $stmt = mysqli_prepare($conn, $sql);
-            mysqli_stmt_bind_param($stmt, "ss", $title, $id);
+            mysqli_stmt_bind_param($stmt, "sss", $title, $status, $id);
             $result = mysqli_stmt_execute($stmt);
 
             if (!$result) {

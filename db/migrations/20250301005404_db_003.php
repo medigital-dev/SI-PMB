@@ -35,6 +35,7 @@ final class Db003 extends AbstractMigration
         $table
             ->changeColumn('type', 'string', ['limit' => 128])
             ->addColumn('size', 'integer', ['null' => false])
+            ->addColumn('status', 'boolean', ['default' => false, 'null' => false])
             ->save();
     }
 
@@ -44,6 +45,7 @@ final class Db003 extends AbstractMigration
         $this->table('berkas')
             ->changeColumn('type', 'string', ['limit' => 64])
             ->removeColumn('size')
+            ->removeColumn('status')
             ->save();
     }
 }
