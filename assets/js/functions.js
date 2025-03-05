@@ -73,10 +73,11 @@ function getFileIcon(mimeTypeOrExtension) {
 }
 
 function reloadWidget() {
-  $.post("./api/widget.php", (res) => {
-    $("#totalInfo").text(res.info);
-    $("#totalBerkas").text(res.berkas);
-    $("#totalBanner").text(res.banner);
+  fetchData("/api/widget.php").then((e) => {
+    $("#totalInfo").text(e.info);
+    $("#totalBerkas").text(e.berkas);
+    $("#totalBanner").text(e.banner);
+    $("#totalEvent").text(e.event);
   });
 }
 
@@ -288,4 +289,18 @@ function timeAgo(datetime, full = false) {
 
   if (!full) result = result.slice(0, 1);
   return result.length ? result.join(", ") + " lalu" : "baru saja";
+}
+
+function toggleButton(buttonElm, text) {
+  if (!buttonElm.prop("disabled")) {
+    buttonElm
+      .html(
+        '<span class="spinner-border spinner-border-sm" aria-hidden="true"></span><span role="status">' +
+          text +
+          "</span>"
+      )
+      .prop("disabled", true);
+  } else {
+    buttonElm.text(text).prop("disabled", false);
+  }
 }

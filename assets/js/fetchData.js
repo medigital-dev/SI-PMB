@@ -40,6 +40,8 @@ async function fetchData(urlOrConfig, ...restParams) {
       url: config.url,
       method: config.method,
       dataType: config.dataType,
+      cache: false,
+      headers: { "X-Requested-With": "XMLHttpRequest" },
     };
 
     if (isFormData) {
@@ -48,21 +50,14 @@ async function fetchData(urlOrConfig, ...restParams) {
       options.enctype = "multipart/form-data";
       options.data = config.data;
     } else {
-      options.contentType =
-        config.dataType === "json"
-          ? "application/json"
-          : "application/x-www-form-urlencoded";
-
-      options.data =
-        config.method === "GET"
-          ? $.param(config.data)
-          : config.dataType === "json"
-          ? JSON.stringify(config.data)
-          : config.data;
+      options.contentType = "application/x-www-form-urlencoded";
+      options.data = $.param(config.data);
     }
     return await $.ajax(options);
   } catch (error) {
-    console.log(error);
-    return null;
+    // toast(error.responseJSON.message, "error", "top-end", 5000);
+    // console.log(error);
+    // return null;
+    throw error;
   }
 }

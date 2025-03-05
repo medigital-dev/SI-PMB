@@ -25,7 +25,7 @@ switch ($method) {
                 echo json_encode($data, JSON_PRETTY_PRINT);
             } else {
                 http_response_code(404);
-                echo json_encode(['message' => 'Item not found']);
+                echo json_encode(['message' => 'Data informasi tidak ditemukan.']);
             }
         }
         break;

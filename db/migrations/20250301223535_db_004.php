@@ -17,5 +17,15 @@ final class Db004 extends AbstractMigration
      * Remember to call "create()" or "update()" and NOT "save()" when working
      * with the Table class.
      */
-    public function change(): void {}
+    public function change(): void
+    {
+        $tabel =  $this->table('event', ['id' => 'id']);
+        $tabel->addColumn('event_id', 'string', ['limit' => 64, 'null' => false])
+            ->addColumn('name', 'string', ['limit' => 128, 'null' => false])
+            ->addColumn('tanggal', 'datetime', ['null' => false])
+            ->addColumn('status', 'boolean', ['default' => 1, 'null' => false])
+            ->addColumn('created_at', 'datetime', ['null' => false])
+            ->addIndex('event_id', ['unique' => true])
+            ->create();
+    }
 }
