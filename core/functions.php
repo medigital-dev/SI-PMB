@@ -1,5 +1,5 @@
 <?php
-require 'dbconn.php';
+require '../config/app.php';
 
 function query($query): array
 {
@@ -127,4 +127,42 @@ function uploadFile($file): array|false
             'src' => $loc
         ]
     ];
+}
+
+/**
+ * Fungsi include file
+ * @param string $path Lokasi file view tanpa .php
+ * @param array $data Array informasi yang dibutuhkan
+ * @return string kode html
+ */
+function view(string $path, array $data = [])
+{
+    if (!file_exists($path)) die("file <code>$path</code> tidak ditemukan.");
+    extract($data);
+    include $path;
+}
+
+/**
+ * Fungsi include file
+ * @param string $headerPath Lokasi file header
+ * @param array $data Data judul, css dan icon halaman 'title'|'style'|'favicon|body['className','id']|script'
+ * ['title'=> string 'Judul Halaman']
+ * ['style'=>array ['lokasi css','dst']]
+ * ['favicon'=> string 'lokasi icon']
+ * ['body'=>['className'=> 'nama class body', id=>'ID Body']]
+ * ['script'=> array ['lokasi script','dst']]
+ * @return string kode html
+ */
+function _renderHeader(string $headerPath, array $data = [])
+{
+    if (!file_exists($headerPath)) die("file <code>$headerPath</code> tidak ditemukan.");
+    extract($data);
+    include $headerPath;
+}
+
+function _renderFooter(string $footerPath, array $data = [])
+{
+    if (!file_exists($footerPath)) die("file <code>$footerPath</code> tidak ditemukan.");
+    extract($data);
+    include $headerPath;
 }

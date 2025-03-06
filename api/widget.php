@@ -1,9 +1,10 @@
 <?php
+session_start();
 if ($_SERVER['REQUEST_METHOD'] !== 'GET')
     die('Aksess Denied!');
 
 header('Content-Type: application/json; charset=utf-8');
-include '../functions.php';
+include '../core/functions.php';
 global $conn;
 
 $response = [

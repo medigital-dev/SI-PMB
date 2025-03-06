@@ -1,0 +1,780 @@
+$(document).ready(function () {
+  $("#showPass").on("click", function () {
+    if ($(this).is(":checked")) $(".password").attr("type", "text");
+    else $(".password").attr("type", "password");
+  });
+
+  $("#isi").summernote({
+    dialogsInBody: true,
+    height: 200,
+    toolbar: [
+      ["misc", ["undo", "redo"]],
+      ["style", ["bold", "italic", "underline", "clear"]],
+      ["color", ["color"]],
+      ["para", ["ul", "ol", "paragraph"]],
+      ["insert", ["link", "table", "file"]],
+      ["view", ["fullscreen", "codeview", "help"]],
+    ],
+    callbacks: {
+      onFileUpload: (file) => {
+        for (let i = 0; i < file.length; i++) {
+          uploadMedia(file[i]);
+        }
+      },
+      onMediaDelete: (file) => deleteMedia(file[0]),
+    },
+  });
+
+  const tabelInformasi = $("#tabelInformasi").DataTable({
+    dom: '<"mb-2"t><"d-flex justify-content-between"ip>',
+    lengthMenu: [
+      [5, 10, 25, 50, 100, -1],
+      [5, 10, 25, 50, 100, "All"],
+    ],
+    responsive: true,
+    ordering: false,
+    processing: true,
+    pagingType: "simple",
+    ajax: {
+      url: "/api/info.php",
+      dataSrc: "",
+    },
+    columns: [
+      {
+        data: "judul",
+        render: (data, type, rows, meta) => {
+          return (
+            '<a class="text-decoration-none" role="button" data-bs-toggle="collapse" href="#collapse-' +
+            rows.id +
+            '"><h6 class="m-0">' +
+            data +
+            "</h6></a>" +
+            '<span class="text-muted small">' +
+            rows.tanggal +
+            "</span>" +
+            '<div class="collapse" id="collapse-' +
+            rows.id +
+            '"><hr class="my-2">' +
+            rows.isi +
+            "</div>"
+          );
+        },
+      },
+      {
+        data: "id",
+        className: "text-center",
+        width: "70px",
+        render: (data, type, rows, meta) => {
+          return (
+            '<div class="btn-group btn-group-sm">' +
+            '<button type="button" class="btn btn-primary btnEditInfo" data-id="' +
+            data +
+            '"><i class="bi bi-pencil-square"></i></button>' +
+            '<button type="button" class="btn btn-danger btnHapusInfo" data-id="' +
+            data +
+            '"><i class="bi bi-trash-fill"></i></button>' +
+            "</div>"
+          );
+        },
+      },
+    ],
+  });
+
+  tabelInformasi.on("draw", () => {
+    reloadWidget();
+
+    $(".btnEditInfo").on("click", function () {
+      const id = $(this).data("id");
+      fetchData("/api/info.php?id=" + id)
+        .then((e) => {
+          $("#idInformasi").val(e.id);
+          $("#judul").val(e.judul);
+          $("#isi").summernote("code", e.isi);
+          $("#modalTambahInformasi").modal("show");
+        })
+        .catch((err) => toast(err.responseJSON.message, "error"));
+    });
+
+    $(".btnHapusInfo").on("click", async function () {
+      const id = $(this).data("id");
+      const data = await fetchData("/api/info.php?id=" + id).catch((err) => {
+        toast(err.responseJSON.message, "error");
+        return false;
+      });
+      if (!data) return;
+      const action = await toast({
+        title: "Hapus informasi?",
+        message:
+          "Informasi: <strong>" +
+          data.judul +
+          "</strong> akan dihapus permanen. Yakin?",
+        icon: "question",
+        position: "middle-center",
+      });
+      if (action) {
+        const res = await fetchData({
+          url: "/api/info.php?id=" + id,
+          method: "DELETE",
+        }).catch((err) => {
+          toast(err.responseJSON.message, "error");
+          return false;
+        });
+        if (!res) return;
+        toast({
+          message:
+            "Informasi: <strong>" + data.judul + "</strong> berhasil dihapus.",
+          delay: 5000,
+          icon: "success",
+        });
+        tabelInformasi.ajax.reload(null, false);
+      }
+    });
+  });
+
+  const tabelBerkas = $("#tabelBerkas").DataTable({
+    dom: '<"mb-2"t><"d-flex justify-content-between"ip>',
+    lengthMenu: [
+      [5, 10, 25, 50, 100, -1],
+      [5, 10, 25, 50, 100, "All"],
+    ],
+    responsive: true,
+    ordering: false,
+    processing: true,
+    pagingType: "simple",
+    ajax: {
+      url: "/api/berkas.php",
+      dataSrc: "",
+    },
+    columns: [
+      {
+        data: "id",
+        className: "w-100",
+        render: (data, type, rows, meta) => {
+          const checked = rows.status == "1" ? "checked" : "";
+          const label =
+            rows.status == "1" ? "Ditampilkan" : "Tidak ditampilkan";
+
+          return (
+            '<div class="d-flex justify-content-start">' +
+            '<div class="px-2 d-flex" style="width: 75px; height: 75px;"><a title="Preview" href="' +
+            rows.src +
+            '" data-fancybox class="mx-auto fs-1">' +
+            getFileIcon(rows.type) +
+            "</a></div>" +
+            '<div class="w-100"><div class="d-flex justify-content-between"><h6 class="m-0">' +
+            rows.title +
+            '</h6><span class="text-muted small">' +
+            timeAgo(rows.tanggal) +
+            '</span></div><p class="m-0 small text-muted">[' +
+            fileSize(parseInt(rows.size)) +
+            "] " +
+            rows.filename +
+            "</p>" +
+            '<div class="form-check form-switch">' +
+            '<input class="form-check-input btnSwitchBerkas" data-id="' +
+            data +
+            '" type="checkbox" role="switch" id="' +
+            data +
+            '" ' +
+            checked +
+            ">" +
+            '<label class="form-check-label small text-muted" for="' +
+            data +
+            '">' +
+            label +
+            " pada unduhan</label>" +
+            "</div>" +
+            "</div>" +
+            "</div>"
+          );
+        },
+      },
+      {
+        data: "id",
+        width: "70px",
+        className: "text-center",
+        render: (data, type, rows, meta) => {
+          return (
+            '<div class="btn-group btn-group-sm">' +
+            '<a href="' +
+            rows.src +
+            '" class="btn btn-primary" download title="Unduh berkas"><i class="bi bi-download"></i></a>' +
+            '<button type="button" class="btn btn-danger btnHapusBerkas" data-id="' +
+            rows.id +
+            '" title="Hapus berkas"><i class="bi bi-trash-fill"></i></button>' +
+            "</div>"
+          );
+        },
+      },
+    ],
+  });
+
+  tabelBerkas.on("draw", () => {
+    reloadWidget();
+
+    $(".btnHapusBerkas").on("click", async function () {
+      const id = $(this).data("id");
+      const data = await fetchData("/api/berkas.php?id=" + id).catch((err) => {
+        toast(err.responseJSON.message, "error");
+        return false;
+      });
+      if (!data) return;
+      const action = await toast({
+        title: "Hapus berkas?",
+        message: "Berkas: " + data.title + " akan dihapus permanen. Yakin?",
+        icon: "question",
+      });
+      if (action) {
+        const result = await fetchData({
+          url: "/api/berkas.php?id=" + id,
+          method: "DELETE",
+        }).catch((err) => {
+          toast(err.responseJSON.message, "error");
+          return false;
+        });
+        if (!result) return;
+        toast({
+          message: "Berkas: " + data.title + " berhasil dihapus permanen?",
+          icon: "success",
+          delay: 5000,
+        });
+      }
+      tabelBerkas.ajax.reload(null, false);
+    });
+
+    $(".btnSwitchBerkas").on("click", async function () {
+      const id = $(this).data("id");
+      const state = $(this).is(":checked") ? 1 : 0;
+      const data = await fetchData("/api/berkas.php?id=" + id).catch((err) => {
+        toast(err.responseJSON.message, "error");
+        return false;
+      });
+      if (!data) return;
+
+      const res = await fetchData({
+        url: "/api/berkas.php?id=" + id,
+        data: {
+          title: data.title,
+          status: state,
+        },
+        method: "POST",
+      }).catch((err) => {
+        toast(err.responseJSON.message, "error");
+        return false;
+      });
+      if (!res) {
+        $(this).prop("checked", !state);
+        return;
+      }
+      toast({
+        message:
+          "Data berkas: <strong>" + data.title + "</strong> berhasil diubah.",
+        icon: "success",
+        delay: 5000,
+      });
+      tabelBerkas.ajax.reload(null, false);
+    });
+  });
+
+  $("#btnReloadTabelInformasi").on("click", () =>
+    tabelInformasi.ajax.reload(null, false)
+  );
+  $("#btnReloadTabelBerkas").on("click", () =>
+    tabelBerkas.ajax.reload(null, false)
+  );
+  $("#btnReloadTabelBanner").on("click", () =>
+    tabelBanner.ajax.reload(null, false)
+  );
+  $("#btnReloadTabelEvent").on("click", () =>
+    tabelEvent.ajax.reload(null, false)
+  );
+
+  $("#btnSaveInfo").on("click", async function () {
+    const btnElm = $(this);
+    const judulElm = $("#judul");
+    const isiElm = $("#isi");
+    const id = $("#idInformasi");
+
+    if (judulElm.val() == "" || isiElm.val() == "") {
+      if (judulElm.val() == "") judulElm.addClass("is-invalid");
+      else judulElm.removeClass("is-invalid");
+      if (isiElm.val() == "") isiElm.addClass("is-invalid");
+      else isiElm.removeClass("is-invalid");
+      toast("Lengkapi form.", "info");
+      return;
+    }
+
+    $(".is-invalid").removeClass("is-invalid");
+    toggleButton(btnElm, "Menyimpan...");
+    const idVal = id.val();
+    let data = new FormData();
+    data.append("judul", judulElm.val());
+    data.append("isi", isiElm.val());
+    const res = await fetchData({
+      url: "/api/info.php?id=" + id.val(),
+      data: {
+        judul: judulElm.val(),
+        isi: isiElm.val(),
+      },
+      method: "POST",
+    }).catch((err) => {
+      toast(err.responseJSON.message, "error");
+      return false;
+    });
+    if (!res) return;
+    toast({
+      message:
+        "Informasi dengan judul: <strong>" +
+        judulElm.val() +
+        "</strong> berhasil disimpan.",
+      icon: "success",
+      delay: 5000,
+    });
+    tabelInformasi.ajax.reload(null, false);
+    toggleButton(btnElm, "Simpan");
+    $("#modalTambahInformasi").modal("hide");
+  });
+
+  $("#modalTambahInformasi").on("hide.bs.modal", function () {
+    $("#judul,#idInformasi").val("");
+    $("#isi").summernote("code", "");
+  });
+
+  $("#searchTabelInformasi").on("keyup", (e) => {
+    const keyword = e.target.value;
+    if (keyword !== "") {
+      $(".collapse").collapse("show");
+      tabelInformasi.search(keyword).draw();
+    } else $(".collapse").collapse("hide");
+  });
+  $("#searchTabelBerkas").on("keyup", (e) =>
+    tabelBerkas.columns(0).search(e.target.value).draw()
+  );
+  $("#searchTabelBanner").on("keyup", (e) =>
+    tabelBanner.columns(0).search(e.target.value).draw()
+  );
+  $("#searchTabelEvent").on("keyup", (e) =>
+    tabelEvent.columns(0).search(e.target.value).draw()
+  );
+
+  $("#btnSaveBerkas").on("click", async function () {
+    const btnElm = $(this);
+    const fileElm = $("#fileBerkas");
+    const titleElm = $("#titleFile");
+
+    if (fileElm.val() == "" || titleElm.val() == "") {
+      if (fileElm.val() == "") fileElm.addClass("is-invalid");
+      else fileElm.removeClass("is-invalid");
+      if (titleElm.val() == "") titleElm.addClass("is-invalid");
+      else titleElm.removeClass("is-invalid");
+      toast("Lengkapi form terlebih dahulu", "error");
+      return;
+    }
+    $("is-invalid").removeClass("is-invalid");
+    toggleButton(btnElm, "Menyimpan...");
+    const file = fileElm.prop("files");
+    let data = new FormData();
+    data.append("title", titleElm.val());
+    data.append("file", file[0]);
+    const res = await fetchData({
+      url: "/api/berkas.php",
+      data: data,
+      method: "POST",
+    }).catch((err) => {
+      toast(err.responseJSON.message, "error");
+      return false;
+    });
+    if (!res) return;
+    toggleButton(btnElm, "Simpan");
+    fileElm.val("");
+    titleElm.val("");
+    $("#modalTambahBerkas").modal("hide");
+    tabelBerkas.ajax.reload(null, false);
+  });
+
+  const tabelBanner = $("#tabelBanner").DataTable({
+    dom: '<"mb-2"t><"d-flex justify-content-between"ip>',
+    lengthMenu: [
+      [5, 10, 25, 50, 100, -1],
+      [5, 10, 25, 50, 100, "All"],
+    ],
+    responsive: true,
+    ordering: false,
+    processing: true,
+    pagingType: "simple",
+    ajax: {
+      url: "/api/banner.php",
+      dataSrc: "",
+    },
+    deferRender: true,
+    columns: [
+      {
+        data: "id",
+        className: "w-100",
+        render: (data, type, rows, meta) => {
+          return (
+            '<div class="d-flex justify-content-start">' +
+            '<div class="px-2 d-flex" style="width: 150px; height: 50px;"><a title="Preview" href="#" data-fancybox class="mx-auto placeholder-image" data-id="' +
+            rows.berkas_id +
+            '">' +
+            '<img src="#" class="img-thumbnail" style="object-fit: cover; height: 100%;">' +
+            "</a></div>" +
+            '<div><h6 class="m-0">' +
+            rows.title +
+            '</h6><p class="m-0 small text-muted">' +
+            rows.description +
+            "</p></div>" +
+            "</div>"
+          );
+        },
+      },
+      {
+        data: "id",
+        className: "text-center",
+        width: "70px",
+        render: (data, type, rows, meta) => {
+          return (
+            '<div class="btn-group btn-group-sm">' +
+            '<button type="button" class="btn btn-danger btnHapusBanner" data-id="' +
+            data +
+            '" title="Hapus Banner"><i class="bi bi-trash-fill"></i></button>' +
+            "</div>"
+          );
+        },
+      },
+    ],
+    drawCallback: async function (settings) {
+      const placeholders = $(".placeholder-image");
+      placeholders.each(async function () {
+        const id = $(this).data("id");
+        const imgData = await fetchData("/api/berkas.php?id=" + id).catch(
+          (err) => {
+            toast(err.responseJSON.message, "error");
+            return false;
+          }
+        );
+        if (imgData) {
+          $(this)
+            .attr("href", imgData.src)
+            .find("img")
+            .attr("src", imgData.src);
+        }
+      });
+    },
+  });
+
+  tabelBanner.on("draw", () => {
+    reloadWidget();
+
+    $(".btnHapusBanner").on("click", async function () {
+      const id = $(this).data("id");
+      const data = await fetchData("/api/banner.php?id=" + id).catch((err) => {
+        toast(err.responseJSON.message, "error");
+        return false;
+      });
+      if (!data) return;
+      const action = await toast({
+        title: "Hapus Banner?",
+        message: "Data banner: " + data.title + " akan dihapus permanen.",
+        icon: "question",
+      });
+      if (action) {
+        const res = await fetchData({
+          url: "/api/banner.php?id=" + id,
+          method: "DELETE",
+        }).catch((err) => {
+          toast(err.responseJSON.message, "error");
+          return false;
+        });
+        if (!res) return;
+        toast({
+          message:
+            "Data banner: <strong>" +
+            data.title +
+            "</strong> berhasil dihapus.",
+          icon: "success",
+          delay: 5000,
+        });
+        tabelBanner.ajax.reload(null, false);
+      }
+    });
+  });
+
+  $("#fileBanner").on("change", function () {
+    const file = $(this).prop("files")[0];
+    const inputElm = $(this);
+    const previewElm = $("#previewBanner");
+
+    inputElm.next(".invalid-feedback").remove();
+    inputElm.removeClass("is-invalid");
+
+    if (!file) return;
+
+    const img = new Image();
+    img.onload = function () {
+      const width = img.width;
+      const height = img.height;
+      const aspectRatio = width / height;
+      const tolerance = 0.5;
+      const targetRatio = 3;
+
+      if (Math.abs(aspectRatio - targetRatio) > tolerance) {
+        inputElm
+          .addClass("is-invalid")
+          .after(
+            '<div class="invalid-feedback">Aspek rasio pada gambar yang diupload harus 3:1.</div>'
+          );
+        previewElm.attr("src", "").parent("a").attr("href", "").hide();
+        $("#btnSaveBanner").prop("disabled", true);
+      } else {
+        previewElm
+          .attr("src", img.src)
+          .parent("a")
+          .attr("href", img.src)
+          .show();
+        $("#btnSaveBanner").prop("disabled", false);
+      }
+    };
+    img.src = URL.createObjectURL(file);
+  });
+
+  $("#btnSaveBanner").on("click", async function () {
+    const btnElm = $(this);
+    const fileElm = $("#fileBanner");
+    const titleElm = $("#titleFileBanner");
+    const description = $("#bannerDescription");
+
+    if (
+      !fileElm.val().trim() ||
+      !titleElm.val().trim() ||
+      fileElm.hasClass("is-invalid")
+    ) {
+      if (!fileElm.val().trim()) fileElm.addClass("is-invalid");
+      else fileElm.removeClass("is-invalid");
+      if (!titleElm.val().trim()) titleElm.addClass("is-invalid");
+      else titleElm.removeClass("is-invalid");
+      toast("Form isian belum valid.", "error");
+      return;
+    }
+    $(".is-invalid").removeClass("is-invalid");
+    toggleButton(btnElm, "Menyimpan...");
+    const file = fileElm.prop("files")[0];
+    let image = new FormData();
+    image.append("file", file);
+    image.append("title", titleElm.val());
+
+    const sendImage = await fetchData({
+      url: "/api/berkas.php",
+      data: image,
+      method: "POST",
+    }).catch((err) => {
+      toast(err.responseJSON.message, "error");
+      return false;
+    });
+    if (!sendImage) return;
+    const setData = await fetchData({
+      url: "/api/banner.php",
+      data: {
+        title: titleElm.val(),
+        description: description.val(),
+        idBerkas: sendImage.data.id,
+      },
+      method: "POST",
+    }).catch((err) => {
+      toast(err.responseJSON.message, "error");
+      return false;
+    });
+    if (!setData) return;
+    toggleButton(btnElm, "Simpan");
+    fileElm.val("");
+    titleElm.val("");
+    $("#modalTambahBanner").modal("hide");
+    toast({
+      message: "Data banner berhasil ditambahkan.",
+      icon: "success",
+      delay: 5000,
+    });
+    tabelBanner.ajax.reload(null, false);
+  });
+
+  const tabelEvent = $("#tabelEvent").DataTable({
+    dom: '<"mb-2"t><"d-flex justify-content-between"ip>',
+    lengthMenu: [
+      [5, 10, 25, 50, 100, -1],
+      [5, 10, 25, 50, 100, "All"],
+    ],
+    responsive: true,
+    ordering: false,
+    processing: true,
+    pagingType: "simple",
+    ajax: {
+      url: "/api/event.php",
+      dataSrc: "",
+    },
+    columns: [
+      {
+        data: "id",
+        className: "w-75",
+        render: (data, type, rows, meta) => {
+          const checked = rows.status == 1 ? "checked" : "";
+          const label = rows.status == 1 ? "Ditampilkan" : "Tidak ditampilkan";
+          return (
+            '<h6 class="mb-1">' +
+            rows.name +
+            "</h6>" +
+            '<div class="form-check form-switch">' +
+            '<input class="form-check-input btnSwitchEvent" data-id="' +
+            data +
+            '" type="checkbox" role="switch" id="' +
+            data +
+            '" ' +
+            checked +
+            ">" +
+            '<label class="form-check-label small text-muted" for="' +
+            data +
+            '">' +
+            label +
+            " pada counter</label>" +
+            "</div>"
+          );
+        },
+      },
+      {
+        data: "tanggal",
+        width: "120px",
+        className: "text-center",
+        render: (data, type, rows, meta) => {
+          return tanggal(data, "D F Y<br>H:i:s WIB");
+        },
+      },
+      {
+        width: "70px",
+        data: "id",
+        className: "text-center",
+        render: (data, type, rows, meta) => {
+          return (
+            '<div class="btn-group btn-group-sm">' +
+            '<button type="button" class="btn btn-danger btnHapusEvent" data-id="' +
+            data +
+            '" title="Hapus Event"><i class="bi bi-trash-fill"></i></button>' +
+            "</div>"
+          );
+        },
+      },
+    ],
+  });
+
+  tabelEvent.on("draw", function () {
+    reloadWidget();
+
+    $(".btnHapusEvent").on("click", async function () {
+      const id = $(this).data("id");
+      const data = await fetchData("/api/event.php?id=" + id).catch((err) => {
+        toast(err.responseJSON.message, "error");
+        return false;
+      });
+      if (!data) return;
+      const conf = await toast({
+        title: "Hapus Event?",
+        message:
+          "Data event: <strong>" +
+          data.name +
+          "</strong> akan dihapus permanen, anda yakin?",
+        icon: "question",
+      });
+      if (!conf) return;
+      const res = await fetchData({
+        url: "/api/event.php?id=" + id,
+        method: "DELETE",
+      }).catch((err) => {
+        toast(err.responseJSON.message, "error");
+        return false;
+      });
+      if (!res) return;
+      toast(
+        "Data event: <strong>" +
+          data.name +
+          "</strong> berhasil dihapus permanen.",
+        "success",
+        null,
+        5000
+      );
+      tabelEvent.ajax.reload(null, false);
+    });
+
+    $(".btnSwitchEvent").on("change", async function () {
+      const id = $(this).data("id");
+      const state = $(this).is(":checked") ? 1 : 0;
+      const data = await fetchData("/api/event.php?id=" + id).catch((err) => {
+        toast(err.responseJSON.message, "error");
+        return false;
+      });
+      if (!data) return;
+      const res = await fetchData({
+        url: "/api/event.php?id=" + id,
+        data: {
+          name: data.name,
+          tanggal: data.tanggal,
+          status: state,
+        },
+        method: "POST",
+      }).catch((err) => {
+        toast(err.responseJSON.message, "error");
+        return false;
+      });
+      if (!res) {
+        $(this).prop("checked", !state);
+        return;
+      }
+      toast({
+        message:
+          "Status event: <strong>" + data.name + "</strong> berhasil diubah.",
+        icon: "success",
+        delay: 5000,
+      });
+      tabelEvent.ajax.reload(null, false);
+    });
+  });
+
+  $("#btnSaveEvent").on("click", async function () {
+    const btn = $(this);
+    const nameElm = $("#namaEvent");
+    const tanggalElm = $("#tanggalEvent");
+    if (!nameElm.val().trim() || !tanggalElm.val().trim()) {
+      if (!nameElm.val().trim()) nameElm.addClass("is-invalid");
+      else nameElm.removeClass("is-invalid");
+      if (!tanggalElm.val().trim()) tanggalElm.addClass("is-invalid");
+      else tanggalElm.removeClass("is-invalid");
+      toast("Lengkapi form terlebih dahulu.");
+      return;
+    }
+    toggleButton(btn, "Menyimpan...");
+    const res = await fetchData({
+      url: "/api/event.php",
+      data: {
+        name: nameElm.val(),
+        tanggal: tanggalElm.val(),
+        status: 1,
+      },
+      method: "POST",
+    }).catch((err) => {
+      toast(err.responseJSON.message, "error");
+      return false;
+    });
+    if (!res) {
+      toggleButton(btn, "Simpan");
+      return;
+    }
+    toggleButton(btn, "Simpan");
+    nameElm.val("");
+    tanggalElm.val("");
+    $("#modalTambahEvent").modal("hide");
+    toast({
+      message:
+        "Data event: <strong>" + nameElm.val() + "</strong> berhasil disimpan.",
+      icon: "success",
+      delay: 5000,
+    });
+    tabelEvent.ajax.reload(null, false);
+  });
+});

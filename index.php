@@ -1,39 +1,9 @@
-<?php
-include 'functions.php';
-$data['informasi'] = query('SELECT * FROM informasi ORDER BY created_at DESC LIMIT 8');
-$data['unduhan'] = query("SELECT * FROM berkas WHERE type = 'unduhan' ORDER BY created_at ASC");
-$data['banner'] = query("SELECT * FROM berkas WHERE type = 'banner' ORDER BY created_at ASC")
+<?php require './config/functions.php';
+$data['banner'] = query("SELECT banner.title, `description`, `order`, src FROM banner LEFT JOIN berkas ON banner.berkas_id =  berkas.berkas_id");
 ?>
-<!doctype html>
-<html lang="en" data-bs-theme="auto">
+<?php include './view/templates/head.php'; ?>
 
-<head>
-  <script src="./assets/js/color-modes.js"></script>
-
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="description" content="" />
-  <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors" />
-  <meta name="generator" content="Hugo 0.112.5" />
-  <title>Info PPDB SMPN 2 Wonosari</title>
-
-  <link href="./assets/css/bootstrap.min.css" rel="stylesheet" />
-  <link href="./assets/css/bootstrap-icons.css" rel="stylesheet" />
-  <link href="./assets/css/fancybox.css" rel="stylesheet" />
-  <link href="./assets/css/datatables.min.css" rel="stylesheet" />
-  <link href="./assets/css/style.css" rel="stylesheet" />
-
-  <!-- Favicons -->
-  <link rel="apple-touch-icon" href="./assets/images/logo2.png" sizes="180x180" />
-  <link rel="icon" href="./assets/images/logo2.png" sizes="32x32" type="image/png" />
-  <link rel="icon" href="./assets/images/logo2.png" sizes="16x16" type="image/png" />
-  <link rel="manifest" href="./assets/manifest.json" />
-  <link rel="icon" href="./assets/images/logo2.png" />
-  <meta name="theme-color" content="#712cf9" />
-
-</head>
-
-<body>
+<body class="bg-body-tertiary">
   <svg xmlns="http://www.w3.org/2000/svg" style="display: none">
     <symbol id="check2" viewBox="0 0 16 16">
       <path d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0z" />
@@ -106,7 +76,7 @@ $data['banner'] = query("SELECT * FROM berkas WHERE type = 'banner' ORDER BY cre
   </svg>
 
   <section class="sticky-top">
-    <div class="col-lg-8 mx-auto">
+    <div class="col-lg-8 mx-auto bg-body shadow">
       <header class="d-flex p-3 align-items-center justify-content-between border-bottom">
         <a href="./" class="d-flex align-items-center text-body-emphasis text-decoration-none">
           <img src="./assets/images/logo2.png" alt="Logo SMPN 2 Wonosari" width="60" class="me-2" />
@@ -116,9 +86,7 @@ $data['banner'] = query("SELECT * FROM berkas WHERE type = 'banner' ORDER BY cre
           </p>
         </a>
         <div class="d-flex">
-          <a href="https://ppdb.pendidikan.gunungkidulkab.go.id/" target="_blank" class="btn btn-primary mx-1 d-none d-lg-block d-sm-block">Daftar</a>
-          <a href="https://chat.whatsapp.com/GKjS4ZwfHqb2HQEVthtleC" class="btn btn-success mx-1 d-none d-lg-block d-sm-block" target="_blank">WA
-            Group</a>
+          <a href="https://ppdb.pendidikan.gunungkidulkab.go.id/" target="_blank" class="btn btn-outline-primary mx-1 d-none d-lg-block d-sm-block">Daftar</a>
           <button class="btn btn-link" title="Menu" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
             <i class="bi bi-three-dots-vertical"></i>
           </button>
@@ -146,14 +114,14 @@ $data['banner'] = query("SELECT * FROM berkas WHERE type = 'banner' ORDER BY cre
             <li>
               <hr class="dropdown-divider">
             </li>
-            <li><a class="dropdown-item" href="./login.php">Sign In</a></li>
+            <li><a class="dropdown-item" href="./auth/login.php">Sign In</a></li>
           </ul>
         </div>
       </header>
     </div>
   </section>
-  <div class="col-lg-8 mx-auto p-4 py-md-5">
-    <main>
+  <div class="col-lg-8 mx-auto p-4 py-md-5 bg-body shadow-lg">
+    <main class="px-lg-5">
 
       <div id="carousel" class="carousel slide carousel-fade mb-3" data-bs-ride="carousel">
         <div class="carousel-inner">
@@ -232,17 +200,7 @@ $data['banner'] = query("SELECT * FROM berkas WHERE type = 'banner' ORDER BY cre
               </tr>
             </thead>
             <tbody>
-              <?php foreach ($data['informasi'] as $row) : ?>
-                <tr>
-                  <td>
-                    <div class="d-flex w-100 justify-content-between">
-                      <h5 class="mb-1"><?= $row['judul']; ?></h5>
-                      <small class="text-muted"><?= timeAgo($row['created_at']); ?></small>
-                    </div>
-                    <p class="mb-1"><?= $row['isi']; ?></p>
-                  </td>
-                </tr>
-              <?php endforeach; ?>
+
             </tbody>
           </table>
           <hr class="col-3 col-md-2 mb-2" />
@@ -252,16 +210,7 @@ $data['banner'] = query("SELECT * FROM berkas WHERE type = 'banner' ORDER BY cre
             Unduhan
           </h2>
           <ul class="list-unstyled ps-0">
-            <?php foreach ($data['unduhan'] as $row) : ?>
-              <li>
-                <a class="icon-link mb-1" target="_blank" href="<?= $row['src']; ?>">
-                  <svg class="bi" width="16" height="16">
-                    <use xlink:href="#arrow-right-circle" />
-                  </svg>
-                  <?= $row['title']; ?>
-                </a>
-              </li>
-            <?php endforeach; ?>
+
           </ul>
           <hr class="col-3 col-md-2 mb-2" />
         </div>
@@ -519,7 +468,7 @@ $data['banner'] = query("SELECT * FROM berkas WHERE type = 'banner' ORDER BY cre
       </div>
     </main>
 
-    <footer class="pt-5 my-5 text-body-secondary border-top d-flex flex-column flex-lg-row justify-content-between align-items-center text-center text-lg-start">
+    <footer class="pt-5 my-5 px-5 text-body-secondary border-top d-flex flex-column flex-lg-row justify-content-between align-items-center text-center text-lg-start">
       <span class="m-0">
         &copy; 2024 Dibuat dan dikembangkan oleh
         <a href="https://muhsaidlg.my.id" target="_blank" class="text-decoration-none">Muhammad Said Latif Ghofari</a>
@@ -528,10 +477,7 @@ $data['banner'] = query("SELECT * FROM berkas WHERE type = 'banner' ORDER BY cre
     </footer>
   </div>
 
-  <script src="./assets/js/jquery.min.js"></script>
-  <script src="./assets/js/bootstrap.bundle.min.js"></script>
-  <script src="./assets/js/datatables.min.js"></script>
-  <script src="./assets/js/fancybox.umd.js"></script>
+  <?php include './view/templates/script.php'; ?>
 
   <script>
     const dataEvent = [
@@ -623,28 +569,10 @@ $data['banner'] = query("SELECT * FROM berkas WHERE type = 'banner' ORDER BY cre
     }
   </script>
   <script>
-    Fancybox.bind("[data-fancybox]", {
-      // Your custom options
-    });
+    Fancybox.bind("[data-fancybox]");
 
     $(document).ready(function() {
-      const tabelInfo = $("#tabelInfoPublic").DataTable({
-        dom: '<"mb-2"t><"d-flex justify-content-center"p>',
-        ordering: false,
-        pagingType: 'simple',
-        lengthMenu: [
-          [5, 25, 50, -1],
-          [5, 25, 50, "All"],
-        ],
-        language: {
-          paginate: {
-            previous: '<i class="bi bi-chevron-left"></i>',
-            next: '<i class="bi bi-chevron-right"></i>',
-          },
-        },
-      });
 
-      $('#cariInfo').on('keyup', e => tabelInfo.search(e.target.value).draw());
     });
   </script>
 </body>

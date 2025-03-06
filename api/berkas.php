@@ -1,6 +1,8 @@
 <?php
+session_start();
+
 header('Content-Type: application/json; charset=utf-8');
-include '../functions.php';
+include '../core/functions.php';
 global $conn;
 
 $method = $_SERVER['REQUEST_METHOD'];
@@ -56,7 +58,7 @@ switch ($method) {
             }
 
             $path = $dir . $filename;
-            $loc = './uploads/' . $filename;
+            $loc = '/uploads/' . $filename;
 
             if (!move_uploaded_file($file['tmp_name'], $path)) {
                 http_response_code(500);

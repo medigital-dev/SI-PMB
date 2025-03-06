@@ -291,16 +291,19 @@ function timeAgo(datetime, full = false) {
   return result.length ? result.join(", ") + " lalu" : "baru saja";
 }
 
-function toggleButton(buttonElm, text) {
-  if (!buttonElm.prop("disabled")) {
-    buttonElm
-      .html(
-        '<span class="spinner-border spinner-border-sm" aria-hidden="true"></span><span role="status">' +
-          text +
-          "</span>"
-      )
-      .prop("disabled", true);
+function toggleButton(buttonElm, text, forceLoading = false) {
+  const elm =
+    '<span class="spinner-border spinner-border-sm me-1" aria-hidden="true"></span><span role="status">' +
+    text +
+    "</span>";
+
+  if (forceLoading) {
+    buttonElm.html(elm).prop("disabled", true);
   } else {
-    buttonElm.text(text).prop("disabled", false);
+    if (!buttonElm.prop("disabled")) {
+      buttonElm.html(elm).prop("disabled", true);
+    } else {
+      buttonElm.text(text).prop("disabled", false);
+    }
   }
 }

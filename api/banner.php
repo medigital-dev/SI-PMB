@@ -1,6 +1,8 @@
 <?php
+session_start();
+
 header('Content-Type: application/json; charset=utf-8');
-include '../functions.php';
+include '../core/functions.php';
 global $conn;
 
 $method = $_SERVER['REQUEST_METHOD'];

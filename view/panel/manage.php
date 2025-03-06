@@ -1,0 +1,342 @@
+<section>
+    <div class="container">
+        <div class="row row-cols-2 row-cols-md-4 g-4 mb-4">
+            <div class="col">
+                <div class="card card-body shadow text-bg-primary bg-gradient">
+                    <h6 class="card-title">Informasi</h6>
+                    <div class="d-flex justify-content-between">
+                        <span class="h1 fs-1 m-0" id="totalInfo">0</span>
+                        <i class="fa-solid fa-users text-opacity-25 text-white fa-3x"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card card-body shadow text-bg-danger bg-gradient">
+                    <h6 class="card-title">Banner</h6>
+                    <div class="d-flex justify-content-between">
+                        <span class="h1 fs-1 m-0" id="totalBanner">0</span>
+                        <i class="fa-solid fa-users text-opacity-25 text-white fa-3x"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card card-body shadow text-bg-warning bg-gradient">
+                    <h6 class="card-title">Event</h6>
+                    <div class="d-flex justify-content-between">
+                        <span class="h1 fs-1 m-0" id="totalEvent">0</span>
+                        <i class="fa-solid fa-users text-opacity-25 text-white fa-3x"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card card-body shadow text-bg-success bg-gradient">
+                    <h6 class="card-title">Berkas/Unduhan</h6>
+                    <div class="d-flex justify-content-between">
+                        <span class="h1 fs-1 m-0" id="totalBerkas">0/0</span>
+                        <i class="fa-solid fa-users text-opacity-25 text-white fa-3x"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="d-block d-lg-flex align-items-start">
+            <div class="card shadow mb-4 me-lg-4">
+                <div class="card-header text-bg-primary text-center">Menu</div>
+                <div class="card-body p-2">
+                    <div class="nav flex-lg-column nav-pills justify-content-center pe-lg-4" role="tablist" aria-orientation="vertical">
+                        <button class="nav-link text-start active" id="v-pills-info-tab" data-bs-toggle="pill" data-bs-target="#v-pills-info" type="button" role="tab" aria-controls="v-pills-info" aria-selected="true">Informasi</button>
+                        <button class="nav-link text-start" id="v-pills-banner-tab" data-bs-toggle="pill" data-bs-target="#v-pills-banner" type="button" role="tab" aria-controls="v-pills-banner" aria-selected="true">Banner</button>
+                        <button class="nav-link text-start" id="v-pills-event-tab" data-bs-toggle="pill" data-bs-target="#v-pills-event" type="button" role="tab" aria-controls="v-pills-event" aria-selected="true">Event</button>
+                        <button class="nav-link text-start" id="v-pills-berkas-tab" data-bs-toggle="pill" data-bs-target="#v-pills-berkas" type="button" role="tab" aria-controls="v-pills-berkas" aria-selected="true">Berkas</button>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-content w-100">
+                <div class="tab-pane fade show active" id="v-pills-info" role="tabpanel" aria-labelledby="v-pills-info-tab" tabindex="0">
+                    <div class="card shadow mb-4">
+                        <div class="card-header text-bg-primary">Data Informasi</div>
+                        <div class="card-body">
+                            <div class="sticky-top py-2 bg-body">
+                                <div class="btn-toolbar">
+                                    <div class="btn-group btn-group-sm my-1 me-1">
+                                        <button type="button" class="btn btn-primary" title="Reload Tabel" id="btnReloadTabelInformasi"><i class="bi bi-arrow-repeat"></i></button>
+                                        <button type="button" class="btn btn-primary" title="Tambah Informasi" id="btnTambahInformasi" data-bs-toggle="modal" data-bs-target="#modalTambahInformasi"><i class="bi bi-plus-circle"></i></button>
+                                    </div>
+                                    <div class="input-group input-group-sm my-1 ms-auto">
+                                        <input type="text" class="form-control" id="searchTabelInformasi" placeholder="Cari Informasi">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="table-responsive">
+                                <table class="table table-bordered table-hover w-100" id="tabelInformasi">
+                                    <thead>
+                                        <tr>
+                                            <th class="text-bg-primary text-center align-middle">Informasi</th>
+                                            <th class="text-bg-primary text-center align-middle">Aksi</th>
+                                        </tr>
+                                    </thead>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="v-pills-berkas" role="tabpanel" aria-labelledby="v-pills-berkas-tab" tabindex="0">
+                    <div class="card shadow mb-4">
+                        <div class="card-header text-bg-primary">Berkas Upload</div>
+                        <div class="card-body">
+                            <div class="sticky-top py-2 bg-body">
+                                <div class="btn-toolbar">
+                                    <div class="btn-group btn-group-sm my-1 me-1">
+                                        <button type="button" class="btn btn-primary" title="Reload Tabel" id="btnReloadTabelBerkas"><i class="bi bi-arrow-repeat"></i></button>
+                                        <button type="button" class="btn btn-primary" title="Tambah Berkas" id="btnTambahBerkas" data-bs-toggle="modal" data-bs-target="#modalTambahBerkas"><i class="bi bi-plus-circle"></i></button>
+                                    </div>
+                                    <div class="input-group input-group-sm ms-auto my-1">
+                                        <input type="text" class="form-control" id="searchTabelBerkas" placeholder="Cari Berkas">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="table-responsive">
+                                <table class="table table-bordered w-100" id="tabelBerkas">
+                                    <thead>
+                                        <tr>
+                                            <th class="text-bg-primary text-center align-middle">Data</th>
+                                            <th class="text-bg-primary text-center align-middle">Aksi</th>
+                                        </tr>
+                                    </thead>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="v-pills-banner" role="tabpanel" aria-labelledby="v-pills-banner-tab" tabindex="0">
+                    <div class="card shadow mb-4">
+                        <div class="card-header text-bg-primary">Data Banner Hero</div>
+                        <div class="card-body">
+                            <div class="sticky-top py-2 bg-body">
+                                <div class="btn-toolbar">
+                                    <div class="btn-group btn-group-sm my-1 me-1">
+                                        <button type="button" class="btn btn-primary" title="Reload Tabel" id="btnReloadTabelBanner"><i class="bi bi-arrow-repeat"></i></button>
+                                        <button type="button" class="btn btn-primary" title="Tambah Banner" id="btnTambahBanner" data-bs-toggle="modal" data-bs-target="#modalTambahBanner"><i class="bi bi-plus-circle"></i></button>
+                                    </div>
+                                    <div class="input-group input-group-sm my-1 ms-auto">
+                                        <input type="text" class="form-control" id="searchTabelBanner" placeholder="Cari Banner">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="table-responsive">
+                                <table class="table table-bordered w-100" id="tabelBanner">
+                                    <thead>
+                                        <tr>
+                                            <th class="text-bg-primary text-center align-middle">Data</th>
+                                            <th class="text-bg-primary text-center align-middle">Aksi</th>
+                                        </tr>
+                                    </thead>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="v-pills-event" role="tabpanel" aria-labelledby="v-pills-event-tab" tabindex="0">
+                    <div class="card shadow mb-4">
+                        <div class="card-header text-bg-primary">Data Event</div>
+                        <div class="card-body">
+                            <div class="sticky-top py-2 bg-body">
+                                <div class="btn-toolbar">
+                                    <div class="btn-group btn-group-sm my-1 me-1">
+                                        <button type="button" class="btn btn-primary" title="Reload Tabel" id="btnReloadTabelEvent"><i class="bi bi-arrow-repeat"></i></button>
+                                        <button type="button" class="btn btn-primary" title="Tambah Banner" id="btnTambahEvent" data-bs-toggle="modal" data-bs-target="#modalTambahEvent"><i class="bi bi-plus-circle"></i></button>
+                                    </div>
+                                    <div class="input-group input-group-sm my-1 ms-auto">
+                                        <input type="text" class="form-control" id="searchTabelEvent" placeholder="Cari Event">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="table-responsive">
+                                <table class="table table-bordered w-100" id="tabelEvent">
+                                    <thead>
+                                        <tr>
+                                            <th class="text-bg-primary text-center align-middle">Uraian</th>
+                                            <th class="text-bg-primary text-center align-middle">Waktu &<br>Tanggal</th>
+                                            <th class="text-bg-primary text-center align-middle">Aksi</th>
+                                        </tr>
+                                    </thead>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<div class="modal fade" data-bs-backdrop="static" data-bs-keyboard="false" id="modalTambahInformasi" tabindex="-1" aria-labelledby="modalTambahInformasiLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="modalTambahInformasiLabel">Tambah Informasi</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="idInformasi">
+                <div class="mb-3">
+                    <label class="form-label" for="judul">Judul</label>
+                    <input type="text" class="form-control" name="judul" id="judul">
+                    <div class="invalid-feedback">Input ini diperlukan!</div>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label" for="isi">Isi</label>
+                    <textarea name="isi" id="isi" rows="10" class="form-control"></textarea>
+                    <div class="invalid-feedback">Input ini diperlukan!</div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+                <button type="button" class="btn btn-primary" id="btnSaveInfo">Simpan</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" data-bs-backdrop="static" data-bs-keyboard="false" id="modalProfil" tabindex="-1" aria-labelledby="modalProfilLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable">
+        <form action="" method="post">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="modalProfilLabel">Profil Pengguna</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="nama" class="form-label">Nama User</label>
+                        <input type="text" class="form-control" name="nama" id="nama" value="<?= $admin['name']; ?>">
+                    </div>
+                    <div class="mb-3">
+                        <label for="username" class="form-label">Username</label>
+                        <input type="text" class="form-control" name="username" id="username" value="<?= $admin['username']; ?>">
+                    </div>
+                    <hr>
+                    <div class="mb-3">
+                        <label for="oldPassword" class="form-label">Password Lama</label>
+                        <input type="password" class="form-control password" name="oldPassword" id="oldPassword">
+                        <div class="form-text">Input password lama jika ingin mengganti password.</div>
+                    </div>
+                    <div class="row row-cols-2">
+                        <div class="col-12 col-md-6 mb-3">
+                            <label for="newPassword" class="form-label">Password Baru</label>
+                            <input type="password" class="form-control password" name="newPassword" id="newPassword">
+                        </div>
+                        <div class="col-12 col-md-6 mb-3">
+                            <label for="newPassword2" class="form-label">Konfirmasi Password</label>
+                            <input type="password" class="form-control password" name="newPassword2" id="newPassword2">
+                        </div>
+                    </div>
+                    <div class="form-check text-start mb-3">
+                        <input class="form-check-input" type="checkbox" id="showPass">
+                        <label class="form-check-label" for="showPass">
+                            Lihat Password
+                        </label>
+                    </div>
+                </div>
+                <div class="modal-footer d-flex justify-content-start">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+                    <button type="submit" class="btn btn-primary" name="saveProfil" id="btnSaveProfil">Simpan</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<div class="modal fade" data-bs-backdrop="static" data-bs-keyboard="false" id="modalTambahBerkas" tabindex="-1" aria-labelledby="modalTambahBerkasLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="modalTambahBerkasLabel">Tambah Berkas Unduhan</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <label for="titleFile" class="form-label">Judul File</label>
+                    <input type="text" class="form-control" name="title" id="titleFile">
+                    <div class="invalid-feedback">Wajib.</div>
+                </div>
+                <div class="mb-3">
+                    <label for="fileBerkas" class="form-label">Pilih file</label>
+                    <input class="form-control" type="file" id="fileBerkas">
+                    <div class="invalid-feedback">Wajib.</div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+                <button type="button" class="btn btn-primary" id="btnSaveBerkas">Simpan</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" data-bs-backdrop="static" data-bs-keyboard="false" id="modalTambahBanner" tabindex="-1" aria-labelledby="modalTambahBannerLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="modalTambahBannerLabel">Tambah Banner Hero</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row mb-3">
+                    <label for="titleFileBanner" class="col-form-label col-sm-3">Judul</label>
+                    <div class="col-sm-9">
+                        <input type="text" class="form-control" name="title" id="titleFileBanner">
+                        <div class="invalid-feedback">Wajib.</div>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <label for="bannerDescription" class="col-form-label col-sm-3">Deskripsi</label>
+                    <div class="col-sm-9">
+                        <textarea rows="4" class="form-control" name="description" id="bannerDescription"></textarea>
+                        <div class="invalid-feedback">Wajib.</div>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <label for="fileBanner" class="col-form-label col-sm-3">Pilih file</label>
+                    <div class="col-sm-9">
+                        <input class="form-control" type="file" id="fileBanner" accept="image/*">
+                        <div class="invalid-feedback">Wajib.</div>
+                        <a href="" data-fancybox>
+                            <img id="previewBanner" class="img-fluid mt-2">
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+                <button type="button" class="btn btn-primary" id="btnSaveBanner">Simpan</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" data-bs-backdrop="static" data-bs-keyboard="false" id="modalTambahEvent" tabindex="-1" aria-labelledby="modalTambahEventLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="modalTambahEventLabel">Tambah Event</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row mb-3">
+                    <label for="namaEvent" class="col-form-label col-sm-3">Nama Event</label>
+                    <div class="col-sm-9">
+                        <input type="text" class="form-control" name="title" id="namaEvent">
+                        <div class="invalid-feedback">Wajib.</div>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <label for="tanggalEvent" class="col-form-label col-sm-3">Tanggal</label>
+                    <div class="col-sm-9">
+                        <input type="datetime-local" name="tanggalEvent" id="tanggalEvent" class="form-control">
+                        <div class="invalid-feedback">Wajib.</div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+                <button type="button" class="btn btn-primary" id="btnSaveEvent">Simpan</button>
+            </div>
+        </div>
+    </div>
+</div>
