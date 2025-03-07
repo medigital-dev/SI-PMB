@@ -9,12 +9,15 @@
                 <li class="nav-item">
                     <a class="nav-link active" aria-current="page" href="/panel/manage.php">Manage</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Content</a>
-                </li>
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        User
+            </ul>
+            <div class="ms-auto">
+                <div class="btn-group btn-group-sm">
+                    <a href="/" target="_blank" class="btn btn-outline-primary btn-sm" title="Homepage"><i class="bi bi-box-arrow-up-right me-1 me-sm-0"></i><span class="d-lg-none">Homepage</span></a>
+                    <a class="btn btn-outline-primary btn-sm dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="bi bi-person-circle me-1 me-sm-0"></i>
+                        <span class="d-lg-none">
+                            User
+                        </span>
                     </a>
                     <ul class="dropdown-menu">
                         <li>
@@ -24,10 +27,10 @@
                         <li>
                             <hr class="dropdown-divider">
                         </li>
-                        <li><a class="dropdown-item" href="./logout.php">Logout</a></li>
+                        <li><a class="dropdown-item" href="/auth/logout.php">Logout</a></li>
                     </ul>
-                </li>
-            </ul>
+                </div>
+            </div>
         </div>
     </div>
 </nav>

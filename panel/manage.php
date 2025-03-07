@@ -2,10 +2,9 @@
 session_start();
 
 if (!isset($_SESSION["login"])) {
-    header("Location: login.php");
+    header("Location: /auth/login.php");
     exit;
 }
-
 include '../core/functions.php';
 
 $admin = $_SESSION['user'];
@@ -29,7 +28,7 @@ view('../view/templates/head.php', [
 view('../view/templates/toogle-theme.php');
 view('../view/panel/navbar.php', ['admin' => $admin]);
 // content
-view('../view/panel/manage.php');
+view('../view/panel/manage.php', ['admin' => $admin]);
 // end content
 view('../view/templates/footer.php', [
     'script' => [

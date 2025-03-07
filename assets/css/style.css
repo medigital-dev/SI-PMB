@@ -123,3 +123,11 @@
     height: 100px;
   }
 }
+
+.sticky-top {
+  transition: transform 0.3s ease-in-out;
+}
+
+.hide-header {
+  transform: translateY(-100%);
+}

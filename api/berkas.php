@@ -8,11 +8,20 @@ global $conn;
 $method = $_SERVER['REQUEST_METHOD'];
 
 $id = isset($_GET['id']) ? mysqli_real_escape_string($conn, $_GET['id']) : null;
+$status = isset($_GET['s']) ? mysqli_real_escape_string($conn, $_GET['s']) : null;
 
 switch ($method) {
     case 'GET':
         if ($id == null) {
-            $sql = "SELECT berkas_id as id, created_at as tanggal, `filename`, title, `type`, src, `size`, `status` FROM berkas ORDER BY created_at DESC";
+            $sql = "SELECT berkas_id as id, created_at as tanggal, `filename`, title, `type`, src, `size`, `status` FROM berkas";
+
+            if (!empty($status)) {
+                $status = mysqli_real_escape_string($conn, $status);
+                $sql .= " WHERE status = '$status'";
+            }
+
+            $sql .= " ORDER BY created_at DESC";
+
             $result = query($sql);
             echo json_encode($result, JSON_PRETTY_PRINT);
         } else {

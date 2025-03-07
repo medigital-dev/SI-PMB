@@ -1,5 +1,5 @@
 <?php
-require '../config/app.php';
+require 'dbconn.php';
 
 function query($query): array
 {

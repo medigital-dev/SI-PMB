@@ -307,3 +307,77 @@ function toggleButton(buttonElm, text, forceLoading = false) {
     }
   }
 }
+
+async function counterInner() {
+  let dataEvent = [];
+  try {
+    const res = await fetchData("/api/event.php");
+    if (!res) return;
+    res.forEach((e) => dataEvent.push([e.name, e.tanggal]));
+  } catch (err) {
+    console.error(err);
+    return;
+  }
+
+  const countDownClock = (seconds) => {
+    const daysElement = document.querySelector(".days");
+    const hoursElement = document.querySelector(".hours");
+    const minutesElement = document.querySelector(".minutes");
+    const secondsElement = document.querySelector(".seconds");
+
+    if (!daysElement || !hoursElement || !minutesElement || !secondsElement) {
+      console.warn("Elemen countdown tidak ditemukan.");
+      return;
+    }
+
+    function updateDisplay(sec) {
+      const days = Math.floor(sec / 86400);
+      const hours = Math.floor((sec % 86400) / 3600);
+      const minutes = Math.floor(((sec % 86400) % 3600) / 60);
+      const seconds = sec % 60;
+
+      daysElement.textContent = days;
+      hoursElement.textContent = hours.toString().padStart(2, "0");
+      minutesElement.textContent = minutes.toString().padStart(2, "0");
+      secondsElement.textContent = seconds.toString().padStart(2, "0");
+    }
+
+    let countdown = setInterval(() => {
+      seconds--;
+
+      if (seconds <= 0) {
+        clearInterval(countdown);
+        return;
+      }
+
+      updateDisplay(seconds);
+    }, 1000);
+
+    updateDisplay(seconds);
+  };
+
+  const eventNameElement = document.querySelector("#eventName");
+  const today = new Date();
+
+  for (const [name, dateString] of dataEvent) {
+    const [datePart, timePart] = dateString.split(" ");
+    const [year, month, day] = datePart.split("-").map(Number);
+    const [hour, minute, second] = timePart
+      ? timePart.split(":").map(Number)
+      : [0, 0, 0];
+
+    const target = new Date(year, month - 1, day, hour, minute, second);
+    const diffInSeconds = Math.floor((target - today) / 1000);
+
+    if (diffInSeconds > 0) {
+      countDownClock(diffInSeconds);
+      if (eventNameElement) {
+        eventNameElement.innerHTML = `<h3 class="text-center fw-bold">${name}</h3><p class="small fs-6 text-center">(${tanggal(
+          dateString,
+          "D F Y H:i WIB"
+        )})</p>`;
+      }
+      break;
+    }
+  }
+}

@@ -17,10 +17,17 @@ final class Db005 extends AbstractMigration
      * Remember to call "create()" or "update()" and NOT "save()" when working
      * with the Table class.
      */
-    public function change(): void {
-        $table = $this->table('sekolah',['id'=>'id']);
-        $table->addColumn('nama','string',['limit'=>128,'null'=>false])
-        ->addColumn('logo','string',['limit'=>64,'null'=>false])
-        ->addColumn('')
+    public function change(): void
+    {
+        $table = $this->table('tautan', ['id' => 'id']);
+        $table->addColumn('tautan_id', 'string', ['limit' => 64, 'null' => false])
+            ->addColumn('title', 'string', ['limit' => 128, 'null' => false])
+            ->addColumn('href', 'string', ['limit' => 128, 'null' => false])
+            ->addColumn('aktif', 'boolean', ['null' => false])
+            ->addColumn('menu', 'boolean', ['null' => false])
+            ->addColumn('created_at', 'datetime', ['null' => false])
+            ->addIndex('tautan_id', ['unique' => true])
+            ->create()
+        ;
     }
 }
