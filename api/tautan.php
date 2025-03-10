@@ -1,7 +1,7 @@
 <?php
 session_start();
-
 header('Content-Type: application/json; charset=utf-8');
+
 include '../core/functions.php';
 include '../auth/filter.php';
 
@@ -14,11 +14,11 @@ $id = isset($_GET['id']) ? mysqli_real_escape_string($conn, $_GET['id']) : null;
 switch ($method) {
     case 'GET':
         if ($id == null) {
-            $sql = "SELECT banner_id as id, title, `description`, `order`, created_at as tanggal, berkas_id FROM banner ORDER BY `order` ASC";
+            $sql = "SELECT tautan_id as id, created_at as tanggal, title, url, aktif, on_menu, urutan FROM tautan ORDER BY urutan ASC";
             $result = query($sql);
             echo json_encode($result, JSON_PRETTY_PRINT);
         } else {
-            $sql = "SELECT banner_id as id, title, `description`, `order`, created_at as tanggal, berkas_id FROM banner WHERE banner_id = ?";
+            $sql = "SELECT tautan_id as id, created_at as tanggal, title, url, aktif, on_menu, urutan FROM tautan WHERE info_id = ?";
             $stmt = mysqli_prepare($conn, $sql);
             mysqli_stmt_bind_param($stmt, "s", $id);
             mysqli_stmt_execute($stmt);
@@ -29,25 +29,25 @@ switch ($method) {
                 echo json_encode($data, JSON_PRETTY_PRINT);
             } else {
                 http_response_code(404);
-                echo json_encode(['message' => 'Item not found']);
+                echo json_encode(['message' => 'Data tautan tidak ditemukan.']);
             }
         }
         break;
 
     case 'POST':
         requireLogin();
+        $data = query("SELECT * FROM tautan");
+        $jumlahData = count($data);
 
         $title = $_POST['title'] ?? null;
-        $description = $_POST['description'] ?? null;
-        $idBerkas = $_POST['idBerkas'] ?? null;
-        $order = $_POST['order'] ?? null;
-        $dataBanner = query("SELECT * FROM BANNER");
-        $jumlahBanner = count($dataBanner);
-        $urutan = $jumlahBanner + 1;
+        $url = $_POST['url'] ?? null;
+        $aktif = $_POST['aktif'] ?? true;
+        $on_menu = $_POST['on_menu'] ?? null;
+        $urutan = $_POST['urutan'] ?? $jumlahData + 1;
 
-        if (!$title) {
+        if (!$title || !$url) {
             http_response_code(400);
-            echo json_encode(['message' => 'Judul dan Deskripsi tidak boleh kosong.']);
+            echo json_encode(['message' => 'Judul dan alamat url tidak boleh kosong.']);
             die;
         }
 
@@ -55,11 +55,11 @@ switch ($method) {
             $timestamp = date('Y-m-d H:i:s');
             do {
                 $unique = random_string();
-            } while (count(query("SELECT * FROM banner WHERE banner_id = '$unique'")) > 0);
+            } while ($jumlahData > 0);
 
-            $sql = "INSERT INTO banner (banner_id, title, `description`, `order`, created_at, berkas_id) VALUES (?, ?, ?, ?, ?, ?)";
+            $sql = "INSERT INTO tautan (tautan_id, title, `url`, aktif, on_menu, urutan, created_at) VALUES (?, ?, ?, ?, ?, ?, ?)";
             $stmt = mysqli_prepare($conn, $sql);
-            mysqli_stmt_bind_param($stmt, "ssssss", $unique, $title, $description, $urutan, $timestamp, $idBerkas);
+            mysqli_stmt_bind_param($stmt, "sssssss", $unique, $title, $url, $aktif, $on_menu, $urutan, $timestamp);
             $result = mysqli_stmt_execute($stmt);
 
             if (!$result) {
@@ -70,9 +70,11 @@ switch ($method) {
 
             $response = [
                 'status' => true,
-                'message' => 'Banner berhasil ditambahkan.',
+                'message' => 'Tautan berhasil ditambahkan.',
                 'data' => [
                     'id' => $unique,
+                    'title' => $title,
+                    'url' => $url,
                 ]
             ];
             http_response_code(201);
@@ -87,21 +89,27 @@ switch ($method) {
                 $types .= "s";
             }
 
-            if ($description !== null) {
-                $updates[] = "description = ?";
-                $params[] = $description;
+            if ($url !== null) {
+                $updates[] = "url = ?";
+                $params[] = $url;
                 $types .= "s";
             }
 
-            if ($idBerkas !== null) {
-                $updates[] = "berkas_id = ?";
-                $params[] = $idBerkas;
+            if ($aktif !== null) {
+                $updates[] = "aktif = ?";
+                $params[] = $aktif;
                 $types .= "s";
             }
 
-            if ($order !== null) {
-                $updates[] = "`order` = ?";
-                $params[] = $order;
+            if ($on_menu !== null) {
+                $updates[] = "on_menu = ?";
+                $params[] = $on_menu;
+                $types .= "i";
+            }
+
+            if ($urutan !== null) {
+                $updates[] = "urutan = ?";
+                $params[] = $urutan;
                 $types .= "i";
             }
 
@@ -127,12 +135,12 @@ switch ($method) {
 
             $response = [
                 'status' => true,
-                'message' => 'Banner berhasil diperbarui.',
+                'message' => 'Daftar link berhasil diperbarui.',
                 'data' => ['id' => $id]
             ];
             http_response_code(200);
         }
-        echo json_encode($response, JSON_PRETTY_PRINT);
+
         break;
 
     case 'DELETE':
@@ -143,22 +151,23 @@ switch ($method) {
             die;
         }
 
-        $sql = "DELETE FROM banner WHERE banner_id = ?";
+        $sql = "DELETE FROM tautan WHERE tautan_id = ?";
         $stmt = mysqli_prepare($conn, $sql);
         mysqli_stmt_bind_param($stmt, "s", $id);
         $result = mysqli_stmt_execute($stmt);
 
         if (!$result || mysqli_affected_rows($conn) == 0) {
             http_response_code(404);
-            echo json_encode(['message' => 'Data banner tidak ditemukan atau gagal dihapus.']);
+            echo json_encode(['message' => 'Data tautan tidak ditemukan atau gagal dihapus.']);
             die;
         }
 
         $response = [
             'status' => true,
-            'message' => 'Banner berhasil dihapus permanen.',
+            'message' => 'Data tautan berhasil dihapus permanen.',
             'data' => ['id' => $id]
         ];
+
         http_response_code(200);
         echo json_encode($response, JSON_PRETTY_PRINT);
         break;

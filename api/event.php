@@ -2,6 +2,8 @@
 session_start();
 header('Content-Type: application/json; charset=utf-8');
 include '../core/functions.php';
+include '../auth/filter.php';
+
 global $conn;
 
 $method = $_SERVER['REQUEST_METHOD'];
@@ -32,6 +34,7 @@ switch ($method) {
         break;
 
     case 'DELETE':
+        requireLogin();
         if (!$id) {
             http_response_code(400);
             echo json_encode(['message' => 'ID tidak boleh kosong.']);
@@ -60,6 +63,7 @@ switch ($method) {
         break;
 
     case 'POST':
+        requireLogin();
         $name = $_POST['name'] ?? null;
         $tanggal = $_POST['tanggal'] ?? null;
         $status = $_POST['status'] ?? null;

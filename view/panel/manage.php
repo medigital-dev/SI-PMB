@@ -48,6 +48,7 @@
                         <button class="nav-link text-start" id="v-pills-banner-tab" data-bs-toggle="pill" data-bs-target="#v-pills-banner" type="button" role="tab" aria-controls="v-pills-banner" aria-selected="true">Banner</button>
                         <button class="nav-link text-start" id="v-pills-event-tab" data-bs-toggle="pill" data-bs-target="#v-pills-event" type="button" role="tab" aria-controls="v-pills-event" aria-selected="true">Event</button>
                         <button class="nav-link text-start" id="v-pills-berkas-tab" data-bs-toggle="pill" data-bs-target="#v-pills-berkas" type="button" role="tab" aria-controls="v-pills-berkas" aria-selected="true">Berkas</button>
+                        <button class="nav-link text-start" id="v-pills-tautan-tab" data-bs-toggle="pill" data-bs-target="#v-pills-tautan" type="button" role="tab" aria-controls="v-pills-tautan" aria-selected="true">Tautan</button>
                     </div>
                 </div>
             </div>
@@ -157,6 +158,34 @@
                                         <tr>
                                             <th class="text-bg-primary text-center align-middle">Uraian</th>
                                             <th class="text-bg-primary text-center align-middle">Waktu &<br>Tanggal</th>
+                                            <th class="text-bg-primary text-center align-middle">Aksi</th>
+                                        </tr>
+                                    </thead>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="v-pills-tautan" role="tabpanel" aria-labelledby="v-pills-tautan-tab" tabindex="0">
+                    <div class="card shadow mb-4">
+                        <div class="card-header text-bg-primary">Data Tautan</div>
+                        <div class="card-body">
+                            <div class="sticky-top py-2 bg-body">
+                                <div class="btn-toolbar">
+                                    <div class="btn-group btn-group-sm my-1 me-1">
+                                        <button type="button" class="btn btn-primary" title="Reload Tabel" id="btnReloadTabelTautan"><i class="bi bi-arrow-repeat"></i></button>
+                                        <button type="button" class="btn btn-primary" title="Tambah Banner" id="btnTambahTautan" data-bs-toggle="modal" data-bs-target="#modalTambahTautan"><i class="bi bi-plus-circle"></i></button>
+                                    </div>
+                                    <div class="input-group input-group-sm my-1 ms-auto">
+                                        <input type="text" class="form-control" id="searchTabelTautan" placeholder="Cari Tautan">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="table-responsive">
+                                <table class="table table-bordered w-100" id="tabelTautan">
+                                    <thead>
+                                        <tr>
+                                            <th class="text-bg-primary text-center align-middle">Data</th>
                                             <th class="text-bg-primary text-center align-middle">Aksi</th>
                                         </tr>
                                     </thead>
@@ -336,6 +365,36 @@
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
                 <button type="button" class="btn btn-primary" id="btnSaveEvent">Simpan</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="modalTambahTautan" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="modalTambahTautanLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="modalTambahTautan">Tambah Tautan</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row mb-3">
+                    <label for="titleTautan" class="col-form-label col-sm-3">Judul</label>
+                    <div class="col-sm-9">
+                        <input type="text" class="form-control" name="title" id="titleTautan">
+                        <div class="invalid-feedback">Wajib.</div>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <label for="urlTautan" class="col-form-label col-sm-3">URL</label>
+                    <div class="col-sm-9">
+                        <textarea rows="4" class="form-control" name="description" id="urlTautan"></textarea>
+                        <div class="invalid-feedback">Wajib.</div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+                <button type="button" class="btn btn-primary" id="btnSimpanTautan">Simpan</button>
             </div>
         </div>
     </div>

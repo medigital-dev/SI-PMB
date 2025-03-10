@@ -22,9 +22,10 @@ final class Db005 extends AbstractMigration
         $table = $this->table('tautan', ['id' => 'id']);
         $table->addColumn('tautan_id', 'string', ['limit' => 64, 'null' => false])
             ->addColumn('title', 'string', ['limit' => 128, 'null' => false])
-            ->addColumn('href', 'string', ['limit' => 128, 'null' => false])
-            ->addColumn('aktif', 'boolean', ['null' => false])
-            ->addColumn('menu', 'boolean', ['null' => false])
+            ->addColumn('url', 'string', ['limit' => 128, 'null' => false])
+            ->addColumn('aktif', 'boolean', ['null' => false, 'default' => true])
+            ->addColumn('on_menu', 'boolean', ['null' => true, 'default' => false])
+            ->addColumn('urutan', 'integer', ['null' => false])
             ->addColumn('created_at', 'datetime', ['null' => false])
             ->addIndex('tautan_id', ['unique' => true])
             ->create()

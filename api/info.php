@@ -1,7 +1,10 @@
 <?php
 session_start();
 header('Content-Type: application/json; charset=utf-8');
+
 include '../core/functions.php';
+include '../auth/filter.php';
+
 global $conn;
 
 $method = $_SERVER['REQUEST_METHOD'];
@@ -32,6 +35,7 @@ switch ($method) {
         break;
 
     case 'POST':
+        requireLogin();
         $judul = $_POST['judul'] ?? null;
         $isi = $_POST['isi'] ?? null;
 
@@ -98,6 +102,7 @@ switch ($method) {
         break;
 
     case 'DELETE':
+        requireLogin();
         if (!$id) {
             http_response_code(400);
             echo json_encode(['message' => 'ID tidak boleh kosong.']);

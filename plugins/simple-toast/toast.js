@@ -1,5 +1,5 @@
 const toastContainer =
-  '<div aria-live="polite" aria-atomic="true" class="position-relative"><div class="toast-container p-1 position-fixed"></div></div>';
+  '<div aria-live="polite" aria-atomic="true" class="position-relative"><div class="toast-container p-1 position-fixed bg-transparent opacity-75"></div></div>';
 
 $("html body").append(toastContainer);
 
@@ -160,7 +160,7 @@ function toast(messageOrConfig, ...params) {
         "bottom-center": "bottom-0 start-50 translate-middle-x",
         "bottom-end": "bottom-0 end-0",
       };
-      return positions[id] || "bottom-0 start-50 translate-middle-x";
+      return positions[id] || "top-0 end-0";
     }
   });
 }

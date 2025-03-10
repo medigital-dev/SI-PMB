@@ -5,7 +5,10 @@ if ($_SERVER['REQUEST_METHOD'] !== 'GET')
 
 header('Content-Type: application/json; charset=utf-8');
 include '../core/functions.php';
+include '../auth/filter.php';
+
 global $conn;
+requireLogin();
 
 $response = [
     'info' => count(query("SELECT * FROM informasi")),

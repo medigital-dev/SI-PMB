@@ -32,7 +32,9 @@ $(document).ready(function () {
       <div class="d-flex gap-2 w-100 justify-content-between">
         <div>
           <h6 class="mb-0">${rows.title}</h6>
-          <p class="mb-0 opacity-75 small">${rows.filename}</p>
+          <p class="mb-0 opacity-75 small">[${fileSize(rows.size)}] ${
+            rows.filename
+          }</p>
         </div>
         <a href="${rows.src}" download target="_blank" title="Unduh ${
             rows.title
