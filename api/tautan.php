@@ -18,7 +18,7 @@ switch ($method) {
             $result = query($sql);
             echo json_encode($result, JSON_PRETTY_PRINT);
         } else {
-            $sql = "SELECT tautan_id as id, created_at as tanggal, title, url, aktif, on_menu, urutan FROM tautan WHERE info_id = ?";
+            $sql = "SELECT tautan_id as id, created_at as tanggal, title, url, aktif, on_menu, urutan FROM tautan WHERE tautan_id = ?";
             $stmt = mysqli_prepare($conn, $sql);
             mysqli_stmt_bind_param($stmt, "s", $id);
             mysqli_stmt_execute($stmt);
@@ -43,19 +43,21 @@ switch ($method) {
         $url = $_POST['url'] ?? null;
         $aktif = $_POST['aktif'] ?? true;
         $on_menu = $_POST['on_menu'] ?? null;
-        $urutan = $_POST['urutan'] ?? $jumlahData + 1;
-
-        if (!$title || !$url) {
-            http_response_code(400);
-            echo json_encode(['message' => 'Judul dan alamat url tidak boleh kosong.']);
-            die;
-        }
+        $urutan = $_POST['urutan'] ?? null;
 
         if ($id == null) {
+            if (!$title || !$url) {
+                http_response_code(400);
+                echo json_encode(['message' => 'Judul dan alamat url tidak boleh kosong.']);
+                die;
+            }
+
             $timestamp = date('Y-m-d H:i:s');
+            $urutan = $jumlahData + 1;
+
             do {
                 $unique = random_string();
-            } while ($jumlahData > 0);
+            } while (count(query("SELECT * FROM tautan WHERE tautan_id = '$unique'")) > 0);
 
             $sql = "INSERT INTO tautan (tautan_id, title, `url`, aktif, on_menu, urutan, created_at) VALUES (?, ?, ?, ?, ?, ?, ?)";
             $stmt = mysqli_prepare($conn, $sql);
@@ -97,13 +99,13 @@ switch ($method) {
 
             if ($aktif !== null) {
                 $updates[] = "aktif = ?";
-                $params[] = $aktif;
+                $params[] = $aktif == 'true' ? 1 : 0;
                 $types .= "s";
             }
 
             if ($on_menu !== null) {
                 $updates[] = "on_menu = ?";
-                $params[] = $on_menu;
+                $params[] = $on_menu == 'true' ? 1 : 0;
                 $types .= "i";
             }
 
@@ -119,7 +121,7 @@ switch ($method) {
                 die;
             }
 
-            $sql = "UPDATE banner SET " . implode(", ", $updates) . " WHERE banner_id = ?";
+            $sql = "UPDATE tautan SET " . implode(", ", $updates) . " WHERE tautan_id = ?";
             $params[] = $id;
             $types .= "s";
 
@@ -135,12 +137,13 @@ switch ($method) {
 
             $response = [
                 'status' => true,
-                'message' => 'Daftar link berhasil diperbarui.',
+                'message' => 'Daftar tautan berhasil diperbarui.',
                 'data' => ['id' => $id]
             ];
             http_response_code(200);
         }
 
+        echo json_encode($response, JSON_PRETTY_PRINT);
         break;
 
     case 'DELETE':

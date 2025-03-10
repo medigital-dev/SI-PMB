@@ -25,6 +25,86 @@ $(document).ready(function () {
     },
   });
 
+  const tabelTautan = $("#tabelTautan").DataTable({
+    dom: '<"mb-2"t><"d-flex justify-content-between"ip>',
+    lengthMenu: [
+      [5, 10, 25, 50, 100, -1],
+      [5, 10, 25, 50, 100, "All"],
+    ],
+    responsive: true,
+    ordering: false,
+    processing: true,
+    pagingType: "simple",
+    ajax: {
+      url: "/api/tautan.php",
+      dataSrc: "",
+    },
+    columns: [
+      {
+        data: "id",
+        className: "w-100",
+        render: (data, type, rows, meta) => {
+          const aktif = rows.aktif == 1 ? "checked" : "";
+          const label = rows.aktif == 1 ? "Aktif" : "Non Aktif";
+          const onMenu = rows.on_menu == 1 ? "checked" : "";
+          const onMenuLabel = rows.on_menu == 1 ? "Aktif" : "Non Aktif";
+          return (
+            '<h6 class="mb-1">' +
+            rows.title +
+            "</h6>" +
+            '<a href="' +
+            rows.url +
+            '" class="mb-1 small text-decoration-none" target="_blank">' +
+            rows.url +
+            "</a>" +
+            '<div class="form-check form-switch">' +
+            '<input class="form-check-input btnAktifTautan" data-id="' +
+            data +
+            '" type="checkbox" role="switch" id="' +
+            data +
+            '" ' +
+            aktif +
+            ">" +
+            '<label class="form-check-label small text-muted" for="' +
+            data +
+            '">' +
+            label +
+            " pada Link Homepage</label>" +
+            "</div>" +
+            '<div class="form-check form-switch">' +
+            '<input class="form-check-input btnOnMenuTautan" data-id="' +
+            data +
+            '" type="checkbox" role="switch" id="' +
+            data +
+            '" ' +
+            onMenu +
+            ">" +
+            '<label class="form-check-label small text-muted" for="' +
+            data +
+            '">' +
+            onMenuLabel +
+            " pada Header Homepage</label>" +
+            "</div>"
+          );
+        },
+      },
+      {
+        data: "id",
+        className: "text-center",
+        width: "70px",
+        render: (data, type, rows, meta) => {
+          return (
+            '<div class="btn-group btn-group-sm">' +
+            '<button type="button" class="btn btn-danger btnHapusTautan" data-id="' +
+            data +
+            '" title="Hapus Tautan"><i class="bi bi-trash-fill"></i></button>' +
+            "</div>"
+          );
+        },
+      },
+    ],
+  });
+
   const tabelInformasi = $("#tabelInformasi").DataTable({
     dom: '<"mb-2"t><"d-flex justify-content-between"ip>',
     lengthMenu: [
@@ -97,10 +177,7 @@ $(document).ready(function () {
 
     $(".btnHapusInfo").on("click", async function () {
       const id = $(this).data("id");
-      const data = await fetchData("/api/info.php?id=" + id).catch((err) => {
-        toast(err.responseJSON.message, "error");
-        return false;
-      });
+      const data = await fetchData("/api/info.php?id=" + id);
       if (!data) return;
       const action = await toast({
         title: "Hapus informasi?",
@@ -115,9 +192,6 @@ $(document).ready(function () {
         const res = await fetchData({
           url: "/api/info.php?id=" + id,
           method: "DELETE",
-        }).catch((err) => {
-          toast(err.responseJSON.message, "error");
-          return false;
         });
         if (!res) return;
         toast({
@@ -214,10 +288,7 @@ $(document).ready(function () {
 
     $(".btnHapusBerkas").on("click", async function () {
       const id = $(this).data("id");
-      const data = await fetchData("/api/berkas.php?id=" + id).catch((err) => {
-        toast(err.responseJSON.message, "error");
-        return false;
-      });
+      const data = await fetchData("/api/berkas.php?id=" + id);
       if (!data) return;
       const action = await toast({
         title: "Hapus berkas?",
@@ -228,9 +299,6 @@ $(document).ready(function () {
         const result = await fetchData({
           url: "/api/berkas.php?id=" + id,
           method: "DELETE",
-        }).catch((err) => {
-          toast(err.responseJSON.message, "error");
-          return false;
         });
         if (!result) return;
         toast({
@@ -245,10 +313,7 @@ $(document).ready(function () {
     $(".btnSwitchBerkas").on("click", async function () {
       const id = $(this).data("id");
       const state = $(this).is(":checked") ? 1 : 0;
-      const data = await fetchData("/api/berkas.php?id=" + id).catch((err) => {
-        toast(err.responseJSON.message, "error");
-        return false;
-      });
+      const data = await fetchData("/api/berkas.php?id=" + id);
       if (!data) return;
 
       const res = await fetchData({
@@ -258,9 +323,6 @@ $(document).ready(function () {
           status: state,
         },
         method: "POST",
-      }).catch((err) => {
-        toast(err.responseJSON.message, "error");
-        return false;
       });
       if (!res) {
         $(this).prop("checked", !state);
@@ -287,6 +349,9 @@ $(document).ready(function () {
   );
   $("#btnReloadTabelEvent").on("click", () =>
     tabelEvent.ajax.reload(null, false)
+  );
+  $("#btnReloadTabelTautan").on("click", () =>
+    tabelTautan.ajax.reload(null, false)
   );
 
   $("#btnSaveInfo").on("click", async function () {
@@ -317,9 +382,6 @@ $(document).ready(function () {
         isi: isiElm.val(),
       },
       method: "POST",
-    }).catch((err) => {
-      toast(err.responseJSON.message, "error");
-      return false;
     });
     if (!res) return;
     toast({
@@ -356,6 +418,9 @@ $(document).ready(function () {
   $("#searchTabelEvent").on("keyup", (e) =>
     tabelEvent.columns(0).search(e.target.value).draw()
   );
+  $("#searchTabelTautan").on("keyup", (e) =>
+    tabelTautan.columns(0).search(e.target.value).draw()
+  );
 
   $("#btnSaveBerkas").on("click", async function () {
     const btnElm = $(this);
@@ -380,9 +445,6 @@ $(document).ready(function () {
       url: "/api/berkas.php",
       data: data,
       method: "POST",
-    }).catch((err) => {
-      toast(err.responseJSON.message, "error");
-      return false;
     });
     if (!res) return;
     toggleButton(btnElm, "Simpan");
@@ -447,12 +509,7 @@ $(document).ready(function () {
       const placeholders = $(".placeholder-image");
       placeholders.each(async function () {
         const id = $(this).data("id");
-        const imgData = await fetchData("/api/berkas.php?id=" + id).catch(
-          (err) => {
-            toast(err.responseJSON.message, "error");
-            return false;
-          }
-        );
+        const imgData = await fetchData("/api/berkas.php?id=" + id);
         if (imgData) {
           $(this)
             .attr("href", imgData.src)
@@ -468,10 +525,7 @@ $(document).ready(function () {
 
     $(".btnHapusBanner").on("click", async function () {
       const id = $(this).data("id");
-      const data = await fetchData("/api/banner.php?id=" + id).catch((err) => {
-        toast(err.responseJSON.message, "error");
-        return false;
-      });
+      const data = await fetchData("/api/banner.php?id=" + id);
       if (!data) return;
       const action = await toast({
         title: "Hapus Banner?",
@@ -482,9 +536,6 @@ $(document).ready(function () {
         const res = await fetchData({
           url: "/api/banner.php?id=" + id,
           method: "DELETE",
-        }).catch((err) => {
-          toast(err.responseJSON.message, "error");
-          return false;
         });
         if (!res) return;
         toast({
@@ -567,9 +618,6 @@ $(document).ready(function () {
       url: "/api/berkas.php",
       data: image,
       method: "POST",
-    }).catch((err) => {
-      toast(err.responseJSON.message, "error");
-      return false;
     });
     if (!sendImage) return;
     const setData = await fetchData({
@@ -580,9 +628,6 @@ $(document).ready(function () {
         idBerkas: sendImage.data.id,
       },
       method: "POST",
-    }).catch((err) => {
-      toast(err.responseJSON.message, "error");
-      return false;
     });
     if (!setData) return;
     toggleButton(btnElm, "Simpan");
@@ -669,10 +714,7 @@ $(document).ready(function () {
 
     $(".btnHapusEvent").on("click", async function () {
       const id = $(this).data("id");
-      const data = await fetchData("/api/event.php?id=" + id).catch((err) => {
-        toast(err.responseJSON.message, "error");
-        return false;
-      });
+      const data = await fetchData("/api/event.php?id=" + id);
       if (!data) return;
       const conf = await toast({
         title: "Hapus Event?",
@@ -686,9 +728,6 @@ $(document).ready(function () {
       const res = await fetchData({
         url: "/api/event.php?id=" + id,
         method: "DELETE",
-      }).catch((err) => {
-        toast(err.responseJSON.message, "error");
-        return false;
       });
       if (!res) return;
       toast(
@@ -705,10 +744,7 @@ $(document).ready(function () {
     $(".btnSwitchEvent").on("change", async function () {
       const id = $(this).data("id");
       const state = $(this).is(":checked") ? 1 : 0;
-      const data = await fetchData("/api/event.php?id=" + id).catch((err) => {
-        toast(err.responseJSON.message, "error");
-        return false;
-      });
+      const data = await fetchData("/api/event.php?id=" + id);
       if (!data) return;
       const res = await fetchData({
         url: "/api/event.php?id=" + id,
@@ -718,9 +754,6 @@ $(document).ready(function () {
           status: state,
         },
         method: "POST",
-      }).catch((err) => {
-        toast(err.responseJSON.message, "error");
-        return false;
       });
       if (!res) {
         $(this).prop("checked", !state);
@@ -757,9 +790,6 @@ $(document).ready(function () {
         status: 1,
       },
       method: "POST",
-    }).catch((err) => {
-      toast(err.responseJSON.message, "error");
-      return false;
     });
     if (!res) {
       toggleButton(btn, "Simpan");
@@ -776,5 +806,93 @@ $(document).ready(function () {
       delay: 5000,
     });
     tabelEvent.ajax.reload(null, false);
+  });
+
+  tabelTautan.on("draw", function () {
+    $(".btnAktifTautan").on("click", async function () {
+      const aktif = $(this).is(":checked");
+      const id = $(this).data("id");
+      const res = await fetchData({
+        url: "/api/tautan.php?id=" + id,
+        data: {
+          aktif: aktif,
+        },
+        method: "POST",
+      });
+      if (!res) return;
+      toast(res.message, "success");
+      tabelTautan.ajax.reload(null, false);
+    });
+
+    $(".btnOnMenuTautan").on("click", async function () {
+      const aktif = $(this).is(":checked");
+      const id = $(this).data("id");
+      const res = await fetchData({
+        url: "/api/tautan.php?id=" + id,
+        data: {
+          on_menu: aktif,
+        },
+        method: "POST",
+      });
+      if (!res) return;
+      toast(res.message, "success");
+      tabelTautan.ajax.reload(null, false);
+    });
+
+    $(".btnHapusTautan").on("click", async function () {
+      const id = $(this).data("id");
+      const data = await fetchData("/api/tautan.php?id=" + id);
+      if (!data) return;
+      const conf = await toast({
+        title: "Hapus tautan?",
+        message:
+          "Tautan: <strong>" +
+          data.title +
+          "</strong> akan dihapus permanen, yakin?",
+        icon: "question",
+        position: "middle-center",
+      });
+      if (conf) {
+        const res = await fetchData({
+          url: "/api/tautan.php?id=" + id,
+          method: "DELETE",
+        });
+        if (!res) return;
+        toast(res.message, "success");
+        tabelTautan.ajax.reload(null, false);
+      }
+    });
+  });
+
+  $("#btnSimpanTautan").on("click", async function () {
+    const title = $("#titleTautan");
+    const url = $("#urlTautan");
+
+    if (!title.val().trim() || !url.val().trim()) {
+      if (!title.val().trim()) title.addClass("is-invalid");
+      else title.removeClass("is-invalid");
+      if (!url.val().trim()) url.addClass("is-invalid");
+      else url.removeClass("is-invalid");
+      toast("Lengkapi form.", "error");
+      return;
+    }
+    $(".is-invalid").removeClass("is-invalid");
+
+    toggleButton($(this), "Menyimpan...");
+    const res = await fetchData({
+      url: "/api/tautan.php",
+      data: {
+        title: title.val(),
+        url: url.val().trim().toLowerCase(),
+      },
+      method: "POST",
+    });
+    if (!res) return;
+    toast(res.message, "success", "", 5000);
+    title.val("");
+    url.val("");
+    $("#modalTambahTautan").modal("hide");
+    toggleButton($(this), "Simpan");
+    tabelTautan.ajax.reload(null, false);
   });
 });

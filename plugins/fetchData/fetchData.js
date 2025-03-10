@@ -55,9 +55,7 @@ async function fetchData(urlOrConfig, ...restParams) {
     }
     return await $.ajax(options);
   } catch (error) {
-    // toast(error.responseJSON.message, "error", "top-end", 5000);
-    // console.log(error);
-    // return null;
-    throw error;
+    toast(error.responseText, "error", "middle-center", 0);
+    return false;
   }
 }

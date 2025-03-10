@@ -97,7 +97,7 @@
                                 </div>
                             </div>
                             <div class="table-responsive">
-                                <table class="table table-bordered w-100" id="tabelBerkas">
+                                <table class="table table-bordered table-hover w-100" id="tabelBerkas">
                                     <thead>
                                         <tr>
                                             <th class="text-bg-primary text-center align-middle">Data</th>
@@ -125,7 +125,7 @@
                                 </div>
                             </div>
                             <div class="table-responsive">
-                                <table class="table table-bordered w-100" id="tabelBanner">
+                                <table class="table table-bordered table-hover w-100" id="tabelBanner">
                                     <thead>
                                         <tr>
                                             <th class="text-bg-primary text-center align-middle">Data</th>
@@ -153,7 +153,7 @@
                                 </div>
                             </div>
                             <div class="table-responsive">
-                                <table class="table table-bordered w-100" id="tabelEvent">
+                                <table class="table table-bordered table-hover w-100" id="tabelEvent">
                                     <thead>
                                         <tr>
                                             <th class="text-bg-primary text-center align-middle">Uraian</th>
@@ -182,7 +182,7 @@
                                 </div>
                             </div>
                             <div class="table-responsive">
-                                <table class="table table-bordered w-100" id="tabelTautan">
+                                <table class="table table-bordered table-hover w-100" id="tabelTautan">
                                     <thead>
                                         <tr>
                                             <th class="text-bg-primary text-center align-middle">Data</th>
