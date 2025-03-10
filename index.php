@@ -1,7 +1,10 @@
-<?php require './core/functions.php';
+<?php
+require './core/functions.php';
 $data['banner'] = query("SELECT banner.title, `description`, `order`, src FROM banner LEFT JOIN berkas ON banner.berkas_id =  berkas.berkas_id");
-?>
-<?php view('./view/templates/head.php', [
+$data['tautan'] = query("SELECT * FROM tautan WHERE aktif = 1");
+$data['on_menu'] = query("SELECT * FROM tautan WHERE aktif = 1 AND on_menu = 1");
+
+view('./view/templates/head.php', [
   'title' => 'Informasi PPDB SMPN 2 Wonosari 2025',
   'style' => [
     '/plugins/bootstrap/bootstrap.min.css',
@@ -31,7 +34,11 @@ view('./view/templates/toogle-theme.php')
         </p>
       </a>
       <div class="d-flex">
-        <a href="https://ppdb.pendidikan.gunungkidulkab.go.id/" target="_blank" class="btn btn-outline-primary mx-1 d-none d-lg-block d-sm-block">Daftar</a>
+        <div class="btn-group">
+          <?php foreach ($data['on_menu'] as $link): ?>
+            <a href="<?= $link['url']; ?>" target="_blank" class="btn btn-outline-primary d-none d-lg-block d-sm-block"><?= $link['title']; ?></a>
+          <?php endforeach; ?>
+        </div>
         <button class="btn btn-link" title="Menu" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
           <i class="bi bi-three-dots-vertical"></i>
         </button>
@@ -313,12 +320,14 @@ view('./view/templates/toogle-theme.php')
           Link PPDB
         </h2>
         <ul class="list-unstyled ps-0">
-          <li>
-            <a class="icon-link mb-1" target="_blank" href="https://ppdb.pendidikan.gunungkidulkab.go.id">
-              <i class="bi bi-browser-chrome me-1"></i>
-              Pendaftaran PPDB
-            </a>
-          </li>
+          <?php foreach ($data['tautan'] as $tautan): ?>
+            <li>
+              <a class="icon-link mb-1" target="_blank" href="<?= $tautan['url']; ?>">
+                <i class="bi bi-browser-chrome me-1"></i>
+                <?= $tautan['title']; ?>
+              </a>
+            </li>
+          <?php endforeach; ?>
         </ul>
       </div>
       <div class="col-md-4">

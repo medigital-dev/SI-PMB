@@ -10,15 +10,21 @@ $(document).ready(function () {
     $header.removeClass("hide-header");
   }
 
+  // Saat halaman dimuat, cek posisi scroll
+  if ($(window).scrollTop() === 0) {
+    showHeader(); // Munculkan jika di atas
+  } else {
+    hideHeader(); // Jika tidak di atas, sembunyikan
+  }
+
   // Deteksi scroll
   $(window).on("scroll", function () {
     isDragging = true;
 
-    // Jika scroll ke paling atas, munculkan header
     if ($(window).scrollTop() === 0) {
-      showHeader();
+      showHeader(); // Jika di paling atas, tampilkan header
     } else {
-      hideHeader();
+      hideHeader(); // Jika tidak di atas, sembunyikan
     }
 
     clearTimeout($.data(this, "scrollTimer"));
@@ -33,7 +39,7 @@ $(document).ready(function () {
 
   // Tap/klik di luar header hanya menampilkan header
   $(document).on("click touchstart", function (e) {
-    if ($(e.target).closest("#mainHeader").length) {
+    if ($(e.target).closest(".sticky-top").length) {
       return; // Jika klik di dalam header, tidak ada efek
     }
 
@@ -41,7 +47,4 @@ $(document).ready(function () {
       showHeader(); // Jika klik/tap di luar header, tampilkan header
     }
   });
-
-  // Sembunyikan header saat halaman dimuat pertama kali
-  hideHeader();
 });
