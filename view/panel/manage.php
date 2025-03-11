@@ -49,6 +49,7 @@
                         <button class="nav-link text-start" id="v-pills-event-tab" data-bs-toggle="pill" data-bs-target="#v-pills-event" type="button" role="tab" aria-controls="v-pills-event" aria-selected="true">Event</button>
                         <button class="nav-link text-start" id="v-pills-berkas-tab" data-bs-toggle="pill" data-bs-target="#v-pills-berkas" type="button" role="tab" aria-controls="v-pills-berkas" aria-selected="true">Berkas</button>
                         <button class="nav-link text-start" id="v-pills-tautan-tab" data-bs-toggle="pill" data-bs-target="#v-pills-tautan" type="button" role="tab" aria-controls="v-pills-tautan" aria-selected="true">Tautan</button>
+                        <button class="nav-link text-start" id="v-pills-forum-tab" data-bs-toggle="pill" data-bs-target="#v-pills-forum" type="button" role="tab" aria-controls="v-pills-forum" aria-selected="true">Forum</button>
                     </div>
                 </div>
             </div>
@@ -183,6 +184,33 @@
                             </div>
                             <div class="table-responsive">
                                 <table class="table table-bordered table-hover w-100" id="tabelTautan">
+                                    <thead>
+                                        <tr>
+                                            <th class="text-bg-primary text-center align-middle">Data</th>
+                                            <th class="text-bg-primary text-center align-middle">Aksi</th>
+                                        </tr>
+                                    </thead>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="v-pills-forum" role="tabpanel" aria-labelledby="v-pills-forum-tab" tabindex="0">
+                    <div class="card shadow mb-4">
+                        <div class="card-header text-bg-primary">Forum Diskusi</div>
+                        <div class="card-body">
+                            <div class="sticky-top py-2 bg-body">
+                                <div class="btn-toolbar">
+                                    <div class="btn-group btn-group-sm my-1 me-1">
+                                        <button type="button" class="btn btn-primary" title="Reload Tabel" id="btnReloadTabelForum"><i class="bi bi-arrow-repeat"></i></button>
+                                    </div>
+                                    <div class="input-group input-group-sm my-1 ms-auto">
+                                        <input type="text" class="form-control" id="searchTabelForum" placeholder="Cari Forum">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="table-responsive">
+                                <table class="table table-bordered table-hover w-100" id="tabelForum">
                                     <thead>
                                         <tr>
                                             <th class="text-bg-primary text-center align-middle">Data</th>
@@ -395,6 +423,49 @@
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
                 <button type="button" class="btn btn-primary" id="btnSimpanTautan">Simpan</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="modalBalasForum" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="modalBalasForumLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="modalBalasForum">Balas Diskusi</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="card card-body mb-3">
+                    <input type="hidden" id="parentForum">
+                    <input type="hidden" id="namaAdmin" value="[Admin] <?= $admin['name']; ?>">
+                    <h6 class="card-title m-0" id="namaForum"></h6>
+                    <span class="small text-muted mb-2" id="tanggalForum"></span>
+                    <p class="card-text" id="isiForum"></p>
+                </div>
+                <div class="mb-2">
+                    <label for="balasForum" class="form-label">Balasan Diskusi</label>
+                    <textarea class="form-control" id="balasForum" rows="3"></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+                <button type="button" class="btn btn-primary" id="btnBalasForumAdmin">Balas</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="modalDetailForum" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="modalDetailForumLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="modalDetailForum">Detail Forum Diskusi</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
             </div>
         </div>
     </div>

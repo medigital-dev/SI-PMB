@@ -895,4 +895,207 @@ $(document).ready(function () {
     toggleButton($(this), "Simpan");
     tabelTautan.ajax.reload(null, false);
   });
+
+  $("#balasForum").summernote({
+    dialogsInBody: true,
+    height: 200,
+    toolbar: [
+      ["misc", ["undo", "redo"]],
+      ["style", ["bold", "italic", "underline", "clear"]],
+      ["color", ["color"]],
+      ["insert", ["link", "file"]],
+      ["view", ["fullscreen", "help"]],
+    ],
+    callbacks: {
+      onFileUpload: (file) => {
+        for (let i = 0; i < file.length; i++) {
+          uploadMedia(file[i]);
+        }
+      },
+      onMediaDelete: (file) => deleteMedia(file[0]),
+    },
+  });
+
+  const tabelForum = $("#tabelForum").DataTable({
+    dom: '<"mb-2"t><"d-flex justify-content-between"ip>',
+    lengthMenu: [
+      [5, 10, 25, 50, 100, -1],
+      [5, 10, 25, 50, 100, "All"],
+    ],
+    responsive: true,
+    ordering: false,
+    processing: true,
+    pagingType: "simple",
+    ajax: {
+      url: "/api/forum.php",
+      dataSrc: "",
+    },
+    rowCallback: (row, data) => {
+      if (data.dibaca == 1) $(row).addClass("table-active");
+    },
+    columns: [
+      {
+        data: "id",
+        className: "w-100",
+        render: (data, type, rows, meta) => {
+          return (
+            '<a class="text-decoration-none btnBacaForum" data-dibaca="' +
+            rows.dibaca +
+            '" data-id="' +
+            data +
+            '" role="button" data-bs-toggle="collapse" href="#collapse-' +
+            rows.id +
+            '"><h6 class="m-0 ' +
+            (rows.dibaca == 1 ? "fw-light" : "fw-bold") +
+            '">' +
+            rows.nama +
+            "</h6></a>" +
+            '<span class="text-muted small">' +
+            tanggal(rows.tanggal, "d F Y H:i WIB") +
+            "</span>" +
+            '<div class="collapse collapse-forum" data-dibaca="' +
+            rows.dibaca +
+            '" data-id="' +
+            data +
+            '" id="collapse-' +
+            rows.id +
+            '"><hr class="my-2"><p class="m-0">' +
+            rows.isi +
+            "</p>" +
+            "</div>"
+          );
+        },
+      },
+      {
+        data: "id",
+        className: "text-center",
+        width: "70px",
+        render: (data, type, rows, meta) => {
+          return (
+            '<div class="btn-group btn-group-sm">' +
+            '<button type="button" class="btn btn-primary btnBalasForum" data-id="' +
+            data +
+            '"><i class="bi bi-reply-fill"></i></button>' +
+            '<button type="button" class="btn btn-primary btnDetailForum" data-id="' +
+            data +
+            '"><i class="bi bi-chat-left-dots-fill"></i></button>' +
+            '<button type="button" class="btn btn-danger btnHapusForum" data-id="' +
+            data +
+            '"><i class="bi bi-trash-fill"></i></button>' +
+            "</div>"
+          );
+        },
+      },
+    ],
+  });
+
+  tabelForum.on("draw", function () {
+    $(".collapse-forum").on("show.bs.collapse", async function () {
+      const dibaca = $(this).data("dibaca");
+      if (dibaca == 0) {
+        const id = $(this).data("id");
+        const res = await fetchData({
+          url: "/api/forum.php?id=" + id,
+          data: {
+            dibaca: 1,
+          },
+          method: "POST",
+        });
+      }
+    });
+
+    $(".btnBalasForum").on("click", async function () {
+      const id = $(this).data("id");
+      const data = await fetchData("/api/forum.php?id=" + id);
+      if (!data) return;
+      $("#parentForum").val(data.id);
+      $("#isiForum").text(data.isi);
+      $("#namaForum").text(data.nama);
+      $("#tanggalForum").text(tanggal(data.tanggal, "d F Y H:i WIB"));
+      $("#balasForum").summernote("code", "");
+      $("#modalBalasForum").modal("show");
+    });
+
+    $(".btnHapusForum").on("click", async function () {
+      const id = $(this).data("id");
+      const data = await fetchData("/api/forum.php?id=" + id);
+      if (!data) return;
+      const conf = await toast({
+        title: "Hapus forum?",
+        message:
+          "Forum diskusi dari: <strong>" +
+          data.nama +
+          "</strong> akan dihapus permanen. yakin?",
+        icon: "question",
+        position: "middle-center",
+      });
+      if (conf) {
+        const deleted = await fetchData({
+          url: "/api/forum.php?id=" + id,
+          method: "DELETE",
+        });
+        if (!deleted) return;
+        toast(deleted.message, "success");
+        tabelForum.ajax.reload(null, false);
+      }
+    });
+
+    $(".btnDetailForum").on("click", async function () {
+      const id = $(this).data("id");
+      const data = await fetchData("/api/forum.php?id=" + id);
+      if (!data) return;
+      const html = await fetchData({
+        url: "/panel/detail-forum.php",
+        data: {
+          id: data.id,
+          parent: data.parent,
+        },
+        method: "POST",
+        dataType: "html",
+      });
+      if (!html) return;
+      $("#modalDetailForum .modal-body").html(html);
+      $("#modalDetailForum").modal("show");
+    });
+  });
+
+  $("#btnBalasForumAdmin").on("click", async function () {
+    const parent = $("#parentForum");
+    const isi = $("#balasForum");
+    const nama = $("#namaAdmin");
+
+    if (isi.summernote("code") == "") {
+      toast("Lengkapi form terlebih dahulu.", "info");
+      return;
+    }
+
+    const resp = await fetchData({
+      url: "/api/forum.php",
+      data: {
+        parent_id: parent.val(),
+        nama: nama.val(),
+        isi: isi.summernote("code"),
+        dibaca: 1,
+        aktif: 1,
+      },
+      method: "POST",
+    });
+
+    if (!resp) return;
+    toast(resp.message, "success", "", 5000);
+    $("#modalBalasForum").modal("hide");
+    tabelForum.ajax.reload(null, false);
+  });
+
+  $("#btnReloadTabelForum").on("click", () =>
+    tabelForum.ajax.reload(null, false)
+  );
+
+  $("#searchTabelForum").on("keyup", (e) => {
+    const keyword = e.target.value;
+    if (keyword !== "") {
+      $(".collapse").collapse("show");
+      tabelForum.search(keyword).draw();
+    } else $(".collapse").collapse("hide");
+  });
 });

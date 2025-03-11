@@ -38,7 +38,7 @@ $(document).ready(function () {
       3000
     );
     setTimeout(() => {
-      window.open("/panel/manage.php");
+      window.open("/panel/manage.php", "_self");
     }, 3000);
   });
 });
