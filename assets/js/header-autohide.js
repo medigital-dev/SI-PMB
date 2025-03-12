@@ -1,5 +1,5 @@
 $(document).ready(function () {
-  let $header = $(".sticky-top");
+  let $header = $("#mainHeader");
   let isDragging = false;
 
   function hideHeader() {
@@ -39,7 +39,7 @@ $(document).ready(function () {
 
   // Tap/klik di luar header hanya menampilkan header
   $(document).on("click touchstart", function (e) {
-    if ($(e.target).closest(".sticky-top").length) {
+    if ($(e.target).closest($header).length) {
       return; // Jika klik di dalam header, tidak ada efek
     }
 

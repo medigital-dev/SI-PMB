@@ -1,14 +1,6 @@
 $(document).ready(function () {
   counterInner();
 
-  $(".owl-carousel").owlCarousel({
-    items: 1,
-    autoplay: true,
-    autoplayTimeout: 5000,
-    loop: true,
-    autoplayHoverPause: true,
-  });
-
   const tableUnduhan = $("#tabelUnduhan").DataTable({
     dom: '<"mb-2"t><"d-flex justify-content-start"p>',
     lengthMenu: [
@@ -91,5 +83,202 @@ $(document).ready(function () {
       $(".collapse").collapse("show");
       tableInfo.search(keyword).draw();
     } else $(".collapse").collapse("hide");
+  });
+
+  const tabelForumPublic = $("#tabelForumPublic").DataTable({
+    dom: '<"mb-2"t><"d-flex justify-content-between"ip>',
+    lengthMenu: [
+      [5, 10, 25, 50, 100, -1],
+      [5, 10, 25, 50, 100, "All"],
+    ],
+    responsive: true,
+    ordering: false,
+    processing: true,
+    pagingType: "simple",
+    ajax: {
+      url: "/api/public/forum.php",
+      dataSrc: "",
+    },
+    columns: [
+      {
+        data: "id",
+        className: "w-100",
+        render: (data, type, rows, meta) => {
+          return (
+            '<p class="mb-1">' +
+            rows.isi +
+            "</p>" +
+            '<div class="d-flex justify-content-between">' +
+            '<span class="text-muted small"><i class="bi bi-calendar-date-fill me-1"></i>' +
+            tanggal(rows.tanggal, "d F Y H:i WIB") +
+            ' - <i class="bi bi-person-circle me-1"></i>' +
+            rows.nama +
+            "</span>" +
+            "<div>" +
+            '<a class="text-decoration-none btnDetailForumPublic" data-id="' +
+            data +
+            '" type="button"><i class="bi bi-chat-fill me-1"></i>' +
+            rows.balasan +
+            " Balasan</a>" +
+            "</div></div>"
+          );
+        },
+      },
+    ],
+  });
+
+  tabelForumPublic.on("draw", function () {
+    $(".btnDetailForumPublic").on("click", async function () {
+      const id = $(this).data("id");
+      const html = await fetchData({
+        url: "/panel/detail-forum.php?id=" + id,
+        dataType: "html",
+      });
+      $("#jawaban").html(html);
+      $("#modalDetailForumPublic").modal("show");
+
+      $(".btnBalasDiskusi").on("click", async function () {
+        const id = $(this).data("id");
+        $("#idForumPublic").val(id);
+        const data = await fetchData("/api/forum.php?id=" + id);
+        if (!data) return;
+        const code = "<p><b>@" + data.nama + "</b>:&nbsp;</p>";
+        $("#pertanyaanAndaBalasan").summernote("code", code);
+        $("#collapse-balas").collapse("show");
+      });
+    });
+  });
+
+  $("#btnKirimBalasan").on("click", async function () {
+    const parent = $("#idForumPublic");
+    const nama = $("#namaAndaBalasan");
+    const isi = $("#pertanyaanAndaBalasan");
+
+    if (!nama.val().trim()) {
+      nama.addClass("is-invalid");
+      return;
+    }
+    $(".is-invalid").removeClass("is-invalid");
+
+    const set = await fetchData({
+      url: "/api/forum.php",
+      data: {
+        parent_id: parent.val(),
+        isi: isi.summernote("code"),
+        nama: nama.val(),
+        aktif: 1,
+        dibaca: 0,
+      },
+      method: "POST",
+    });
+    if (!set) return;
+    toast("Balasan anda berhasil di tambahkan.", "success");
+    isi.summernote("code", "");
+    $("#collapse-balas").collapse("hide");
+    tabelForumPublic.ajax.reload(null, false);
+    $("#jawaban").html(
+      '<div class="d-flex align-items-center">' +
+        '<strong role="status">Loading...</strong>' +
+        '<div class="spinner-border spinner-border-sm ms-auto" aria-hidden="true"></div>' +
+        "</div>"
+    );
+    const html = await fetchData({
+      url: "/panel/detail-forum.php?id=" + parent.val(),
+      dataType: "html",
+    });
+    $("#jawaban").html(html);
+
+    $(".btnBalasDiskusi").on("click", async function () {
+      const id = $(this).data("id");
+      $("#idForumPublic").val(id);
+      const data = await fetchData("/api/forum.php?id=" + id);
+      if (!data) return;
+      const code = "<p><b>@" + data.nama + "</b>&nbsp;<br></p>";
+      $("#pertanyaanAndaBalasan").summernote("code", code);
+      $("#collapse-balas").collapse("show");
+    });
+  });
+
+  $("#pertanyaanAnda").summernote({
+    height: 200,
+    placeholder: "Pertanyaan anda",
+    dialogsInBody: true,
+    toolbar: [
+      ["style", ["bold", "italic", "underline"]],
+      ["insert", ["link", "file"]],
+      ["view", ["fullscreen", "help"]],
+    ],
+    callbacks: {
+      onFileUpload: (file) => {
+        for (let i = 0; i < file.length; i++) {
+          uploadMedia(file[i], "#pertanyaanAnda");
+        }
+      },
+      onMediaDelete: (file) => deleteMedia(file[0]),
+    },
+  });
+
+  $("#pertanyaanAndaBalasan").summernote({
+    height: 100,
+    placeholder: "Pertanyaan anda",
+    dialogsInBody: true,
+    toolbar: [
+      ["style", ["bold", "italic", "underline"]],
+      ["insert", ["link", "file"]],
+      ["view", ["fullscreen", "help"]],
+    ],
+    callbacks: {
+      onFileUpload: (file) => {
+        for (let i = 0; i < file.length; i++) {
+          uploadMedia(file[i], "#pertanyaanAndaBalasan");
+        }
+      },
+      onMediaDelete: (file) => deleteMedia(file[0]),
+    },
+  });
+
+  $("#btnKirimPertanyaan").on("click", async function () {
+    const nama = $("#namaAnda");
+    const isiElm = $("#pertanyaanAnda");
+    const isiVal = isiElm.summernote("code");
+
+    if (!nama.val().trim() || isiVal == "<p><br></p>") {
+      if (!nama.val().trim()) nama.addClass("is-invalid");
+      else nama.removeClass("is-invalid");
+      if (isiVal == "<p><br></p>") isiElm.addClass("is-invalid");
+      else isiElm.removeClass("is-invalid");
+
+      toast("Nama dan pertanyaan wajib diisi.", "error");
+      return;
+    }
+    $(".is-invalid").removeClass("is-invalid");
+    toggleButton($(this), "Menyimpan...");
+    const set = await fetchData({
+      url: "/api/forum.php",
+      data: {
+        nama: nama.val(),
+        isi: isiVal,
+        aktif: 1,
+        dibaca: 0,
+      },
+      method: "POST",
+    });
+
+    if (!set) {
+      toggleButton($(this), "Kirim");
+      return;
+    }
+    toast(
+      "Pertanyaan anda telah disimpan dalam daftar. Silahkan cek secara berkala jawaban pertanyaan anda.",
+      "success"
+    );
+    nama.val("");
+    isiElm.summernote("code", "");
+    toggleButton($(this), "Kirim");
+    tabelForumPublic.ajax.reload(null, false);
+  });
+
+  $("#cariForum").on("keyup", function () {
+    tabelForumPublic.search($(this).val()).draw();
   });
 });

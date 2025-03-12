@@ -462,7 +462,28 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-
+                <div class="" id="jawaban">
+                    <div class="d-flex align-items-center">
+                        <strong role="status">Memuat balasan...</strong>
+                        <div class="spinner-border spinner-border-sm ms-auto" aria-hidden="true"></div>
+                    </div>
+                </div>
+                <div class="sticky-bottom py-2 bg-body">
+                    <div class="collapse" id="collapse-balas">
+                        <div class="card card-body border-primary shadow">
+                            <input type="hidden" id="idForumPublic">
+                            <input type="hidden" class="form-control" id="namaAndaBalasan" placeholder="Nama Anda" value="[Admin] <?= $admin['name']; ?>">
+                            <div class="form-floating mb-2">
+                                <textarea class="form-control pertanyaanAnda" placeholder="Pertanyaan anda" id="pertanyaanAndaBalasan"></textarea>
+                                <div class="invalid-feedback">Wajib.</div>
+                            </div>
+                            <div>
+                                <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-toggle="collapse" data-bs-target="#collapse-balas">Tutup</button>
+                                <button type="button" class="btn btn-sm btn-primary" id="btnKirimBalasan">Kirim</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>

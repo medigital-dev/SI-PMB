@@ -81,7 +81,7 @@ function reloadWidget() {
   });
 }
 
-async function uploadMedia(file) {
+async function uploadMedia(file, summernoteElm = "textarea#isi") {
   let berkas = new FormData();
   berkas.append("title", file.name);
   berkas.append("file", file);
@@ -120,14 +120,14 @@ async function uploadMedia(file) {
     childElem.style.height = "180px";
     childElem.style.objectFit = "cover";
     elem.appendChild(childElem);
-    $("textarea#isi").summernote("insertNode", elem);
+    $(summernoteElm).summernote("insertNode", elem);
   } else if (listMimeAudio.indexOf(file.type) > -1) {
     //Audio
     elem = document.createElement("audio");
     elem.setAttribute("src", res.data.src);
     elem.setAttribute("controls", "controls");
     elem.setAttribute("preload", "metadata");
-    $("textarea#isi").summernote("insertNode", elem);
+    $(summernoteElm).summernote("insertNode", elem);
   } else if (listMimeVideo.indexOf(file.type) > -1) {
     //Video
     elemFancy = document.createElement("a");
@@ -140,7 +140,7 @@ async function uploadMedia(file) {
     elem.setAttribute("class", "img-thumbnail");
     elem.setAttribute("width", 480);
     elemFancy.appendChild(elem);
-    $("textarea#isi").summernote("insertNode", elemFancy);
+    $(summernoteElm).summernote("insertNode", elemFancy);
   } else {
     //Other file type
     elem = document.createElement("a");
@@ -149,7 +149,7 @@ async function uploadMedia(file) {
     elem.title = file.name;
     elem.href = res.data.src;
     elem.target = "_blank";
-    $("textarea#isi").summernote("insertNode", elem);
+    $(summernoteElm).summernote("insertNode", elem);
   }
 }
 

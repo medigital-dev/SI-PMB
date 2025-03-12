@@ -973,10 +973,14 @@ $(document).ready(function () {
         render: (data, type, rows, meta) => {
           return (
             '<div class="btn-group btn-group-sm">' +
-            '<button type="button" class="btn btn-primary btnBalasForum" data-id="' +
+            '<button type="button" class="btn btn-primary btnBalasForum" data-parent="' +
+            rows.parent +
+            '" data-id="' +
             data +
             '"><i class="bi bi-reply-fill"></i></button>' +
-            '<button type="button" class="btn btn-primary btnDetailForum" data-id="' +
+            '<button type="button" class="btn btn-primary btnDetailForum" data-parent="' +
+            rows.parent +
+            '" data-id="' +
             data +
             '"><i class="bi bi-chat-left-dots-fill"></i></button>' +
             '<button type="button" class="btn btn-danger btnHapusForum" data-id="' +
@@ -994,7 +998,7 @@ $(document).ready(function () {
       const dibaca = $(this).data("dibaca");
       if (dibaca == 0) {
         const id = $(this).data("id");
-        const res = await fetchData({
+        await fetchData({
           url: "/api/forum.php?id=" + id,
           data: {
             dibaca: 1,
@@ -1006,13 +1010,18 @@ $(document).ready(function () {
 
     $(".btnBalasForum").on("click", async function () {
       const id = $(this).data("id");
+      const parent = $(this).data("parent");
       const data = await fetchData("/api/forum.php?id=" + id);
+
       if (!data) return;
-      $("#parentForum").val(data.id);
-      $("#isiForum").text(data.isi);
+      $("#parentForum").val(parent ? parent : id);
+      $("#isiForum").html(data.isi);
       $("#namaForum").text(data.nama);
       $("#tanggalForum").text(tanggal(data.tanggal, "d F Y H:i WIB"));
-      $("#balasForum").summernote("code", "");
+      $("#balasForum").summernote(
+        "code",
+        "<p><b>@" + data.nama + "</b>:&nbsp;</p>"
+      );
       $("#modalBalasForum").modal("show");
     });
 
@@ -1042,20 +1051,24 @@ $(document).ready(function () {
 
     $(".btnDetailForum").on("click", async function () {
       const id = $(this).data("id");
-      const data = await fetchData("/api/forum.php?id=" + id);
-      if (!data) return;
+      const parent = $(this).data("parent");
       const html = await fetchData({
-        url: "/panel/detail-forum.php",
-        data: {
-          id: data.id,
-          parent: data.parent,
-        },
-        method: "POST",
+        url: "/panel/detail-forum.php?id=" + (parent ? parent : id),
         dataType: "html",
       });
       if (!html) return;
-      $("#modalDetailForum .modal-body").html(html);
+      $("#modalDetailForum .modal-body #jawaban").html(html);
       $("#modalDetailForum").modal("show");
+
+      $(".btnBalasDiskusi").on("click", async function () {
+        const id = $(this).data("id");
+        $("#idForumPublic").val(id);
+        const data = await fetchData("/api/forum.php?id=" + id);
+        if (!data) return;
+        const code = "<p><b>@" + data.nama + "</b>:&nbsp;</p>";
+        $("#pertanyaanAndaBalasan").summernote("code", code);
+        $("#collapse-balas").collapse("show");
+      });
     });
   });
 
@@ -1097,5 +1110,55 @@ $(document).ready(function () {
       $(".collapse").collapse("show");
       tabelForum.search(keyword).draw();
     } else $(".collapse").collapse("hide");
+  });
+
+  $("#btnKirimBalasan").on("click", async function () {
+    const parent = $("#idForumPublic");
+    const nama = $("#namaAndaBalasan");
+    const isi = $("#pertanyaanAndaBalasan");
+
+    if (!nama.val().trim()) {
+      nama.addClass("is-invalid");
+      return;
+    }
+    $(".is-invalid").removeClass("is-invalid");
+
+    const set = await fetchData({
+      url: "/api/forum.php",
+      data: {
+        parent_id: parent.val(),
+        isi: isi.summernote("code"),
+        nama: nama.val(),
+        aktif: 1,
+        dibaca: 1,
+      },
+      method: "POST",
+    });
+    if (!set) return;
+    toast("Balasan anda berhasil di tambahkan.", "success");
+    isi.summernote("code", "");
+    $("#collapse-balas").collapse("hide");
+    tabelForum.ajax.reload(null, false);
+    $("#jawaban").html(
+      '<div class="d-flex align-items-center">' +
+        '<strong role="status">Loading...</strong>' +
+        '<div class="spinner-border spinner-border-sm ms-auto" aria-hidden="true"></div>' +
+        "</div>"
+    );
+    const html = await fetchData({
+      url: "/panel/detail-forum.php?id=" + parent.val(),
+      dataType: "html",
+    });
+    $("#jawaban").html(html);
+
+    $(".btnBalasDiskusi").on("click", async function () {
+      const id = $(this).data("id");
+      $("#idForumPublic").val(id);
+      const data = await fetchData("/api/forum.php?id=" + id);
+      if (!data) return;
+      const code = "<p><b>@" + data.nama + "</b>:&nbsp;</p>";
+      $("#pertanyaanAndaBalasan").summernote("code", code);
+      $("#collapse-balas").collapse("show");
+    });
   });
 });

@@ -35,7 +35,6 @@ switch ($method) {
         break;
 
     case 'POST':
-        requireLogin();
 
         $parent = $_POST['parent_id'] ?? null;
         $nama = $_POST['nama'] ?? null;
@@ -75,6 +74,8 @@ switch ($method) {
             ];
             http_response_code(201);
         } else {
+            requireLogin();
+
             $updates = [];
             $params = [];
             $types = "";

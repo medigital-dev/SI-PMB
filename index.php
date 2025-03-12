@@ -9,9 +9,8 @@ view('./view/templates/head.php', [
   'style' => [
     '/plugins/bootstrap/bootstrap.min.css',
     '/plugins/bootstrap-icon/bootstrap-icons.css',
+    '/plugins/summernote/summernote-bs4.css',
     '/plugins/fancybox/fancybox.css',
-    '/plugins/owl-carousel/owl.carousel.min.css',
-    '/plugins/owl-carousel/owl.theme.default.min.css',
     '/plugins/datatables/datatables.min.css',
     '/assets/css/style.css'
   ],
@@ -23,9 +22,9 @@ view('./view/templates/toogle-theme.php')
 
 ?>
 
-<section class="sticky-top">
+<section class="sticky-top" id="mainHeader">
   <div class="col-lg-8 mx-auto bg-body shadow">
-    <header id="mainHeader" class="d-flex p-3 align-items-center justify-content-between border-bottom">
+    <header class="d-flex p-3 align-items-center justify-content-between border-bottom">
       <a href="./" class="d-flex align-items-center text-body-emphasis text-decoration-none">
         <img src="./assets/brand/logo2.png" alt="Logo SMPN 2 Wonosari" width="60" class="me-2" />
         <p class="m-0 p-0 lh-1">
@@ -52,6 +51,8 @@ view('./view/templates/toogle-theme.php')
           <li><a class="dropdown-item" href="#jalur-kuota">Jalur dan Kuota</a></li>
           <li><a class="dropdown-item" href="#syarat">Syarat</a></li>
           <li><a class="dropdown-item" href="#berkas">Berkas Upload</a></li>
+          <li><a class="dropdown-item" href="#forum">Forum</a></li>
+          <li><a class="dropdown-item" href="#pertanyaan">Pertanyaan Anda</a></li>
           <li><a class="dropdown-item" href="#link">Link</a></li>
           <li><a class="dropdown-item" href="#official">Official</a></li>
           <li>
@@ -66,12 +67,18 @@ view('./view/templates/toogle-theme.php')
 <div class="col-lg-8 mx-auto p-4 py-md-5 bg-body shadow-lg">
   <main class="px-lg-5">
     <div id="banner" class="pt-3 mt-3 text-body-emphasis">
-      <div class="owl-carousel">
-        <?php foreach ($data['banner'] as $banner) : ?>
-          <div>
-            <img src="<?= $banner['src']; ?>" class="d-block img-fluid" />
-          </div>
-        <?php endforeach; ?>
+      <div id="carousel" class="carousel slide carousel-fade mb-3" data-bs-ride="carousel">
+        <div class="carousel-inner">
+          <?php $i = 0;
+          foreach ($data['banner'] as $banner) : ?>
+            <div class="carousel-item <?= $i == 0 ? 'active' : ''; ?>">
+              <a href="<?= $banner['src']; ?>" data-fancybox="banner">
+                <img src="<?= $banner['src']; ?>" class="d-block img-fluid" />
+              </a>
+            </div>
+            <?php $i++; ?>
+          <?php endforeach; ?>
+        </div>
       </div>
     </div>
 
@@ -316,6 +323,44 @@ view('./view/templates/toogle-theme.php')
 
     <div class="row">
       <div class="col-md-8">
+        <div class="row d-flex justify-content-between mb-2">
+          <div class="col-6">
+            <h2 id="forum" class="text-body-emphasis pt-3 mt-3">
+              Forum Diskusi
+            </h2>
+          </div>
+          <div class="col-auto pt-3 mt-3">
+            <input type="text" id="cariForum" placeholder="Cari" class="form-control">
+          </div>
+        </div>
+        <table class="table table-hover" id="tabelForumPublic">
+          <thead>
+            <tr>
+              <th>Daftar Pertanyaan</th>
+            </tr>
+          </thead>
+        </table>
+        <hr class="col-3 col-md-2 mb-2" />
+      </div>
+      <div class="col-md-4">
+        <h2 id="pertanyaan" class="text-body-emphasis pt-3 mt-3">
+          Pertanyaan anda
+        </h2>
+        <div class="form-text mb-2">Silahkan sampaikan pertanyaan anda pada form berikut.</div>
+        <div class="form-floating mb-2">
+          <input type="text" class="form-control" id="namaAnda" placeholder="Nama Anda">
+          <label for="namaAnda">Nama Anda</label>
+        </div>
+        <div class="form-floating mb-2">
+          <textarea class="form-control pertanyaanAnda" placeholder="Pertanyaan anda" id="pertanyaanAnda"></textarea>
+          <div class="invalid-feedback">Wajib.</div>
+        </div>
+        <button type="button" class="btn btn-sm btn-primary" id="btnKirimPertanyaan">Kirim</button>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-8">
         <h2 id="link" class="text-body-emphasis pt-3 mt-3">
           Link PPDB
         </h2>
@@ -397,14 +442,57 @@ view('./view/templates/toogle-theme.php')
   </footer>
 </div>
 
+<div class="modal fade" id="modalDetailForumPublic" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="modalDetailForumPublicLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="modalDetailForumPublic">Forum Diskusi</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body pb-0">
+        <div class="" id="jawaban">
+          <div class="d-flex align-items-center">
+            <strong role="status">Memuat balasan...</strong>
+            <div class="spinner-border spinner-border-sm ms-auto" aria-hidden="true"></div>
+          </div>
+        </div>
+        <div class="sticky-bottom py-2 bg-body">
+          <div class="collapse" id="collapse-balas">
+            <div class="card card-body border-primary shadow">
+              <input type="hidden" id="idForumPublic">
+              <div class="form-floating mb-2">
+                <input type="text" class="form-control" id="namaAndaBalasan" placeholder="Nama Anda">
+                <label for="namaAndaBalasan">Nama Anda</label>
+              </div>
+              <div class="form-floating mb-2">
+                <textarea class="form-control pertanyaanAnda" placeholder="Pertanyaan anda" id="pertanyaanAndaBalasan"></textarea>
+                <div class="invalid-feedback">Wajib.</div>
+              </div>
+              <div>
+                <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-toggle="collapse" data-bs-target="#collapse-balas">Tutup</button>
+                <button type="button" class="btn btn-sm btn-primary" id="btnKirimBalasan">Kirim</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <?php view('./view/templates/footer.php', [
   'script' => [
     './plugins/jquery/jquery.min.js',
     './plugins/bootstrap/bootstrap.bundle.min.js',
+    '/plugins/summernote/summernote-bs4.js',
+    '/plugins/summernote/summernote-file.js',
     '/plugins/datatables/datatables.min.js',
     './plugins/fancybox/fancybox.umd.js',
-    './plugins/owl-carousel/owl.carousel.min.js',
     '/plugins/fetchData/fetchData.js',
+    '/plugins/simple-toast/toast.js',
     '/assets/js/functions.js',
     '/assets/js/global.js',
     '/assets/js/homepage.js',

@@ -153,3 +153,68 @@ if (!function_exists('view')) {
         include $path;
     }
 }
+
+if (!function_exists('tanggal')) {
+    /**
+     * Mengonversi tanggal dan waktu ke format bahasa Indonesia.
+     *
+     * @param string|null $tanggalWaktu Input dalam format US (default: null, akan menggunakan waktu saat ini)
+     * @param string $format Format keluaran (default: 'd-m-Y')
+     * @return string Tanggal dan waktu dalam format bahasa Indonesia
+     */
+    function tanggal($tanggalWaktu = null, $format = 'd-m-Y')
+    {
+        if ($tanggalWaktu == null) {
+            $tanggalWaktu = 'now';
+        }
+
+        $namaHariIndonesia = array(
+            'Sunday' => 'Minggu',
+            'Monday' => 'Senin',
+            'Tuesday' => 'Selasa',
+            'Wednesday' => 'Rabu',
+            'Thursday' => 'Kamis',
+            'Friday' => 'Jumat',
+            'Saturday' => 'Sabtu',
+            'Sun' => 'Min',
+            'Mon' => 'Sen',
+            'Tue' => 'Sel',
+            'Wed' => 'Rab',
+            'Thu' => 'Kam',
+            'Fri' => 'Jum',
+            'Sat' => 'Sab'
+        );
+
+        $namaBulanIndonesia = array(
+            'January' => 'Januari',
+            'February' => 'Februari',
+            'March' => 'Maret',
+            'April' => 'April',
+            'May' => 'Mei',
+            'June' => 'Juni',
+            'July' => 'Juli',
+            'August' => 'Agustus',
+            'September' => 'September',
+            'October' => 'Oktober',
+            'November' => 'November',
+            'December' => 'Desember',
+            'Jan' => 'Jan',
+            'Feb' => 'Feb',
+            'Mar' => 'Mar',
+            'Apr' => 'Apr',
+            'May' => 'Mei',
+            'Jun' => 'Jun',
+            'Jul' => 'Jul',
+            'Aug' => 'Agu',
+            'Sep' => 'Sep',
+            'Oct' => 'Okt',
+            'Nov' => 'Nov',
+            'Dec' => 'Des'
+        );
+
+        $timestamp = strtotime($tanggalWaktu);
+        $tanggalWaktuIndonesia = date($format, $timestamp);
+        $tanggalWaktuIndonesia = strtr($tanggalWaktuIndonesia, array_merge($namaHariIndonesia, $namaBulanIndonesia));
+        return $tanggalWaktuIndonesia;
+    }
+}
