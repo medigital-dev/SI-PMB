@@ -78,6 +78,8 @@ function reloadWidget() {
     $("#totalBerkas").text(e.berkas);
     $("#totalBanner").text(e.banner);
     $("#totalEvent").text(e.event);
+    $("#totalTautan").text(e.tautan);
+    $("#totalForum").text(e.forum);
   });
 }
 

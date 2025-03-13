@@ -1,30 +1,27 @@
 <section>
     <div class="container">
-        <div class="row row-cols-2 row-cols-md-4 g-4 mb-4">
+        <div class="row row-cols-2 row-cols-md-3 row-cols-lg-6 g-4 mb-4">
             <div class="col">
                 <div class="card card-body shadow text-bg-primary bg-gradient">
                     <h6 class="card-title">Informasi</h6>
                     <div class="d-flex justify-content-between">
                         <span class="h1 fs-1 m-0" id="totalInfo">0</span>
-                        <i class="fa-solid fa-users text-opacity-25 text-white fa-3x"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card card-body shadow text-bg-secondary bg-gradient">
+                    <h6 class="card-title">Banner</h6>
+                    <div class="d-flex justify-content-between">
+                        <span class="h1 fs-1 m-0" id="totalBanner">0</span>
                     </div>
                 </div>
             </div>
             <div class="col">
                 <div class="card card-body shadow text-bg-danger bg-gradient">
-                    <h6 class="card-title">Banner</h6>
-                    <div class="d-flex justify-content-between">
-                        <span class="h1 fs-1 m-0" id="totalBanner">0</span>
-                        <i class="fa-solid fa-users text-opacity-25 text-white fa-3x"></i>
-                    </div>
-                </div>
-            </div>
-            <div class="col">
-                <div class="card card-body shadow text-bg-warning bg-gradient">
                     <h6 class="card-title">Event</h6>
                     <div class="d-flex justify-content-between">
                         <span class="h1 fs-1 m-0" id="totalEvent">0</span>
-                        <i class="fa-solid fa-users text-opacity-25 text-white fa-3x"></i>
                     </div>
                 </div>
             </div>
@@ -33,7 +30,22 @@
                     <h6 class="card-title">Berkas/Unduhan</h6>
                     <div class="d-flex justify-content-between">
                         <span class="h1 fs-1 m-0" id="totalBerkas">0/0</span>
-                        <i class="fa-solid fa-users text-opacity-25 text-white fa-3x"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card card-body shadow text-bg-warning bg-gradient">
+                    <h6 class="card-title">Tautan/Aktif</h6>
+                    <div class="d-flex justify-content-between">
+                        <span class="h1 fs-1 m-0" id="totalTautan">0/0</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card card-body shadow text-bg-info bg-gradient">
+                    <h6 class="card-title">Diskusi/Baru</h6>
+                    <div class="d-flex justify-content-between">
+                        <span class="h1 fs-1 m-0" id="totalForum">0/0</span>
                     </div>
                 </div>
             </div>

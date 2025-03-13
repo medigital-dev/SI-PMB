@@ -15,6 +15,8 @@ $response = [
     'berkas' => count(query("SELECT * FROM berkas")) . '/' . count(query("SELECT * FROM berkas WHERE status = 1")),
     'banner' => count(query("SELECT * FROM banner")),
     'event' => count(query("SELECT * FROM event")),
+    'tautan' => count(query("SELECT * FROM tautan")) . '/' . count(query("SELECT * FROM tautan WHERE aktif = 1")),
+    'forum' => count(query("SELECT * FROM forum")) . '/' . count(query("SELECT * FROM forum WHERE dibaca = 0")),
 ];
 
 echo json_encode($response, JSON_PRETTY_PRINT);
