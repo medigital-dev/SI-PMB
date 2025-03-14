@@ -1,5 +1,5 @@
 <?php
-require 'dbconn.php';
+require_once 'dbconn.php';
 
 if (!function_exists('query')) {
     function query($query): array
@@ -21,6 +21,74 @@ if (!function_exists('query')) {
         return $rows;
     }
 }
+
+if (!function_exists('db_get')) {
+    function db_get(string $table, string $select = '*', array $where = [], array $orderBy = [])
+    {
+        global $conn;
+        if (!$conn) {
+            return ['error' => 'Koneksi database tidak tersedia'];
+        }
+
+        // Ambil informasi indeks dari tabel
+        $indexColumns = [];
+        $indexQuery = $conn->query("SHOW INDEX FROM $table WHERE Key_name = 'PRIMARY' OR Non_unique = 0");
+        if ($indexQuery) {
+            while ($row = $indexQuery->fetch_assoc()) {
+                $indexColumns[] = $row['Column_name'];
+            }
+        }
+
+        // Bangun query dasar
+        $query = "SELECT $select FROM $table";
+
+        // Tambahkan WHERE jika ada
+        if (!empty($where)) {
+            $conditions = [];
+            foreach ($where as $key => $value) {
+                $conditions[] = "$key = ?";
+            }
+            $query .= " WHERE " . implode(" AND ", $conditions);
+        }
+
+        // Tambahkan ORDER BY jika ada
+        if (!empty($orderBy)) {
+            $orderClauses = [];
+            foreach ($orderBy as $column => $direction) {
+                $orderClauses[] = "$column $direction";
+            }
+            $query .= " ORDER BY " . implode(", ", $orderClauses);
+        }
+
+        // **Cek apakah `WHERE` hanya menggunakan kolom INDEX**
+        $whereKeys = array_keys($where);
+        $useFirst = !empty($whereKeys) && count(array_intersect($whereKeys, $indexColumns)) > 0;
+
+        // Siapkan statement
+        $stmt = $conn->prepare($query);
+        if (!$stmt) {
+            return ['error' => 'Gagal menyiapkan query: ' . $conn->error];
+        }
+
+        // Binding parameter jika ada kondisi WHERE
+        if (!empty($where)) {
+            $types = str_repeat("s", count($where)); // Semua parameter dianggap string
+            $stmt->bind_param($types, ...array_values($where));
+        }
+
+        // Eksekusi query
+        if (!$stmt->execute()) {
+            return ['error' => 'Gagal mengeksekusi query: ' . $stmt->error];
+        }
+
+        // Ambil hasil query
+        $result = $stmt->get_result();
+
+        // **Gunakan first() jika PRIMARY KEY digunakan, else gunakan findAll()**
+        return $useFirst ? $result->fetch_assoc() : $result->fetch_all(MYSQLI_ASSOC);
+    }
+}
+
 
 if (!function_exists('timeAgo')) {
     function timeAgo($datetime, $full = false): string
@@ -102,15 +170,15 @@ if (!function_exists('updateProfil')) {
 }
 
 if (!function_exists('uploadFile')) {
-    function uploadFile($file): array|false
+    function uploadFile($file, $dir = '/uploads/', $filename = ''): array|false
     {
         $oldName = $file['name'];
         $mime_type = mime_content_type($file['tmp_name']);
         $ext = strtolower(pathinfo($oldName, PATHINFO_EXTENSION));
         $size = $file['size'];
 
-        $filename = date('ymd-') . strtolower(random_string(8)) . '.' . $ext;
-        $dir = '../uploads/';
+        $filename = $filename == '' ? date('ymd-') . strtolower(random_string(8)) . '.' . $ext : $filename;
+
         if (!file_exists($dir)) {
             mkdir($dir, 0777, true);
             chmod($dir, 0777);

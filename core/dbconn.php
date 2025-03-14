@@ -1,10 +1,11 @@
 <?php
-date_default_timezone_set('Asia/Jakarta');
 
-$server   = "localhost";
-$user     = "root";
-$pass     = "";
-$database = "ppdb";
+require_once 'config.php';
+
+$server   = DB_SERVER;
+$user     = DB_USER;
+$pass     = DB_PASSWORD;
+$database = DB_NAME;
 
 mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
 
