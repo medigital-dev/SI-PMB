@@ -242,12 +242,23 @@
                             <div class="d-flex flex-column flex-lg-row align-items-start">
                                 <div class="nav flex-lg-column flex-row nav-pills me-lg-4 justify-content-center mb-sm-3" id="v-pills-tab" role="tablist" aria-orientation="vertical">
                                     <button class="nav-link text-start active" id="v-pills-logo-tab" data-bs-toggle="pill" data-bs-target="#v-pills-logo" type="button" role="tab" aria-controls="v-pills-logo" aria-selected="true">Logo</button>
-                                    <button class="nav-link text-start" id="v-pills-profile-tab" data-bs-toggle="pill" data-bs-target="#v-pills-profile" type="button" role="tab" aria-controls="v-pills-profile" aria-selected="false">Profile</button>
+                                    <button class="nav-link text-start" id="v-pills-header-tab" data-bs-toggle="pill" data-bs-target="#v-pills-header" type="button" role="tab" aria-controls="v-pills-header" aria-selected="false">Header</button>
                                     <button class="nav-link text-start" id="v-pills-disabled-tab" data-bs-toggle="pill" data-bs-target="#v-pills-disabled" type="button" role="tab" aria-controls="v-pills-disabled" aria-selected="false" disabled>Disabled</button>
                                     <button class="nav-link text-start" id="v-pills-messages-tab" data-bs-toggle="pill" data-bs-target="#v-pills-messages" type="button" role="tab" aria-controls="v-pills-messages" aria-selected="false">Messages</button>
                                     <button class="nav-link text-start" id="v-pills-settings-tab" data-bs-toggle="pill" data-bs-target="#v-pills-settings" type="button" role="tab" aria-controls="v-pills-settings" aria-selected="false">Settings</button>
                                 </div>
                                 <div class="tab-content w-100" id="v-pills-tabContent">
+                                    <div class="tab-pane fade" id="v-pills-header" role="tabpanel" aria-labelledby="v-pills-header-tab" tabindex="0">
+                                        <div class="mb-3">
+                                            <label for="isiHeader" class="form-label">Header Homepage</label>
+                                            <div id="isiHeader" class="form-control py-4">
+                                                <?= $data['header'] ? $data['header'][0]['isi'] : '' ?>
+                                            </div>
+                                        </div>
+                                        <input type="hidden" value="<?= $data['header'] ? $data['header'][0]['header_id'] : '' ?>" id="idHeader">
+                                        <button type="button" class="btn btn-sm btn-primary" id="btnEditHeader">Edit</button>
+                                        <button type="button" class="btn btn-sm btn-success" id="btnSaveHeader">Simpan</button>
+                                    </div>
                                     <div class="tab-pane fade show active" id="v-pills-logo" role="tabpanel" aria-labelledby="v-pills-logo-tab" tabindex="0">
                                         <div class="row">
                                             <div class="col-md-6 mb-3">

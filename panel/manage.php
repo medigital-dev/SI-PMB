@@ -8,8 +8,9 @@ if (!isset($_SESSION["login"])) {
 
 require_once '../core/functions.php';
 
-$data['logo'] = query("SELECT * FROM logo WHERE aktif = 1");
+$data['logo'] = db_get('logo', ['where' => ['aktif' => true]]);
 $data['admin'] = $_SESSION['user'];
+$data['header'] = db_get('header');
 
 view('../view/templates/head.php', [
     'title' => 'Manage | SI-PPDB',

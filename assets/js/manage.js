@@ -1237,4 +1237,33 @@ $(document).ready(function () {
     toast("Logo mode gelap berhasil dirubah.", "success");
     file.val("");
   });
+
+  $("#btnEditHeader").on("click", function () {
+    $("#isiHeader").summernote({
+      focus: true,
+      height: 100,
+      dialogsInBody: true,
+      toolbar: [
+        ["style", ["bold", "italic", "underline"]],
+        ["fontsize", ["fontsize"]],
+        ["color", ["color"]],
+        ["height", ["height"]],
+      ],
+    });
+  });
+
+  $("#btnSaveHeader").on("click", async function () {
+    const id = $("#idHeader").val();
+    var markup = $("#isiHeader").summernote("code");
+    $("#isiHeader").summernote("destroy");
+    const res = fetchData({
+      url: "/api/header.php" + (id == "" ? "" : "?id=" + id),
+      data: {
+        isi: markup.replaceAll("<p", '<p class="m-0"'),
+      },
+      method: "POST",
+    });
+    if (!res) return;
+    toast("Header berhasil disimpan.", "success");
+  });
 });

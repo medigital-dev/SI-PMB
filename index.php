@@ -3,6 +3,7 @@ require './core/functions.php';
 $data['banner'] = query("SELECT banner.title, `description`, `order`, src FROM banner LEFT JOIN berkas ON banner.berkas_id =  berkas.berkas_id");
 $data['tautan'] = query("SELECT * FROM tautan WHERE aktif = 1");
 $data['on_menu'] = query("SELECT * FROM tautan WHERE aktif = 1 AND on_menu = 1");
+$data['header'] = db_get('header');
 
 view('./view/templates/head.php', [
   'title' => 'Informasi PPDB SMPN 2 Wonosari 2025',
@@ -27,10 +28,9 @@ view('./view/templates/toogle-theme.php')
     <header class="d-flex p-3 align-items-center justify-content-between border-bottom">
       <a href="./" class="d-flex align-items-center text-body-emphasis text-decoration-none">
         <img src="" id="logo" alt="Logo SMPN 2 Wonosari" width="60" class="img-fluid h-100 me-2" />
-        <p class="m-0 p-0 lh-1">
-          <span class="fs-4 fw-bold text-uppercase d-block">Info PPDB 2024</span>
-          <span class="fs-5 fw-bold d-block">SMPN 2 Wonosari</span>
-        </p>
+        <div class="m-0 p-0 lh-1">
+          <?= $data['header'] ? $data['header'][0]['isi'] : '' ?>
+        </div>
       </a>
       <div class="d-flex">
         <div class="btn-group">
