@@ -243,7 +243,7 @@
                                 <div class="nav flex-lg-column flex-row nav-pills me-lg-4 justify-content-center mb-sm-3" id="v-pills-tab" role="tablist" aria-orientation="vertical">
                                     <button class="nav-link text-start active" id="v-pills-logo-tab" data-bs-toggle="pill" data-bs-target="#v-pills-logo" type="button" role="tab" aria-controls="v-pills-logo" aria-selected="true">Logo</button>
                                     <button class="nav-link text-start" id="v-pills-header-tab" data-bs-toggle="pill" data-bs-target="#v-pills-header" type="button" role="tab" aria-controls="v-pills-header" aria-selected="false">Header</button>
-                                    <button class="nav-link text-start" id="v-pills-disabled-tab" data-bs-toggle="pill" data-bs-target="#v-pills-disabled" type="button" role="tab" aria-controls="v-pills-disabled" aria-selected="false" disabled>Disabled</button>
+                                    <button class="nav-link text-start" id="v-pills-heroes-tab" data-bs-toggle="pill" data-bs-target="#v-pills-heroes" type="button" role="tab" aria-controls="v-pills-heroes" aria-selected="false">Heroes</button>
                                     <button class="nav-link text-start" id="v-pills-messages-tab" data-bs-toggle="pill" data-bs-target="#v-pills-messages" type="button" role="tab" aria-controls="v-pills-messages" aria-selected="false">Messages</button>
                                     <button class="nav-link text-start" id="v-pills-settings-tab" data-bs-toggle="pill" data-bs-target="#v-pills-settings" type="button" role="tab" aria-controls="v-pills-settings" aria-selected="false">Settings</button>
                                 </div>
@@ -315,8 +315,18 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="tab-pane fade" id="v-pills-profile" role="tabpanel" aria-labelledby="v-pills-profile-tab" tabindex="0">...</div>
-                                    <div class="tab-pane fade" id="v-pills-disabled" role="tabpanel" aria-labelledby="v-pills-disabled-tab" tabindex="0">...</div>
+                                    <div class="tab-pane fade" id="v-pills-heroes" role="tabpanel" aria-labelledby="v-pills-heroes-tab" tabindex="0">
+                                        <div class="mb-3">
+                                            <label for="isiHeader" class="form-label">Heros Homepage</label>
+                                            <div id="isiHeroes" class="form-control py-4">
+                                                <?= $data['heroes'] ? $data['heroes']['content'] : '' ?>
+                                            </div>
+                                            <div class="form-text small">Heroes homepage adalah pesan selamat datang pada halaman utama.</div>
+                                        </div>
+                                        <input type="hidden" value="<?= $data['heroes'] ? $data['heroes']['hero_id'] : '' ?>" id="idHeroes">
+                                        <button type="button" class="btn btn-sm btn-primary" id="btnEditHeroes">Edit</button>
+                                        <button type="button" class="btn btn-sm btn-success" id="btnSaveHeroes">Simpan</button>
+                                    </div>
                                     <div class="tab-pane fade" id="v-pills-messages" role="tabpanel" aria-labelledby="v-pills-messages-tab" tabindex="0">...</div>
                                     <div class="tab-pane fade" id="v-pills-settings" role="tabpanel" aria-labelledby="v-pills-settings-tab" tabindex="0">...</div>
                                 </div>

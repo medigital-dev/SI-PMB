@@ -5,6 +5,7 @@ $data['tautan'] = query("SELECT * FROM tautan WHERE aktif = 1");
 $data['on_menu'] = query("SELECT * FROM tautan WHERE aktif = 1 AND on_menu = 1");
 $data['header'] = db_get('header', [], true);
 $data['favicon'] = db_get('logo', ['where' => ['type' => 'favicon']], true);
+$data['heroes'] = db_get('heroes', [], true);
 
 view('./view/templates/head.php', [
   'title' => 'Informasi PPDB SMPN 2 Wonosari 2025',
@@ -85,13 +86,14 @@ view('./view/templates/toogle-theme.php')
     </div>
 
     <div id="welcome" class="pt-3 mt-3 text-body-emphasis">
-      <h3 class="text-body-emphasis">Selamat Datang di Laman</h3>
+      <!-- <h3 class="text-body-emphasis">Selamat Datang di Laman</h3>
       <h1 class="text-body-emphasis">Info PPDB SMPN 2 Wonosari 2024</h1>
       <p class="fs-5">
         Selamat datang di Laman Pusat Informasi Penerimaan Peserta Didik Baru
         (PPDB) SMP Negeri 2 Wonosari Tahun Pelajaran 2024/2025. Segala
         informasi terkait PPDB akan kami infokan di halaman ini.
-      </p>
+      </p> -->
+      <?= $data['heroes'] ? $data['heroes']['content'] : ''; ?>
     </div>
 
     <hr class="col-3 col-md-2 mb-2" />

@@ -1346,4 +1346,50 @@ $(document).ready(function () {
     if (!res) return;
     toast("Header berhasil disimpan.", "success");
   });
+
+  $("#btnEditHeroes").on("click", function () {
+    $("#isiHeroes").summernote({
+      focus: true,
+      height: 100,
+      dialogsInBody: true,
+      fontSizes: [
+        "11",
+        "12",
+        "16",
+        "18",
+        "20",
+        "24",
+        "26",
+        "32",
+        "36",
+        "40",
+        "48",
+        "54",
+        "64",
+        "82",
+        "150",
+      ],
+      toolbar: [
+        ["style", ["bold", "italic", "underline"]],
+        ["fontsize", ["fontsize"]],
+        ["color", ["color"]],
+        ["height", ["height"]],
+      ],
+    });
+  });
+
+  $("#btnSaveHeroes").on("click", async function () {
+    const id = $("#idHeroes").val();
+    var markup = $("#isiHeroes").summernote("code");
+    $("#isiHeroes").summernote("destroy");
+    const res = fetchData({
+      url: "/api/heroes.php" + (id == "" ? "" : "?id=" + id),
+      data: {
+        content: markup.replaceAll("<p", '<p class="m-0"'),
+      },
+      method: "POST",
+    });
+    if (!res) return;
+    toast("Heroes berhasil disimpan.", "success");
+  });
 });

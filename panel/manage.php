@@ -14,6 +14,7 @@ $data['logo']['default'] = db_get('logo', ['where' => ['type' => 'default']], tr
 $data['logo']['favicon'] = db_get('logo', ['where' => ['type' => 'favicon']], true);
 $data['admin'] = $_SESSION['user'];
 $data['header'] = db_get('header', [], true);
+$data['heroes'] = db_get('heroes', [], true);
 
 view('../view/templates/head.php', [
     'title' => 'Manage | SI-PPDB',
