@@ -30,6 +30,7 @@ switch ($method) {
         break;
 
     case 'POST':
+        requireLogin();
         $isi = $_POST['isi'] ?? null;
         $timestamp = date('Y-m-d H:i:s');
 
