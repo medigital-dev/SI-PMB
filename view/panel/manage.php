@@ -264,15 +264,11 @@
                                             <div class="col-md-6 mb-3">
                                                 <div class="mb-3">
                                                     <label for="fileDark" class="form-label">Mode Gelap</label>
-                                                    <div class="border-primary text-bg-dark p-4 mb-2 text-center" id="previewDark" style="height: 200px;">
-                                                        <?php if ($data['logo']): ?>
-                                                            <?php foreach ($data['logo'] as $logo) : ?>
-                                                                <?php if ($logo['type'] == 'dark'): ?>
-                                                                    <input type="hidden" id="idDark" value="<?= $logo['logo_id']; ?>">
-                                                                    <img src="<?= $logo['src']; ?>" alt="Logo Dark" class="img-fluid h-100">
-                                                                <?php endif; ?>
-                                                            <?php endforeach; ?>
-                                                        <?php endif ?>
+                                                    <div class="border-primary p-4 mb-2 text-center" id="previewDark" style="height: 200px;">
+                                                        <input type="hidden" id="iddark" value="<?= $data['logo']['dark'] ? $data['logo']['dark']['logo_id'] : ''; ?>">
+                                                        <?php if ($data['logo']['dark']) : ?>
+                                                            <img src="<?= $data['logo']['dark']['src'] ?>" alt="Logo dark" class="img-fluid h-100">
+                                                        <?php endif; ?>
                                                     </div>
                                                     <input type="file" class="form-control" name="fileDark" id="fileDark" accept="image/*">
                                                 </div>
@@ -281,15 +277,11 @@
                                             <div class="col-md-6 mb-3">
                                                 <div class="mb-3">
                                                     <label for="fileLight" class="form-label">Mode Terang</label>
-                                                    <div class="border-primary text-bg-light p-4 mb-2 text-center" id="previewLight" style="height: 200px;">
-                                                        <?php if ($data['logo']): ?>
-                                                            <?php foreach ($data['logo'] as $logo) : ?>
-                                                                <?php if ($logo['type'] == 'light'): ?>
-                                                                    <input type="hidden" id="idLight" value="<?= $logo['logo_id']; ?>">
-                                                                    <img src="<?= $logo['src']; ?>" alt="Logo Light" class="img-fluid h-100">
-                                                                <?php endif; ?>
-                                                            <?php endforeach; ?>
-                                                        <?php endif ?>
+                                                    <div class="border-primary p-4 mb-2 text-center" id="previewLight" style="height: 200px;">
+                                                        <input type="hidden" id="idlight" value="<?= $data['logo']['light'] ? $data['logo']['light']['logo_id'] : ''; ?>">
+                                                        <?php if ($data['logo']['light']) : ?>
+                                                            <img src="<?= $data['logo']['light']['src'] ?>" alt="Logo light" class="img-fluid h-100">
+                                                        <?php endif; ?>
                                                     </div>
                                                     <input type="file" class="form-control" name="fileLight" id="fileLight" accept="image/*">
                                                 </div>
@@ -299,14 +291,10 @@
                                                 <div class="mb-3">
                                                     <label for="fileDefault" class="form-label">Mode Default</label>
                                                     <div class="border-primary p-4 mb-2 text-center" id="previewDefault" style="height: 200px;">
-                                                        <?php if ($data['logo']): ?>
-                                                            <?php foreach ($data['logo'] as $logo) : ?>
-                                                                <?php if ($logo['type'] == 'default'): ?>
-                                                                    <input type="hidden" id="idDefault" value="<?= $logo['logo_id']; ?>">
-                                                                    <img src="<?= $logo['src']; ?>" alt="Logo Default" class="img-fluid h-100">
-                                                                <?php endif; ?>
-                                                            <?php endforeach; ?>
-                                                        <?php endif ?>
+                                                        <input type="hidden" id="idDefault" value="<?= $data['logo']['default'] ? $data['logo']['default']['logo_id'] : ''; ?>">
+                                                        <?php if ($data['logo']['default']) : ?>
+                                                            <img src="<?= $data['logo']['default']['src'] ?>" alt="Logo default" class="img-fluid h-100">
+                                                        <?php endif; ?>
                                                     </div>
                                                     <input type="file" class="form-control" name="fileDefault" id="fileDefault" accept="image/*">
                                                 </div>
@@ -316,14 +304,10 @@
                                                 <div class="mb-3">
                                                     <label for="fileFavicon" class="form-label">Mode Favicon</label>
                                                     <div class="border-primary p-4 mb-2 text-center" id="previewFavicon" style="height: 200px;">
-                                                        <?php if ($data['logo']): ?>
-                                                            <?php foreach ($data['logo'] as $logo) : ?>
-                                                                <?php if ($logo['type'] == 'favicon'): ?>
-                                                                    <input type="hidden" id="idFavicon" value="<?= $logo['logo_id']; ?>">
-                                                                    <img src="<?= $logo['src']; ?>" alt="Logo Favicon" class="img-fluid h-100">
-                                                                <?php endif; ?>
-                                                            <?php endforeach; ?>
-                                                        <?php endif ?>
+                                                        <input type="hidden" id="idFavicon" value="<?= $data['logo']['favicon'] ? $data['logo']['favicon']['logo_id'] : ''; ?>">
+                                                        <?php if ($data['logo']['favicon']) : ?>
+                                                            <img src="<?= $data['logo']['favicon']['src'] ?>" alt="Logo favicon" class="img-fluid h-100">
+                                                        <?php endif; ?>
                                                     </div>
                                                     <input type="file" class="form-control" name="fileFavicon" id="fileFavicon" accept="image/*">
                                                 </div>

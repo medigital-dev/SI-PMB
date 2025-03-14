@@ -1279,7 +1279,7 @@ $(document).ready(function () {
     $(".is-invalid").removeClass("is-invalid");
     let set = new FormData();
     set.append("file", file.prop("files")[0]);
-    set.append("type", "Default");
+    set.append("type", "default");
     set.append("aktif", 1);
     const resp = await fetchData({
       url:
@@ -1304,7 +1304,7 @@ $(document).ready(function () {
     $(".is-invalid").removeClass("is-invalid");
     let set = new FormData();
     set.append("file", file.prop("files")[0]);
-    set.append("type", "Favicon");
+    set.append("type", "favicon");
     set.append("aktif", 1);
     const resp = await fetchData({
       url:
