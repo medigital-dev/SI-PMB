@@ -1,6 +1,5 @@
 <?php
 include '../core/functions.php';
-include '../core/config.php';
 
 global $conn;
 
