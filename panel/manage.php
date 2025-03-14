@@ -5,9 +5,11 @@ if (!isset($_SESSION["login"])) {
     header("Location: /auth/login.php");
     exit;
 }
-include '../core/functions.php';
 
-$admin = $_SESSION['user'];
+require_once '../core/functions.php';
+
+$data['logo'] = query("SELECT * FROM logo WHERE aktif = 1");
+$data['admin'] = $_SESSION['user'];
 
 view('../view/templates/head.php', [
     'title' => 'Manage | SI-PPDB',
@@ -26,9 +28,9 @@ view('../view/templates/head.php', [
 ]);
 
 view('../view/templates/toogle-theme.php');
-view('../view/panel/navbar.php', ['admin' => $admin]);
+view('../view/panel/navbar.php', $data);
 // content
-view('../view/panel/manage.php', ['admin' => $admin]);
+view('../view/panel/manage.php', $data);
 // end content
 view('../view/templates/footer.php', [
     'script' => [

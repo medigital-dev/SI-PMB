@@ -1,5 +1,8 @@
 <nav class="navbar navbar-expand-lg sticky-top bg-body-tertiary shadow">
     <div class="container">
+        <span style="height: 40px;" class="me-2">
+            <img src="" alt="" id="logo" class="img-fluid h-100">
+        </span>
         <a class="navbar-brand" href="/panel/manage.php">CMS-Info PPDB</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#main-menu" aria-controls="main-menu" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>

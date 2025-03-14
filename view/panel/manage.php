@@ -1,5 +1,5 @@
 <section>
-    <div class="container">
+    <div class="container pb-5">
         <div class="row row-cols-2 row-cols-md-3 row-cols-lg-6 g-4 mb-4">
             <div class="col">
                 <div class="card card-body shadow text-bg-primary bg-gradient">
@@ -62,6 +62,7 @@
                         <button class="nav-link text-start" id="v-pills-berkas-tab" data-bs-toggle="pill" data-bs-target="#v-pills-berkas" type="button" role="tab" aria-controls="v-pills-berkas" aria-selected="true">Berkas</button>
                         <button class="nav-link text-start" id="v-pills-tautan-tab" data-bs-toggle="pill" data-bs-target="#v-pills-tautan" type="button" role="tab" aria-controls="v-pills-tautan" aria-selected="true">Tautan</button>
                         <button class="nav-link text-start" id="v-pills-forum-tab" data-bs-toggle="pill" data-bs-target="#v-pills-forum" type="button" role="tab" aria-controls="v-pills-forum" aria-selected="true">Forum</button>
+                        <button class="nav-link text-start" id="v-pills-pengaturan-tab" data-bs-toggle="pill" data-bs-target="#v-pills-pengaturan" type="button" role="tab" aria-controls="v-pills-pengaturan" aria-selected="true">Pengaturan</button>
                     </div>
                 </div>
             </div>
@@ -230,6 +231,66 @@
                                         </tr>
                                     </thead>
                                 </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="v-pills-pengaturan" role="tabpanel" aria-labelledby="v-pills-pengaturan-tab" tabindex="0">
+                    <div class="card shadow mb-4">
+                        <div class="card-header text-bg-primary">Pengaturan Aplikasi</div>
+                        <div class="card-body">
+                            <div class="d-flex flex-column flex-lg-row align-items-start">
+                                <div class="nav flex-lg-column flex-row nav-pills me-lg-4 justify-content-center mb-sm-3" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+                                    <button class="nav-link text-start active" id="v-pills-logo-tab" data-bs-toggle="pill" data-bs-target="#v-pills-logo" type="button" role="tab" aria-controls="v-pills-logo" aria-selected="true">Logo</button>
+                                    <button class="nav-link text-start" id="v-pills-profile-tab" data-bs-toggle="pill" data-bs-target="#v-pills-profile" type="button" role="tab" aria-controls="v-pills-profile" aria-selected="false">Profile</button>
+                                    <button class="nav-link text-start" id="v-pills-disabled-tab" data-bs-toggle="pill" data-bs-target="#v-pills-disabled" type="button" role="tab" aria-controls="v-pills-disabled" aria-selected="false" disabled>Disabled</button>
+                                    <button class="nav-link text-start" id="v-pills-messages-tab" data-bs-toggle="pill" data-bs-target="#v-pills-messages" type="button" role="tab" aria-controls="v-pills-messages" aria-selected="false">Messages</button>
+                                    <button class="nav-link text-start" id="v-pills-settings-tab" data-bs-toggle="pill" data-bs-target="#v-pills-settings" type="button" role="tab" aria-controls="v-pills-settings" aria-selected="false">Settings</button>
+                                </div>
+                                <div class="tab-content w-100" id="v-pills-tabContent">
+                                    <div class="tab-pane fade show active" id="v-pills-logo" role="tabpanel" aria-labelledby="v-pills-logo-tab" tabindex="0">
+                                        <div class="row">
+                                            <div class="col-md-6 mb-3">
+                                                <div class="mb-3">
+                                                    <label for="fileDark" class="form-label">Mode Gelap</label>
+                                                    <div class="border-primary text-bg-dark p-4 mb-2 text-center" id="previewDark" style="height: 200px;">
+                                                        <?php if ($data['logo']): ?>
+                                                            <?php foreach ($data['logo'] as $logo) : ?>
+                                                                <?php if ($logo['tema'] == 'dark'): ?>
+                                                                    <input type="hidden" id="idDark" value="<?= $logo['logo_id']; ?>">
+                                                                    <img src="<?= $logo['src']; ?>" alt="Logo Dark" class="img-fluid h-100">
+                                                                <?php endif; ?>
+                                                            <?php endforeach; ?>
+                                                        <?php endif ?>
+                                                    </div>
+                                                    <input type="file" class="form-control" name="fileDark" id="fileDark" accept="image/*">
+                                                </div>
+                                                <button type="button" class="btn btn-sm btn-primary" id="btnSimpanLogoDark">Simpan</button>
+                                            </div>
+                                            <div class="col-md-6 mb-3">
+                                                <div class="mb-3">
+                                                    <label for="fileDark" class="form-label">Mode Terang</label>
+                                                    <div class="border-primary text-bg-light p-4 mb-2 text-center" id="previewLight" style="height: 200px;">
+                                                        <?php if ($data['logo']): ?>
+                                                            <?php foreach ($data['logo'] as $logo) : ?>
+                                                                <?php if ($logo['tema'] == 'light'): ?>
+                                                                    <input type="hidden" id="idLight" value="<?= $logo['logo_id']; ?>">
+                                                                    <img src="<?= $logo['src']; ?>" alt="Logo Light" class="img-fluid h-100">
+                                                                <?php endif; ?>
+                                                            <?php endforeach; ?>
+                                                        <?php endif ?>
+                                                    </div>
+                                                    <input type="file" class="form-control" name="fileLight" id="fileLight" accept="image/*">
+                                                </div>
+                                                <button type="button" class="btn btn-sm btn-primary" id="btnSimpanLogoLight">Simpan</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="tab-pane fade" id="v-pills-profile" role="tabpanel" aria-labelledby="v-pills-profile-tab" tabindex="0">...</div>
+                                    <div class="tab-pane fade" id="v-pills-disabled" role="tabpanel" aria-labelledby="v-pills-disabled-tab" tabindex="0">...</div>
+                                    <div class="tab-pane fade" id="v-pills-messages" role="tabpanel" aria-labelledby="v-pills-messages-tab" tabindex="0">...</div>
+                                    <div class="tab-pane fade" id="v-pills-settings" role="tabpanel" aria-labelledby="v-pills-settings-tab" tabindex="0">...</div>
+                                </div>
                             </div>
                         </div>
                     </div>

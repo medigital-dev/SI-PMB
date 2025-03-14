@@ -1161,4 +1161,76 @@ $(document).ready(function () {
       $("#collapse-balas").collapse("show");
     });
   });
+
+  $("#fileDark").on("change", function () {
+    file = this.files[0];
+    if (file) {
+      let reader = new FileReader();
+      reader.onload = function (event) {
+        $("#previewDark")
+          .html("")
+          .append(
+            '<img src="' + event.target.result + '" class="img-fluid h-100">'
+          );
+      };
+      reader.readAsDataURL(file);
+    }
+  });
+
+  $("#fileLight").on("change", function () {
+    file = this.files[0];
+    if (file) {
+      let reader = new FileReader();
+      reader.onload = function (event) {
+        $("#previewLight")
+          .html("")
+          .append(
+            '<img src="' + event.target.result + '" class="img-fluid h-100">'
+          );
+      };
+      reader.readAsDataURL(file);
+    }
+  });
+
+  $("#btnSimpanLogoDark").on("click", async function () {
+    const file = $("#fileDark");
+    const idDark = $("#idDark");
+    if (!file.val().trim()) {
+      file.addClass("is-invalid");
+    }
+    $(".is-invalid").removeClass("is-invalid");
+    let set = new FormData();
+    set.append("file", file.prop("files")[0]);
+    set.append("tema", "dark");
+    set.append("aktif", 1);
+    const resp = await fetchData({
+      url: "/api/logo.php" + (idDark.length > 0 ? "?id=" + idDark.val() : ""),
+      data: set,
+      method: "POST",
+    });
+    if (!resp) return;
+    toast("Logo mode gelap berhasil dirubah.", "success");
+    file.val("");
+  });
+
+  $("#btnSimpanLogoLight").on("click", async function () {
+    const file = $("#fileLight");
+    const idLight = $("#idLight");
+    if (!file.val().trim()) {
+      file.addClass("is-invalid");
+    }
+    $(".is-invalid").removeClass("is-invalid");
+    let set = new FormData();
+    set.append("file", file.prop("files")[0]);
+    set.append("tema", "light");
+    set.append("aktif", 1);
+    const resp = await fetchData({
+      url: "/api/logo.php" + (idLight.length > 0 ? "?id=" + idLight.val() : ""),
+      data: set,
+      method: "POST",
+    });
+    if (!resp) return;
+    toast("Logo mode gelap berhasil dirubah.", "success");
+    file.val("");
+  });
 });

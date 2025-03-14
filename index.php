@@ -26,7 +26,7 @@ view('./view/templates/toogle-theme.php')
   <div class="col-lg-8 mx-auto bg-body shadow">
     <header class="d-flex p-3 align-items-center justify-content-between border-bottom">
       <a href="./" class="d-flex align-items-center text-body-emphasis text-decoration-none">
-        <img src="./assets/brand/logo2.png" alt="Logo SMPN 2 Wonosari" width="60" class="me-2" />
+        <img src="" id="logo" alt="Logo SMPN 2 Wonosari" width="60" class="img-fluid h-100 me-2" />
         <p class="m-0 p-0 lh-1">
           <span class="fs-4 fw-bold text-uppercase d-block">Info PPDB 2024</span>
           <span class="fs-5 fw-bold d-block">SMPN 2 Wonosari</span>
