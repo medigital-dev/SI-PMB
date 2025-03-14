@@ -1,5 +1,5 @@
 const toastContainer =
-  '<div aria-live="polite" aria-atomic="true" class="position-relative"><div class="toast-container p-1 position-fixed bg-transparent opacity-75"></div></div>';
+  '<div aria-live="polite" aria-atomic="true" class="position-relative"><div class="toast-container p-1 position-fixed"></div></div>';
 
 $("html body").append(toastContainer);
 
