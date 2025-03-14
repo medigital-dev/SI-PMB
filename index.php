@@ -72,7 +72,7 @@ view('./view/templates/toogle-theme.php')
           <?php $i = 0;
           foreach ($data['banner'] as $banner) : ?>
             <div class="carousel-item <?= $i == 0 ? 'active' : ''; ?>">
-              <a href="<?= $banner['src']; ?>" data-fancybox="banner">
+              <a href="<?= $banner['src']; ?>" data-fancybox="banner-hero">
                 <img src="<?= $banner['src']; ?>" class="d-block img-fluid" />
               </a>
             </div>

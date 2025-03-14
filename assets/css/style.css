@@ -6,6 +6,14 @@
   user-select: none;
 }
 
+.toast-container {
+  z-index: 9998 !important;
+}
+
+.fancybox__container {
+  z-index: 1800 !important;
+}
+
 @media (min-width: 768px) {
   .bd-placeholder-img-lg {
     font-size: 3.5rem;
