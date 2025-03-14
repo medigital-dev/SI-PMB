@@ -23,72 +23,131 @@ if (!function_exists('query')) {
 }
 
 if (!function_exists('db_get')) {
-    function db_get(string $table, string $select = '*', array $where = [], array $orderBy = [])
+    /**
+     * @param string $table Nama Tabel
+     * @param array $condition
+     * string|array 'select'
+     * string|array 'where'
+     * string|array 'orderBy'
+     * string|array 'join'
+     */
+    function db_get($table, array $condition = [])
     {
         global $conn;
-        if (!$conn) {
-            return ['error' => 'Koneksi database tidak tersedia'];
+
+        $select = '*';
+        if (!empty($condition['select'])) {
+            $select = is_array($condition['select']) ? implode(', ', $condition['select']) : $condition['select'];
         }
 
-        // Ambil informasi indeks dari tabel
-        $indexColumns = [];
-        $indexQuery = $conn->query("SHOW INDEX FROM $table WHERE Key_name = 'PRIMARY' OR Non_unique = 0");
-        if ($indexQuery) {
-            while ($row = $indexQuery->fetch_assoc()) {
-                $indexColumns[] = $row['Column_name'];
+        $where = [];
+        if (!empty($condition['where'])) {
+            foreach ($condition['where'] as $key => $value) {
+                $where[] = "`$key` = '" . mysqli_real_escape_string($conn, $value) . "'";
             }
         }
 
-        // Bangun query dasar
-        $query = "SELECT $select FROM $table";
-
-        // Tambahkan WHERE jika ada
-        if (!empty($where)) {
-            $conditions = [];
-            foreach ($where as $key => $value) {
-                $conditions[] = "$key = ?";
+        $orderBy = '';
+        if (!empty($condition['orderBy'])) {
+            if (is_array($condition['orderBy'])) {
+                $orders = [];
+                foreach ($condition['orderBy'] as $col => $dir) {
+                    $orders[] = "`$col` " . (strtoupper($dir) === 'DESC' ? 'DESC' : 'ASC');
+                }
+                $orderBy = "ORDER BY " . implode(', ', $orders);
+            } else {
+                $orderBy = "ORDER BY `$condition[orderBy]`";
             }
-            $query .= " WHERE " . implode(" AND ", $conditions);
         }
 
-        // Tambahkan ORDER BY jika ada
-        if (!empty($orderBy)) {
-            $orderClauses = [];
-            foreach ($orderBy as $column => $direction) {
-                $orderClauses[] = "$column $direction";
-            }
-            $query .= " ORDER BY " . implode(", ", $orderClauses);
+        $join = '';
+        if (!empty($condition['join']) && is_array($condition['join'])) {
+            $joinType = isset($condition['join'][2]) ? strtoupper($condition['join'][2]) : 'INNER';
+            $join = "$joinType JOIN `{$condition['join'][0]}` ON {$condition['join'][1]}";
         }
 
-        // **Cek apakah `WHERE` hanya menggunakan kolom INDEX**
-        $whereKeys = array_keys($where);
-        $useFirst = !empty($whereKeys) && count(array_intersect($whereKeys, $indexColumns)) > 0;
+        $whereSql = !empty($where) ? "WHERE " . implode(' AND ', $where) : '';
 
-        // Siapkan statement
-        $stmt = $conn->prepare($query);
-        if (!$stmt) {
-            return ['error' => 'Gagal menyiapkan query: ' . $conn->error];
+        // Cek apakah where mengarah ke primary key
+        $primaryKey = get_primary_key($table);
+        if ($primaryKey && isset($condition['where']) && count($condition['where']) === 1 && array_key_exists($primaryKey, $condition['where'])) {
+            $sql = "SELECT $select FROM `$table` $join $whereSql LIMIT 1";
+            $result = mysqli_query($conn, $sql);
+            return $result ? mysqli_fetch_assoc($result) : null;
         }
 
-        // Binding parameter jika ada kondisi WHERE
-        if (!empty($where)) {
-            $types = str_repeat("s", count($where)); // Semua parameter dianggap string
-            $stmt->bind_param($types, ...array_values($where));
+        $sql = "SELECT $select FROM `$table` $join $whereSql $orderBy";
+        $result = mysqli_query($conn, $sql);
+
+        return $result ? mysqli_fetch_all($result, MYSQLI_ASSOC) : [];
+    }
+
+    function get_primary_key($table)
+    {
+        global $conn;
+        $sql = "SHOW KEYS FROM `$table` WHERE Key_name = 'PRIMARY'";
+        $result = mysqli_query($conn, $sql);
+        if ($row = mysqli_fetch_assoc($result)) {
+            return $row['Column_name'];
         }
-
-        // Eksekusi query
-        if (!$stmt->execute()) {
-            return ['error' => 'Gagal mengeksekusi query: ' . $stmt->error];
-        }
-
-        // Ambil hasil query
-        $result = $stmt->get_result();
-
-        // **Gunakan first() jika PRIMARY KEY digunakan, else gunakan findAll()**
-        return $useFirst ? $result->fetch_assoc() : $result->fetch_all(MYSQLI_ASSOC);
+        return null;
     }
 }
 
+if (!function_exists('db_save')) {
+    function db_save($table, array $condition)
+    {
+        global $conn;
+
+        if (!isset($condition['set']) || !is_array($condition['set'])) {
+            return false;
+        }
+
+        $setParts = [];
+        foreach ($condition['set'] as $key => $value) {
+            $setParts[] = "$key = '" . mysqli_real_escape_string($conn, $value) . "'";
+        }
+        $set = implode(', ', $setParts);
+
+        if (isset($condition['where']) && is_array($condition['where']) && !empty($condition['where'])) {
+            // UPDATE query
+            $whereParts = [];
+            foreach ($condition['where'] as $key => $value) {
+                $whereParts[] = "$key = '" . mysqli_real_escape_string($conn, $value) . "'";
+            }
+            $where = " WHERE " . implode(' AND ', $whereParts);
+            $sql = "UPDATE $table SET $set$where";
+        } else {
+            // INSERT query
+            $columns = implode(', ', array_keys($condition['set']));
+            $values = "'" . implode("', '", array_map(fn($v) => mysqli_real_escape_string($conn, $v), array_values($condition['set']))) . "'";
+            $sql = "INSERT INTO $table ($columns) VALUES ($values)";
+        }
+
+        return mysqli_query($conn, $sql);
+    }
+}
+
+if (!function_exists('db_delete')) {
+    function db_delete($table, $condition)
+    {
+        global $conn;
+
+        if (!isset($condition['where']) || empty($condition['where'])) {
+            return "Error: WHERE condition is required for DELETE";
+        }
+
+        $whereParts = [];
+        foreach ($condition['where'] as $key => $value) {
+            $whereParts[] = "$key = '" . mysqli_real_escape_string($conn, $value) . "'";
+        }
+        $where = " WHERE " . implode(' AND ', $whereParts);
+
+        $sql = "DELETE FROM $table$where";
+
+        return mysqli_query($conn, $sql) ? true : "Error: " . mysqli_error($conn);
+    }
+}
 
 if (!function_exists('timeAgo')) {
     function timeAgo($datetime, $full = false): string
