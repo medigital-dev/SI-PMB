@@ -31,55 +31,62 @@ if (!function_exists('db_get')) {
      * string|array 'orderBy'
      * string|array 'join'
      */
-    function db_get($table, array $condition = [])
+    function db_get($table, array $condition = [], $returnRow = false)
     {
         global $conn;
 
+        $primaryKey = get_primary_key($table);
         $select = '*';
-        if (!empty($condition['select'])) {
+        $where = '';
+        $orderBy = '';
+        $joins = '';
+
+        if (isset($condition['select'])) {
             $select = is_array($condition['select']) ? implode(', ', $condition['select']) : $condition['select'];
         }
 
-        $where = [];
-        if (!empty($condition['where'])) {
+        if (isset($condition['where']) && is_array($condition['where'])) {
+            $whereParts = [];
             foreach ($condition['where'] as $key => $value) {
-                $where[] = "`$key` = '" . mysqli_real_escape_string($conn, $value) . "'";
+                $whereParts[] = "$key = '" . mysqli_real_escape_string($conn, $value) . "'";
             }
+            $where = " WHERE " . implode(' AND ', $whereParts);
         }
 
-        $orderBy = '';
-        if (!empty($condition['orderBy'])) {
+        if (isset($condition['orderBy'])) {
             if (is_array($condition['orderBy'])) {
-                $orders = [];
-                foreach ($condition['orderBy'] as $col => $dir) {
-                    $orders[] = "`$col` " . (strtoupper($dir) === 'DESC' ? 'DESC' : 'ASC');
+                $orderByParts = [];
+                foreach ($condition['orderBy'] as $column => $direction) {
+                    $orderByParts[] = "$column $direction";
                 }
-                $orderBy = "ORDER BY " . implode(', ', $orders);
+                $orderBy = " ORDER BY " . implode(', ', $orderByParts);
             } else {
-                $orderBy = "ORDER BY `$condition[orderBy]`";
+                $orderBy = " ORDER BY " . $condition['orderBy'];
             }
         }
 
-        $join = '';
-        if (!empty($condition['join']) && is_array($condition['join'])) {
-            $joinType = isset($condition['join'][2]) ? strtoupper($condition['join'][2]) : 'INNER';
-            $join = "$joinType JOIN `{$condition['join'][0]}` ON {$condition['join'][1]}";
+        if (isset($condition['join'])) {
+            if (isset($condition['join'][0]) && !is_array($condition['join'][0])) {
+                $condition['join'] = [$condition['join']];
+            }
+
+            foreach ($condition['join'] as $join) {
+                list($joinTable, $joinCondition, $joinType) = $join + [2 => 'INNER'];
+                $joins .= " $joinType JOIN $joinTable ON $joinCondition";
+            }
         }
 
-        $whereSql = !empty($where) ? "WHERE " . implode(' AND ', $where) : '';
-
-        // Cek apakah where mengarah ke primary key
-        $primaryKey = get_primary_key($table);
-        if ($primaryKey && isset($condition['where']) && count($condition['where']) === 1 && array_key_exists($primaryKey, $condition['where'])) {
-            $sql = "SELECT $select FROM `$table` $join $whereSql LIMIT 1";
+        // Check if querying by primary key or forcing single row return
+        if ($returnRow || ($primaryKey && isset($condition['where']) && count($condition['where']) === 1 && array_key_exists($primaryKey, $condition['where']))) {
+            $sql = "SELECT $select FROM $table$joins$where$orderBy LIMIT 1";
             $result = mysqli_query($conn, $sql);
-            return $result ? mysqli_fetch_assoc($result) : null;
+            return mysqli_fetch_assoc($result);
         }
 
-        $sql = "SELECT $select FROM `$table` $join $whereSql $orderBy";
+        // Normal SELECT query
+        $sql = "SELECT $select FROM $table$joins$where$orderBy";
         $result = mysqli_query($conn, $sql);
-
-        return $result ? mysqli_fetch_all($result, MYSQLI_ASSOC) : [];
+        return mysqli_fetch_all($result, MYSQLI_ASSOC);
     }
 
     function get_primary_key($table)
