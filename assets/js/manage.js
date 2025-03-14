@@ -1195,8 +1195,10 @@ $(document).ready(function () {
   $("#btnSimpanLogoDark").on("click", async function () {
     const file = $("#fileDark");
     const idDark = $("#idDark");
-    if (!file.val().trim()) {
+    if (file.prop("files").length == 0) {
+      toast("File input wajib dipilih.", "error");
       file.addClass("is-invalid");
+      return;
     }
     $(".is-invalid").removeClass("is-invalid");
     let set = new FormData();
@@ -1216,8 +1218,10 @@ $(document).ready(function () {
   $("#btnSimpanLogoLight").on("click", async function () {
     const file = $("#fileLight");
     const idLight = $("#idLight");
-    if (!file.val().trim()) {
+    if (file.prop("files").length == 0) {
+      toast("File input wajib dipilih.", "error");
       file.addClass("is-invalid");
+      return;
     }
     $(".is-invalid").removeClass("is-invalid");
     let set = new FormData();
