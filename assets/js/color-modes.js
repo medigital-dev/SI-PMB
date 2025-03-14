@@ -32,7 +32,7 @@
       .then((response) => response.json())
       .then((data) => {
         const logos = data;
-        const logoSrc = logos.find((logo) => logo.tema === theme)?.src;
+        const logoSrc = logos.find((logo) => logo.type === theme)?.src;
         const logoElement = document.getElementById("logo");
         if (logoSrc) {
           logoElement.src = logoSrc;

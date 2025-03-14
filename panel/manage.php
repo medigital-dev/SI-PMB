@@ -9,8 +9,9 @@ if (!isset($_SESSION["login"])) {
 require_once '../core/functions.php';
 
 $data['logo'] = db_get('logo', ['where' => ['aktif' => true]]);
+$data['favicon'] = db_get('logo', ['where' => ['type' => 'favicon']], true);
 $data['admin'] = $_SESSION['user'];
-$data['header'] = db_get('header');
+$data['header'] = db_get('header', [], true);
 
 view('../view/templates/head.php', [
     'title' => 'Manage | SI-PPDB',
@@ -26,6 +27,7 @@ view('../view/templates/head.php', [
     'body' => [
         'className' => 'bg-body-tertiary',
     ],
+    'favicon' => [$data['favicon'] ? $data['favicon']['src'] : '']
 ]);
 
 view('../view/templates/toogle-theme.php');

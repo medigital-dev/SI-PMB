@@ -1192,6 +1192,36 @@ $(document).ready(function () {
     }
   });
 
+  $("#fileDefault").on("change", function () {
+    file = this.files[0];
+    if (file) {
+      let reader = new FileReader();
+      reader.onload = function (event) {
+        $("#previewDefault")
+          .html("")
+          .append(
+            '<img src="' + event.target.result + '" class="img-fluid h-100">'
+          );
+      };
+      reader.readAsDataURL(file);
+    }
+  });
+
+  $("#fileFavicon").on("change", function () {
+    file = this.files[0];
+    if (file) {
+      let reader = new FileReader();
+      reader.onload = function (event) {
+        $("#previewFavicon")
+          .html("")
+          .append(
+            '<img src="' + event.target.result + '" class="img-fluid h-100">'
+          );
+      };
+      reader.readAsDataURL(file);
+    }
+  });
+
   $("#btnSimpanLogoDark").on("click", async function () {
     const file = $("#fileDark");
     const idDark = $("#idDark");
@@ -1203,7 +1233,7 @@ $(document).ready(function () {
     $(".is-invalid").removeClass("is-invalid");
     let set = new FormData();
     set.append("file", file.prop("files")[0]);
-    set.append("tema", "dark");
+    set.append("type", "dark");
     set.append("aktif", 1);
     const resp = await fetchData({
       url: "/api/logo.php" + (idDark.length > 0 ? "?id=" + idDark.val() : ""),
@@ -1226,7 +1256,7 @@ $(document).ready(function () {
     $(".is-invalid").removeClass("is-invalid");
     let set = new FormData();
     set.append("file", file.prop("files")[0]);
-    set.append("tema", "light");
+    set.append("type", "light");
     set.append("aktif", 1);
     const resp = await fetchData({
       url: "/api/logo.php" + (idLight.length > 0 ? "?id=" + idLight.val() : ""),
@@ -1234,7 +1264,57 @@ $(document).ready(function () {
       method: "POST",
     });
     if (!resp) return;
-    toast("Logo mode gelap berhasil dirubah.", "success");
+    toast("Logo mode terang berhasil dirubah.", "success");
+    file.val("");
+  });
+
+  $("#btnSimpanLogoDefault").on("click", async function () {
+    const file = $("#fileDefault");
+    const idDefault = $("#idDefault");
+    if (file.prop("files").length == 0) {
+      toast("File input wajib dipilih.", "error");
+      file.addClass("is-invalid");
+      return;
+    }
+    $(".is-invalid").removeClass("is-invalid");
+    let set = new FormData();
+    set.append("file", file.prop("files")[0]);
+    set.append("type", "Default");
+    set.append("aktif", 1);
+    const resp = await fetchData({
+      url:
+        "/api/logo.php" +
+        (idDefault.length > 0 ? "?id=" + idDefault.val() : ""),
+      data: set,
+      method: "POST",
+    });
+    if (!resp) return;
+    toast("Logo mode default berhasil dirubah.", "success");
+    file.val("");
+  });
+
+  $("#btnSimpanLogoFavicon").on("click", async function () {
+    const file = $("#fileFavicon");
+    const idFavicon = $("#idFavicon");
+    if (file.prop("files").length == 0) {
+      toast("File input wajib dipilih.", "error");
+      file.addClass("is-invalid");
+      return;
+    }
+    $(".is-invalid").removeClass("is-invalid");
+    let set = new FormData();
+    set.append("file", file.prop("files")[0]);
+    set.append("type", "Favicon");
+    set.append("aktif", 1);
+    const resp = await fetchData({
+      url:
+        "/api/logo.php" +
+        (idFavicon.length > 0 ? "?id=" + idFavicon.val() : ""),
+      data: set,
+      method: "POST",
+    });
+    if (!resp) return;
+    toast("Logo mode favicon berhasil dirubah.", "success");
     file.val("");
   });
 

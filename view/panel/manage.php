@@ -252,10 +252,10 @@
                                         <div class="mb-3">
                                             <label for="isiHeader" class="form-label">Header Homepage</label>
                                             <div id="isiHeader" class="form-control py-4">
-                                                <?= $data['header'] ? $data['header'][0]['isi'] : '' ?>
+                                                <?= $data['header'] ? $data['header']['isi'] : '' ?>
                                             </div>
                                         </div>
-                                        <input type="hidden" value="<?= $data['header'] ? $data['header'][0]['header_id'] : '' ?>" id="idHeader">
+                                        <input type="hidden" value="<?= $data['header'] ? $data['header']['header_id'] : '' ?>" id="idHeader">
                                         <button type="button" class="btn btn-sm btn-primary" id="btnEditHeader">Edit</button>
                                         <button type="button" class="btn btn-sm btn-success" id="btnSaveHeader">Simpan</button>
                                     </div>
@@ -267,7 +267,7 @@
                                                     <div class="border-primary text-bg-dark p-4 mb-2 text-center" id="previewDark" style="height: 200px;">
                                                         <?php if ($data['logo']): ?>
                                                             <?php foreach ($data['logo'] as $logo) : ?>
-                                                                <?php if ($logo['tema'] == 'dark'): ?>
+                                                                <?php if ($logo['type'] == 'dark'): ?>
                                                                     <input type="hidden" id="idDark" value="<?= $logo['logo_id']; ?>">
                                                                     <img src="<?= $logo['src']; ?>" alt="Logo Dark" class="img-fluid h-100">
                                                                 <?php endif; ?>
@@ -280,11 +280,11 @@
                                             </div>
                                             <div class="col-md-6 mb-3">
                                                 <div class="mb-3">
-                                                    <label for="fileDark" class="form-label">Mode Terang</label>
+                                                    <label for="fileLight" class="form-label">Mode Terang</label>
                                                     <div class="border-primary text-bg-light p-4 mb-2 text-center" id="previewLight" style="height: 200px;">
                                                         <?php if ($data['logo']): ?>
                                                             <?php foreach ($data['logo'] as $logo) : ?>
-                                                                <?php if ($logo['tema'] == 'light'): ?>
+                                                                <?php if ($logo['type'] == 'light'): ?>
                                                                     <input type="hidden" id="idLight" value="<?= $logo['logo_id']; ?>">
                                                                     <img src="<?= $logo['src']; ?>" alt="Logo Light" class="img-fluid h-100">
                                                                 <?php endif; ?>
@@ -294,6 +294,40 @@
                                                     <input type="file" class="form-control" name="fileLight" id="fileLight" accept="image/*">
                                                 </div>
                                                 <button type="button" class="btn btn-sm btn-primary" id="btnSimpanLogoLight">Simpan</button>
+                                            </div>
+                                            <div class="col-md-6 mb-3">
+                                                <div class="mb-3">
+                                                    <label for="fileDefault" class="form-label">Mode Default</label>
+                                                    <div class="border-primary p-4 mb-2 text-center" id="previewDefault" style="height: 200px;">
+                                                        <?php if ($data['logo']): ?>
+                                                            <?php foreach ($data['logo'] as $logo) : ?>
+                                                                <?php if ($logo['type'] == 'default'): ?>
+                                                                    <input type="hidden" id="idDefault" value="<?= $logo['logo_id']; ?>">
+                                                                    <img src="<?= $logo['src']; ?>" alt="Logo Default" class="img-fluid h-100">
+                                                                <?php endif; ?>
+                                                            <?php endforeach; ?>
+                                                        <?php endif ?>
+                                                    </div>
+                                                    <input type="file" class="form-control" name="fileDefault" id="fileDefault" accept="image/*">
+                                                </div>
+                                                <button type="button" class="btn btn-sm btn-primary" id="btnSimpanLogoDefault">Simpan</button>
+                                            </div>
+                                            <div class="col-md-6 mb-3">
+                                                <div class="mb-3">
+                                                    <label for="fileFavicon" class="form-label">Mode Favicon</label>
+                                                    <div class="border-primary p-4 mb-2 text-center" id="previewFavicon" style="height: 200px;">
+                                                        <?php if ($data['logo']): ?>
+                                                            <?php foreach ($data['logo'] as $logo) : ?>
+                                                                <?php if ($logo['type'] == 'favicon'): ?>
+                                                                    <input type="hidden" id="idFavicon" value="<?= $logo['logo_id']; ?>">
+                                                                    <img src="<?= $logo['src']; ?>" alt="Logo Favicon" class="img-fluid h-100">
+                                                                <?php endif; ?>
+                                                            <?php endforeach; ?>
+                                                        <?php endif ?>
+                                                    </div>
+                                                    <input type="file" class="form-control" name="fileFavicon" id="fileFavicon" accept="image/*">
+                                                </div>
+                                                <button type="button" class="btn btn-sm btn-primary" id="btnSimpanLogoFavicon">Simpan</button>
                                             </div>
                                         </div>
                                     </div>

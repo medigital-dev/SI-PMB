@@ -18,9 +18,9 @@
     <?php endif; ?>
 
     <!-- favicon -->
-    <?php if (isset($icon)): ?>
-        <?php foreach ($icon as $val): ?>
-            <link href="<?= $val; ?>" rel="icon" />
+    <?php if (isset($favicon)): ?>
+        <?php foreach ($favicon as $val): ?>
+            <link href="<?= $val; ?>" rel="icon shortcut" type="image/x-icon" />
         <?php endforeach; ?>
     <?php endif; ?>
     <!-- Theme -->

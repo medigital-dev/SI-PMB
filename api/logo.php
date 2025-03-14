@@ -14,11 +14,11 @@ $id = isset($_GET['id']) ? mysqli_real_escape_string($conn, $_GET['id']) : null;
 switch ($method) {
     case 'GET':
         if ($id == null) {
-            $sql = "SELECT logo_id as id, created_at as tanggal, src, aktif, tema FROM logo";
+            $sql = "SELECT logo_id as id, created_at as tanggal, src, aktif, type FROM logo";
             $result = query($sql);
             echo json_encode($result, JSON_PRETTY_PRINT);
         } else {
-            $sql = "SELECT logo_id as id, created_at as tanggal, src, aktif, tema FROM logo WHERE info_id = ?";
+            $sql = "SELECT logo_id as id, created_at as tanggal, src, aktif, type FROM logo WHERE info_id = ?";
             $stmt = mysqli_prepare($conn, $sql);
             mysqli_stmt_bind_param($stmt, "s", $id);
             mysqli_stmt_execute($stmt);
@@ -36,18 +36,18 @@ switch ($method) {
 
     case 'POST':
         requireLogin();
-        $tema = $_POST['tema'] ?? null;
+        $type = $_POST['type'] ?? null;
         $aktif = $_POST['aktif'] ?? null;
         $file = $_FILES['file'] ?? null;
 
-        if (!$file || !$tema) {
+        if (!$file || !$type) {
             http_response_code(400);
             echo json_encode(['message' => 'File dan teme harus ada', 'status' => false]);
             die;
         }
 
         $ext = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
-        $filename = 'logo-' . $tema . '.' . $ext;
+        $filename = 'logo-' . $type . '.' . $ext;
         $dir = '../assets/brand/';
         if (!file_exists($dir)) {
             mkdir($dir, 0777, true);
@@ -70,9 +70,9 @@ switch ($method) {
                 $unique = random_string();
             } while (count(query("SELECT * FROM logo WHERE logo_id = '$unique'")) > 0);
 
-            $sql = "INSERT INTO logo (logo_id, src, tema, aktif, created_at) VALUES (?, ?, ?, ?, ?)";
+            $sql = "INSERT INTO logo (logo_id, src, type, aktif, created_at) VALUES (?, ?, ?, ?, ?)";
             $stmt = mysqli_prepare($conn, $sql);
-            mysqli_stmt_bind_param($stmt, "sssss", $unique, $loc, $tema, $aktif, $timestamp);
+            mysqli_stmt_bind_param($stmt, "sssss", $unique, $loc, $type, $aktif, $timestamp);
             $result = mysqli_stmt_execute($stmt);
 
             if (!$result) {
@@ -92,9 +92,9 @@ switch ($method) {
             ];
             http_response_code(201);
         } else {
-            $sql = "UPDATE logo SET src = ?, tema = ?, aktif = ? WHERE logo_id = ?";
+            $sql = "UPDATE logo SET src = ?, type = ?, aktif = ? WHERE logo_id = ?";
             $stmt = mysqli_prepare($conn, $sql);
-            mysqli_stmt_bind_param($stmt, "ssss", $loc, $tema, $aktif, $id);
+            mysqli_stmt_bind_param($stmt, "ssss", $loc, $type, $aktif, $id);
             $result = mysqli_stmt_execute($stmt);
 
             if (!$result) {

@@ -3,7 +3,8 @@ require './core/functions.php';
 $data['banner'] = query("SELECT banner.title, `description`, `order`, src FROM banner LEFT JOIN berkas ON banner.berkas_id =  berkas.berkas_id");
 $data['tautan'] = query("SELECT * FROM tautan WHERE aktif = 1");
 $data['on_menu'] = query("SELECT * FROM tautan WHERE aktif = 1 AND on_menu = 1");
-$data['header'] = db_get('header');
+$data['header'] = db_get('header', [], true);
+$data['favicon'] = db_get('logo', ['where' => ['type' => 'favicon']], true);
 
 view('./view/templates/head.php', [
   'title' => 'Informasi PPDB SMPN 2 Wonosari 2025',
@@ -17,7 +18,8 @@ view('./view/templates/head.php', [
   ],
   'body' => [
     'className' => 'bg-body'
-  ]
+  ],
+  'favicon' => [$data['favicon'] ? $data['favicon']['src'] : '']
 ]);
 view('./view/templates/toogle-theme.php')
 
@@ -29,7 +31,7 @@ view('./view/templates/toogle-theme.php')
       <a href="./" class="d-flex align-items-center text-body-emphasis text-decoration-none">
         <img src="" id="logo" alt="Logo SMPN 2 Wonosari" width="60" class="img-fluid h-100 me-2" />
         <div class="m-0 p-0 lh-1">
-          <?= $data['header'] ? $data['header'][0]['isi'] : '' ?>
+          <?= $data['header'] ? $data['header']['isi'] : '' ?>
         </div>
       </a>
       <div class="d-flex">
