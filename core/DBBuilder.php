@@ -6,18 +6,45 @@ class DBBuilder
 {
     private $conn;
     private $table;
+    private $primaryKey = 'id';
+    private $allowedFields = [];
     private $select = '*';
     private $where = [];
     private $joins = [];
     private $orderBy = [];
+    private $data = [];
     private $limit = '';
     private $debug = false;
+    private $lastInsertedId;
+    private $lastAffectedRows;
+    private $lastError;
 
     public function __construct()
     {
         global $conn;
         $this->conn = $conn;
     }
+
+    public function set($data)
+    {
+        if (empty($data)) return $this;
+
+        if (empty($this->allowedFields)) {
+            $this->lastError = "Error: No fields are allowed to be set.";
+            return false;
+        }
+
+        $filteredData = array_intersect_key($data, array_flip($this->allowedFields));
+
+        if (empty($filteredData)) {
+            $this->lastError = "Error: No valid fields provided.";
+            return false;
+        }
+
+        $this->data = array_merge($this->data, $filteredData);
+        return $this;
+    }
+
 
     public function table($table)
     {
@@ -54,7 +81,7 @@ class DBBuilder
     {
         $column = $this->escapeColumn($column);
         $direction = strtoupper($direction) === 'DESC' ? 'DESC' : 'ASC';
-        $this->orderBy[] = "$column $direction";
+        $this->orderBy = ["$column $direction"];
         return $this;
     }
 
@@ -126,53 +153,60 @@ class DBBuilder
         return $data[0] ?? null;
     }
 
-    public function insert($data)
+    public function insert($data = [])
     {
-        if (empty($this->table)) {
-            throw new Exception("Error: Table name is required");
-        }
-        if (empty($data)) {
-            throw new Exception("Error: No data to insert");
+        if (!$this->set($data)) return false;
+
+        if (empty($this->table) || empty($this->data)) {
+            $this->lastError = "Error: Table name is required or no valid data provided.";
+            return false;
         }
 
-        $columns = implode(', ', array_map([$this, 'escapeColumn'], array_keys($data)));
-        $values = implode(', ', array_map([$this, 'prepareValue'], array_values($data)));
+        $columns = implode(', ', array_map([$this, 'escapeColumn'], array_keys($this->data)));
+        $values = implode(', ', array_map([$this, 'prepareValue'], array_values($this->data)));
 
         $sql = "INSERT INTO $this->table ($columns) VALUES ($values)";
-        if ($this->debug) echo "Debug Query: " . $sql . "<br>";
-
         $result = mysqli_query($this->conn, $sql);
-        if (!$result) {
-            throw new Exception(mysqli_error($this->conn));
+
+        if ($result) {
+            $this->lastInsertedId = mysqli_insert_id($this->conn);
+            $this->lastAffectedRows = mysqli_affected_rows($this->conn);
+        } else {
+            $this->lastError = mysqli_error($this->conn);
         }
 
-        return mysqli_insert_id($this->conn);
+        $this->resetQuery();
+        return $result;
     }
 
-    public function update($data)
+
+    public function update($id = null, $data = [])
     {
-        if (empty($this->table)) {
-            throw new Exception("Error: Table name is required");
+        if (!$this->set($data)) return false;
+
+        if ($id) {
+            $this->where([$this->primaryKey => $id]);
         }
-        if (empty($this->where)) {
-            throw new Exception("Error: WHERE condition is required for UPDATE");
-        }
-        if (empty($data)) {
-            throw new Exception("Error: No data to update");
+
+        if (empty($this->table) || empty($this->data) || empty($this->where)) {
+            $this->lastError = "Error: Table name, data, and WHERE condition are required";
+            return false;
         }
 
         $set = implode(', ', array_map(function ($key, $val) {
             return $this->escapeColumn($key) . " = " . $this->prepareValue($val);
-        }, array_keys($data), array_values($data)));
+        }, array_keys($this->data), array_values($this->data)));
 
         $sql = "UPDATE $this->table SET $set WHERE " . implode(' AND ', $this->where);
-        if ($this->debug) echo "Debug Query: " . $sql . "<br>";
-
         $result = mysqli_query($this->conn, $sql);
-        if (!$result) {
-            throw new Exception(mysqli_error($this->conn));
+
+        if ($result) {
+            $this->lastAffectedRows = mysqli_affected_rows($this->conn);
+        } else {
+            $this->lastError = mysqli_error($this->conn);
         }
 
+        $this->resetQuery();
         return $result;
     }
 
@@ -188,12 +222,60 @@ class DBBuilder
 
     public function resetQuery()
     {
-        // $this->table = '';
+        $this->table = '';
         $this->select = '*';
         $this->where = [];
         $this->joins = [];
-        $this->orderBy = '';
+        $this->orderBy = [];
         $this->limit = '';
+        $this->data = [];
         return $this;
+    }
+
+    public function setAllowedFields($fields)
+    {
+        if (!is_array($fields)) {
+            throw new Exception("Allowed fields must be an array.");
+        }
+        $this->allowedFields = $fields;
+        return $this;
+    }
+
+    public function getInsertedId()
+    {
+        return $this->lastInsertedId;
+    }
+
+    public function getAffectedRows()
+    {
+        return $this->lastAffectedRows;
+    }
+
+    public function getLastError()
+    {
+        return $this->lastError;
+    }
+
+    public function delete($id = null)
+    {
+        if ($id)
+            $this->where([$this->primaryKey => $id]);
+
+        if (empty($this->table) || empty($this->where)) {
+            $this->lastError = "Error: Table name and WHERE condition are required";
+            return false;
+        }
+
+        $sql = "DELETE FROM $this->table WHERE " . implode(' AND ', $this->where);
+        $result = mysqli_query($this->conn, $sql);
+
+        $this->resetQuery();  // ✅ Pastikan query tidak bercampur dengan yang lain
+
+        if (!$result) {
+            $this->lastError = mysqli_error($this->conn);
+            return false;
+        }
+
+        return true;
     }
 }
