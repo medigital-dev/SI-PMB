@@ -31,7 +31,11 @@ $(document).ready(function () {
       [5, 10, 25, 50, 100, -1],
       [5, 10, 25, 50, 100, "All"],
     ],
-    responsive: true,
+    responsive: {
+      details: {
+        renderer: DataTable.Responsive.renderer.listHiddenNodes(),
+      },
+    },
     ordering: false,
     processing: true,
     pagingType: "simple",
@@ -111,7 +115,11 @@ $(document).ready(function () {
       [5, 10, 25, 50, 100, -1],
       [5, 10, 25, 50, 100, "All"],
     ],
-    responsive: true,
+    responsive: {
+      details: {
+        renderer: DataTable.Responsive.renderer.listHiddenNodes(),
+      },
+    },
     ordering: false,
     processing: true,
     pagingType: "simple",
@@ -211,7 +219,11 @@ $(document).ready(function () {
       [5, 10, 25, 50, 100, -1],
       [5, 10, 25, 50, 100, "All"],
     ],
-    responsive: true,
+    responsive: {
+      details: {
+        renderer: DataTable.Responsive.renderer.listHiddenNodes(),
+      },
+    },
     ordering: false,
     processing: true,
     pagingType: "simple",
@@ -460,7 +472,11 @@ $(document).ready(function () {
       [5, 10, 25, 50, 100, -1],
       [5, 10, 25, 50, 100, "All"],
     ],
-    responsive: true,
+    responsive: {
+      details: {
+        renderer: DataTable.Responsive.renderer.listHiddenNodes(),
+      },
+    },
     ordering: false,
     processing: true,
     pagingType: "simple",
@@ -648,7 +664,11 @@ $(document).ready(function () {
       [5, 10, 25, 50, 100, -1],
       [5, 10, 25, 50, 100, "All"],
     ],
-    responsive: true,
+    responsive: {
+      details: {
+        renderer: DataTable.Responsive.renderer.listHiddenNodes(),
+      },
+    },
     ordering: false,
     processing: true,
     pagingType: "simple",
@@ -922,7 +942,11 @@ $(document).ready(function () {
       [5, 10, 25, 50, 100, -1],
       [5, 10, 25, 50, 100, "All"],
     ],
-    responsive: true,
+    responsive: {
+      details: {
+        renderer: DataTable.Responsive.renderer.listHiddenNodes(),
+      },
+    },
     ordering: false,
     processing: true,
     pagingType: "simple",
@@ -1391,5 +1415,163 @@ $(document).ready(function () {
     });
     if (!res) return;
     toast("Heroes berhasil disimpan.", "success");
+  });
+
+  const tabelJadwal = $("#tabelJadwal").DataTable({
+    dom: '<"mb-2"t><"d-flex justify-content-between"ip>',
+    lengthMenu: [
+      [5, 10, 25, 50, 100, -1],
+      [5, 10, 25, 50, 100, "All"],
+    ],
+    responsive: {
+      details: {
+        renderer: DataTable.Responsive.renderer.listHiddenNodes(),
+      },
+    },
+    ordering: false,
+    processing: true,
+    pagingType: "simple",
+    ajax: {
+      url: "/api/jadwal.php",
+      dataSrc: "",
+    },
+    columns: [
+      {
+        data: "id",
+        className: "w-100",
+        render: (data, type, rows, meta) => {
+          const checked = rows.aktif == 1 ? "checked" : "";
+          const label = rows.aktif == 1 ? "Aktif" : "Tidak Aktif";
+          return (
+            '<h6 class="mb-1">' +
+            rows.title +
+            "</h6>" +
+            '<p class="m-0">' +
+            rows.content +
+            "</p>" +
+            '<div class="form-check form-switch">' +
+            '<input class="form-check-input btnSwitchJadwal" data-id="' +
+            data +
+            '" type="checkbox" role="switch" id="' +
+            data +
+            '" ' +
+            checked +
+            ">" +
+            '<label class="form-check-label small text-muted" for="' +
+            data +
+            '">' +
+            label +
+            "</label>" +
+            "</div>"
+          );
+        },
+      },
+      {
+        data: "id",
+        className: "text-center",
+        width: "70px",
+        render: (data, type, rows, meta) => {
+          return (
+            '<div class="btn-group btn-group-sm">' +
+            '<button type="button" class="btn btn-danger btnHapusJadwal" data-id="' +
+            data +
+            '"><i class="bi bi-trash-fill"></i></button>' +
+            "</div>"
+          );
+        },
+      },
+    ],
+  });
+
+  tabelJadwal.on("draw", function () {
+    $(".btnSwitchJadwal").on("click", async function () {
+      const id = $(this).data("id");
+      const data = await fetchData("/api/jadwal.php?id=" + id);
+      if (!data) return;
+
+      const resp = await fetchData({
+        url: "/api/jadwal.php?id=" + id,
+        data: {
+          title: data.title,
+          content: data.content,
+          aktif: $(this).is(":checked") ? 1 : 0,
+        },
+        method: "POST",
+      });
+      if (!resp) return;
+      toast("Data jadwal pelaksanaan berhasil dirubah.", "success");
+      tabelJadwal.ajax.reload(null, false);
+    });
+
+    $(".btnHapusJadwal").on("click", async function () {
+      const id = $(this).data("id");
+      const data = await fetchData("/api/jadwal.php?id=" + id);
+      if (!data) return;
+      const conf = await toast({
+        title: "Hapus Jadwal?",
+        message:
+          "Jadwal: <strong>" +
+          data.title +
+          "</strong> akan dihapus permanen. yakin?",
+        icon: "question",
+        position: "middle-center",
+      });
+      if (conf) {
+        const deleted = await fetchData({
+          url: "/api/jadwal.php?id=" + id,
+          method: "DELETE",
+        });
+        if (!deleted) return;
+        toast(deleted.message, "success");
+        tabelJadwal.ajax.reload(null, false);
+      }
+    });
+  });
+
+  $("#contentJadwal").summernote({
+    height: 100,
+    dialogsInBody: true,
+    toolbar: [
+      ["style", ["bold", "italic", "underline"]],
+      ["view", ["fullscreen", "help"]],
+    ],
+  });
+
+  $("#btnReloadTabelJadwal").on("click", () =>
+    tabelJadwal.ajax.reload(null, false)
+  );
+
+  $("#searchTabelJadwal").on("keyup", (e) =>
+    tabelJadwal.columns(0).search(e.target.value).draw()
+  );
+
+  $("#btnSimpanJadwal").on("click", async function () {
+    const title = $("#titleJadwal");
+    const content = $("#contentJadwal");
+    if (!title.val().trim() || content.summernote("isEmpty")) {
+      if (!title.val().trim()) title.addClass("is-invalid");
+      else title.removeClass("is-invalid");
+      if (content.summernote("isEmpty")) content.addClass("is-invalid");
+      else content.removeClass("is-invalid");
+      toast("Lengkapi form terlebih dahulu.", "error");
+      return;
+    }
+    $(".is-invalid").removeClass("is-invalid");
+    const resp = await fetchData({
+      url: "/api/jadwal.php",
+      data: {
+        title: title.val(),
+        content: content.summernote("code").replaceAll("<p", '<p class="mb-0"'),
+        aktif: 1,
+      },
+      method: "POST",
+    });
+    if (!resp) return;
+
+    toast("Data jadwal pelaksanaan PPDB berhasil ditambahkan.", "success");
+    title.val("");
+    content.summernote("code", "");
+    tabelJadwal.ajax.reload(null, false);
+    $("#modalTambahJadwal").modal("hide");
   });
 });

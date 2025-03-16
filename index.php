@@ -6,6 +6,7 @@ $data['on_menu'] = query("SELECT * FROM tautan WHERE aktif = 1 AND on_menu = 1")
 $data['header'] = db_get('header', [], true);
 $data['favicon'] = db_get('logo', ['where' => ['type' => 'favicon']], true);
 $data['heroes'] = db_get('heroes', [], true);
+$data['jadwal'] = db_get('jadwal');
 
 view('./view/templates/head.php', [
   'title' => 'Informasi PPDB SMPN 2 Wonosari 2025',
@@ -86,13 +87,6 @@ view('./view/templates/toogle-theme.php')
     </div>
 
     <div id="welcome" class="pt-3 mt-3 text-body-emphasis">
-      <!-- <h3 class="text-body-emphasis">Selamat Datang di Laman</h3>
-      <h1 class="text-body-emphasis">Info PPDB SMPN 2 Wonosari 2024</h1>
-      <p class="fs-5">
-        Selamat datang di Laman Pusat Informasi Penerimaan Peserta Didik Baru
-        (PPDB) SMP Negeri 2 Wonosari Tahun Pelajaran 2024/2025. Segala
-        informasi terkait PPDB akan kami infokan di halaman ini.
-      </p> -->
       <?= $data['heroes'] ? $data['heroes']['content'] : ''; ?>
     </div>
 
@@ -173,26 +167,15 @@ view('./view/templates/toogle-theme.php')
       <h2 id="pelaksanaan" class="text-body-emphasis pt-3 mt-3">
         Pelaksanaan
       </h2>
-      <div class="col-md-3">
-        <h5 class="text-body-emphasis">Pendaftaran</h5>
-        <p class="">
-          Senin-Rabu <br />
-          24 - 26 Juni 2024<br>
-          <span>Ditutup: 26 Juni 2024 pukul 15.30 WIB</span>
-        </p>
-      </div>
-      <div class="col-md-3">
-        <h5 class="text-body-emphasis">Seleksi</h5>
-        <p class="">Rabu<br />26 Juni 2024<br>
-          Diakhiri pukul 15.45 WIB</p>
-      </div>
-      <div class="col-md-3">
-        <h5 class="text-body-emphasis">Pengumuman</h5>
-        <p class="">Jumat<br />28 Juni 2024 <br> Pukul 10.00 WIB</p>
-      </div>
-      <div class="col-md-3">
-        <h5 class="text-body-emphasis">Daftar Ulang</h5>
-        <p class="">Senin-Selasa<br />1 - 2 Juli 2024<br>Pada jam kerja.</p>
+      <div class="row d-flex flex-column flex-lg-row justify-content-center">
+        <?php foreach ($data['jadwal'] as $jadwal): ?>
+          <div class="col">
+            <h5 class="text-body-emphasis"><?= $jadwal['title']; ?></h5>
+            <p class="m-0">
+              <?= $jadwal['content']; ?>
+            </p>
+          </div>
+        <?php endforeach ?>
       </div>
     </div>
 

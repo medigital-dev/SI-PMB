@@ -244,7 +244,7 @@
                                     <button class="nav-link text-start active" id="v-pills-logo-tab" data-bs-toggle="pill" data-bs-target="#v-pills-logo" type="button" role="tab" aria-controls="v-pills-logo" aria-selected="true">Logo</button>
                                     <button class="nav-link text-start" id="v-pills-header-tab" data-bs-toggle="pill" data-bs-target="#v-pills-header" type="button" role="tab" aria-controls="v-pills-header" aria-selected="false">Header</button>
                                     <button class="nav-link text-start" id="v-pills-heroes-tab" data-bs-toggle="pill" data-bs-target="#v-pills-heroes" type="button" role="tab" aria-controls="v-pills-heroes" aria-selected="false">Heroes</button>
-                                    <button class="nav-link text-start" id="v-pills-messages-tab" data-bs-toggle="pill" data-bs-target="#v-pills-messages" type="button" role="tab" aria-controls="v-pills-messages" aria-selected="false">Messages</button>
+                                    <button class="nav-link text-start" id="v-pills-jadwal-tab" data-bs-toggle="pill" data-bs-target="#v-pills-jadwal" type="button" role="tab" aria-controls="v-pills-jadwal" aria-selected="false">Jadwal</button>
                                     <button class="nav-link text-start" id="v-pills-settings-tab" data-bs-toggle="pill" data-bs-target="#v-pills-settings" type="button" role="tab" aria-controls="v-pills-settings" aria-selected="false">Settings</button>
                                 </div>
                                 <div class="tab-content w-100" id="v-pills-tabContent">
@@ -264,7 +264,7 @@
                                             <div class="col-md-6 mb-3">
                                                 <div class="mb-3">
                                                     <label for="fileDark" class="form-label">Mode Gelap</label>
-                                                    <div class="border-primary p-4 mb-2 text-center" id="previewDark" style="height: 200px;">
+                                                    <div class="border-primary p-4 mb-2 text-center text-bg-dark" id="previewDark" style="height: 200px;">
                                                         <input type="hidden" id="iddark" value="<?= $data['logo']['dark'] ? $data['logo']['dark']['logo_id'] : ''; ?>">
                                                         <?php if ($data['logo']['dark']) : ?>
                                                             <img src="<?= $data['logo']['dark']['src'] ?>" alt="Logo dark" class="img-fluid h-100">
@@ -277,7 +277,7 @@
                                             <div class="col-md-6 mb-3">
                                                 <div class="mb-3">
                                                     <label for="fileLight" class="form-label">Mode Terang</label>
-                                                    <div class="border-primary p-4 mb-2 text-center" id="previewLight" style="height: 200px;">
+                                                    <div class="border-primary p-4 mb-2 text-center text-bg-light" id="previewLight" style="height: 200px;">
                                                         <input type="hidden" id="idlight" value="<?= $data['logo']['light'] ? $data['logo']['light']['logo_id'] : ''; ?>">
                                                         <?php if ($data['logo']['light']) : ?>
                                                             <img src="<?= $data['logo']['light']['src'] ?>" alt="Logo light" class="img-fluid h-100">
@@ -327,7 +327,29 @@
                                         <button type="button" class="btn btn-sm btn-primary" id="btnEditHeroes">Edit</button>
                                         <button type="button" class="btn btn-sm btn-success" id="btnSaveHeroes">Simpan</button>
                                     </div>
-                                    <div class="tab-pane fade" id="v-pills-messages" role="tabpanel" aria-labelledby="v-pills-messages-tab" tabindex="0">...</div>
+                                    <div class="tab-pane fade" id="v-pills-jadwal" role="tabpanel" aria-labelledby="v-pills-jadwal-tab" tabindex="0">
+                                        <div class="sticky-top py-2 bg-body">
+                                            <div class="btn-toolbar">
+                                                <div class="btn-group btn-group-sm my-1 me-1">
+                                                    <button type="button" class="btn btn-primary" title="Reload Tabel" id="btnReloadTabelJadwal"><i class="bi bi-arrow-repeat"></i></button>
+                                                    <button type="button" class="btn btn-primary" title="Tambah Jadwal" id="btnTambahJadwal" data-bs-toggle="modal" data-bs-target="#modalTambahJadwal"><i class="bi bi-plus-circle"></i></button>
+                                                </div>
+                                                <div class="input-group input-group-sm my-1 ms-auto">
+                                                    <input type="text" class="form-control" id="searchTabelJadwal" placeholder="Cari Jadwal">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="table-responsive">
+                                            <table class="table table-bordered table-hover w-100" id="tabelJadwal">
+                                                <thead>
+                                                    <tr>
+                                                        <th class="text-bg-primary text-center align-middle">Data</th>
+                                                        <th class="text-bg-primary text-center align-middle">Aksi</th>
+                                                    </tr>
+                                                </thead>
+                                            </table>
+                                        </div>
+                                    </div>
                                     <div class="tab-pane fade" id="v-pills-settings" role="tabpanel" aria-labelledby="v-pills-settings-tab" tabindex="0">...</div>
                                 </div>
                             </div>
@@ -599,6 +621,35 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="modalTambahJadwal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="modalTambahJadwalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="modalTambahJadwal">Tambah Jadwal Pelaksanaan</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row mb-3">
+                    <label for="title" class="col-sm-3 col-form-label">Judul</label>
+                    <div class="col-sm-9">
+                        <input type="text" class="form-control" id="titleJadwal" name="title">
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <label for="content" class="col-sm-3 col-form-label">Isi</label>
+                    <div class="col-sm-9">
+                        <textarea name="content" rows="3" id="contentJadwal" class="form-control"></textarea>
+                        <div class="invalid-feedback">Wajib.</div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+                <button type="button" class="btn btn-primary" id="btnSimpanJadwal">Simpan</button>
             </div>
         </div>
     </div>
