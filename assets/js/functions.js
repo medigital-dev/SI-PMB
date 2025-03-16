@@ -315,7 +315,9 @@ async function counterInner() {
   try {
     const res = await fetchData("/api/event.php");
     if (!res) return;
-    res.forEach((e) => dataEvent.push([e.name, e.tanggal]));
+    res.forEach((e) => {
+      if (e.status == 1) dataEvent.push([e.name, e.tanggal]);
+    });
   } catch (err) {
     console.error(err);
     return;
