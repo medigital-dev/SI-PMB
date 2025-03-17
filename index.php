@@ -195,8 +195,8 @@ view('./view/templates/toogle-theme.php')
     <div class="row d-flex flex-column flex-lg-row justify-content-center">
       <?php foreach ($data['jalur'] as $jalur): ?>
         <div class="col">
-          <h5 class="text-body-emphasis"><?= $jalur['nama']; ?> (<?= $jalur['persen']; ?>%)</h5>
-          <p class="fs-3"><?= $jalur['jumlah']; ?></p>
+          <h5 class="text-body-emphasis fw-bold"><?= $jalur['nama']; ?> (<?= $jalur['persen']; ?>%)</h5>
+          <p class="fs-4"><?= $jalur['jumlah']; ?></p>
         </div>
       <?php endforeach ?>
     </div>
