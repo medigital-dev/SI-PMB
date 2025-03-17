@@ -70,7 +70,7 @@ switch ($method) {
             http_response_code(201);
         }
 
-        echo json_encode($response);
+        echo json_encode($response, JSON_PRETTY_PRINT);
         break;
 
     case 'DELETE':
@@ -102,6 +102,5 @@ switch ($method) {
     default:
         http_response_code(405);
         echo json_encode(['message' => 'Method not allowed']);
-        break;
         break;
 }
