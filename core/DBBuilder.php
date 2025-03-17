@@ -18,6 +18,7 @@ class DBBuilder
     private $lastInsertedId;
     private $lastAffectedRows;
     private $lastError;
+    private $groupStarted = false;
 
     public function __construct()
     {
@@ -58,21 +59,35 @@ class DBBuilder
         return $this;
     }
 
-    public function where($conditions)
+    public function where($namaField, $value, $type = 'AND')
     {
-        if (!is_array($conditions)) return $this;
+        $namaField = $this->escapeColumn($namaField);
+        $prefix = empty($this->where) ? '' : " $type ";
 
-        foreach ($conditions as $key => $value) {
-            $key = $this->escapeColumn($key);
-            if (is_null($value)) {
-                $this->where[] = "$key IS NULL";
-            } elseif (is_bool($value)) {
-                $this->where[] = "$key = " . (int)$value;
-            } elseif (is_numeric($value)) {
-                $this->where[] = "$key = $value";
-            } else {
-                $this->where[] = "$key = '" . mysqli_real_escape_string($this->conn, $value) . "'";
-            }
+        if (is_null($value)) {
+            $this->where[] = "$prefix$namaField IS NULL";
+        } elseif (is_bool($value)) {
+            $this->where[] = "$prefix$namaField = " . (int)$value;
+        } elseif (is_numeric($value)) {
+            $this->where[] = "$prefix$namaField = $value";
+        } else {
+            $this->where[] = "$prefix$namaField = '" . mysqli_real_escape_string($this->conn, $value) . "'";
+        }
+        return $this;
+    }
+
+    public function groupStart()
+    {
+        $this->where[] = "(";
+        $this->groupStarted = true;
+        return $this;
+    }
+
+    public function groupEnd()
+    {
+        if ($this->groupStarted) {
+            $this->where[] = ")";
+            $this->groupStarted = false;
         }
         return $this;
     }
@@ -185,7 +200,7 @@ class DBBuilder
         if (!$this->set($data)) return false;
 
         if ($id) {
-            $this->where([$this->primaryKey => $id]);
+            $this->where($this->primaryKey, $id);
         }
 
         if (empty($this->table) || empty($this->data) || empty($this->where)) {
@@ -259,7 +274,7 @@ class DBBuilder
     public function delete($id = null)
     {
         if ($id)
-            $this->where([$this->primaryKey => $id]);
+            $this->where($this->primaryKey, $id);
 
         if (empty($this->table) || empty($this->where)) {
             $this->lastError = "Error: Table name and WHERE condition are required";
@@ -277,5 +292,100 @@ class DBBuilder
         }
 
         return true;
+    }
+
+    public function selectSum($column, $alias = null)
+    {
+        $column = $this->escapeColumn($column);
+        $alias = $alias ? $this->escapeColumn($alias) : $column;
+
+        $this->select = "SUM($column) AS $alias";
+
+        return $this;
+    }
+
+    public function countAll()
+    {
+        if (empty($this->table)) {
+            $this->lastError = "Error: Table name is required";
+            return false;
+        }
+
+        $sql = "SELECT COUNT(*) AS total FROM $this->table";
+
+        if (!empty($this->where)) {
+            $sql .= " WHERE " . implode(' AND ', $this->where);
+        }
+
+        $result = mysqli_query($this->conn, $sql);
+
+        if ($result) {
+            $row = mysqli_fetch_assoc($result);
+            return (int) $row['total'];
+        }
+
+        $this->lastError = mysqli_error($this->conn);
+        return false;
+    }
+
+    public function selectMin($column)
+    {
+        return $this->aggregateFunction('MIN', $column);
+    }
+
+    public function selectMax($column)
+    {
+        return $this->aggregateFunction('MAX', $column);
+    }
+
+    public function selectAvg($column)
+    {
+        return $this->aggregateFunction('AVG', $column);
+    }
+
+    private function aggregateFunction($function, $column)
+    {
+        if (empty($this->table)) {
+            $this->lastError = "Error: Table name is required";
+            return false;
+        }
+
+        $column = $this->escapeColumn($column);
+        $sql = "SELECT $function($column) AS result FROM $this->table";
+
+        if (!empty($this->where)) {
+            $sql .= " WHERE " . implode(' AND ', $this->where);
+        }
+
+        $result = mysqli_query($this->conn, $sql);
+
+        if ($result) {
+            $row = mysqli_fetch_assoc($result);
+            return $row['result'] ?? null;
+        }
+
+        $this->lastError = mysqli_error($this->conn);
+        return false;
+    }
+
+    public function like($field, $value)
+    {
+        return $this->addLikeCondition($field, $value, 'AND');
+    }
+
+    public function orLike($field, $value)
+    {
+        return $this->addLikeCondition($field, $value, 'OR');
+    }
+
+    private function addLikeCondition($field, $value, $type)
+    {
+        $field = $this->escapeColumn($field);
+        $prefix = (empty($this->where) || end($this->where) === '(') ? '' : " $type ";
+
+        $value = mysqli_real_escape_string($this->conn, $value);
+        $this->where[] = "$prefix$field LIKE '%$value%'";
+
+        return $this;
     }
 }
