@@ -4,21 +4,20 @@ require_once 'dbconn.php';
 
 class DBBuilder
 {
-    private $conn;
-    private $table;
-    private $primaryKey = 'id';
-    private $allowedFields = [];
-    private $select = '*';
-    private $where = [];
-    private $joins = [];
-    private $orderBy = [];
-    private $data = [];
-    private $limit = '';
-    private $debug = false;
-    private $lastInsertedId;
-    private $lastAffectedRows;
-    private $lastError;
-    private $groupStarted = false;
+    protected $conn;
+    protected $table;
+    protected $primaryKey = 'id';
+    protected $select = '*';
+    protected $where = [];
+    protected $joins = [];
+    protected $orderBy = [];
+    protected $data = [];
+    protected $limit = '';
+    protected $debug = false;
+    protected $lastInsertedId;
+    protected $lastAffectedRows;
+    protected $lastError;
+    protected $groupStarted = false;
 
     public function __construct()
     {
@@ -30,19 +29,7 @@ class DBBuilder
     {
         if (empty($data)) return $this;
 
-        if (empty($this->allowedFields)) {
-            $this->lastError = "Error: No fields are allowed to be set.";
-            return false;
-        }
-
-        $filteredData = array_intersect_key($data, array_flip($this->allowedFields));
-
-        if (empty($filteredData)) {
-            $this->lastError = "Error: No valid fields provided.";
-            return false;
-        }
-
-        $this->data = array_merge($this->data, $filteredData);
+        $this->data = array_merge($this->data, $data);
         return $this;
     }
 
@@ -55,8 +42,26 @@ class DBBuilder
 
     public function select($columns = '*')
     {
-        $this->select = is_array($columns) ? implode(', ', array_map([$this, 'escapeColumn'], $columns)) : $this->escapeColumn($columns);
+        if (is_string($columns)) {
+            $columns = explode(',', $columns);
+        }
+
+        $columns = array_map('trim', $columns);
+
+        $this->select = implode(', ', array_map([$this, 'escapeColumnWithAlias'], $columns));
+
         return $this;
+    }
+
+
+    private function escapeColumnWithAlias($column)
+    {
+        if (preg_match('/\s+as\s+/i', $column)) {
+            list($col, $alias) = preg_split('/\s+as\s+/i', $column);
+            return $this->escapeColumn(trim($col)) . ' AS ' . $this->escapeColumn(trim($alias));
+        }
+
+        return $this->escapeColumn($column);
     }
 
     public function where($namaField, $value, $type = 'AND')
@@ -122,7 +127,11 @@ class DBBuilder
     public function getQuery()
     {
         if (empty($this->table)) {
-            throw new Exception("Error: Table name is required");
+            if (property_exists($this, 'table') && !empty($this->table)) {
+                $this->table($this->table);
+            } else {
+                throw new Exception("Error: Table name is required");
+            }
         }
 
         $sql = "SELECT $this->select FROM $this->table";
@@ -237,23 +246,14 @@ class DBBuilder
 
     public function resetQuery()
     {
-        $this->table = '';
         $this->select = '*';
         $this->where = [];
         $this->joins = [];
         $this->orderBy = [];
         $this->limit = '';
         $this->data = [];
-        return $this;
-    }
-
-    public function setAllowedFields($fields)
-    {
-        if (!is_array($fields)) {
-            throw new Exception("Allowed fields must be an array.");
-        }
-        $this->allowedFields = $fields;
-        return $this;
+        $this->debug = false;
+        $this->groupStarted = false;
     }
 
     public function getInsertedId()
