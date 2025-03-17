@@ -245,6 +245,7 @@
                                     <button class="nav-link text-start" id="v-pills-header-tab" data-bs-toggle="pill" data-bs-target="#v-pills-header" type="button" role="tab" aria-controls="v-pills-header" aria-selected="false">Header</button>
                                     <button class="nav-link text-start" id="v-pills-heroes-tab" data-bs-toggle="pill" data-bs-target="#v-pills-heroes" type="button" role="tab" aria-controls="v-pills-heroes" aria-selected="false">Heroes</button>
                                     <button class="nav-link text-start" id="v-pills-jadwal-tab" data-bs-toggle="pill" data-bs-target="#v-pills-jadwal" type="button" role="tab" aria-controls="v-pills-jadwal" aria-selected="false">Jadwal</button>
+                                    <button class="nav-link text-start" id="v-pills-jalur-tab" data-bs-toggle="pill" data-bs-target="#v-pills-jalur" type="button" role="tab" aria-controls="v-pills-jalur" aria-selected="false">Jalur</button>
                                     <button class="nav-link text-start" id="v-pills-settings-tab" data-bs-toggle="pill" data-bs-target="#v-pills-settings" type="button" role="tab" aria-controls="v-pills-settings" aria-selected="false">Settings</button>
                                 </div>
                                 <div class="tab-content w-100" id="v-pills-tabContent">
@@ -341,6 +342,29 @@
                                         </div>
                                         <div class="table-responsive">
                                             <table class="table table-bordered table-hover w-100" id="tabelJadwal">
+                                                <thead>
+                                                    <tr>
+                                                        <th class="text-bg-primary text-center align-middle">Data</th>
+                                                        <th class="text-bg-primary text-center align-middle">Aksi</th>
+                                                    </tr>
+                                                </thead>
+                                            </table>
+                                        </div>
+                                    </div>
+                                    <div class="tab-pane fade" id="v-pills-jalur" role="tabpanel" aria-labelledby="v-pills-jalur-tab" tabindex="0">
+                                        <div class="sticky-top py-2 bg-body">
+                                            <div class="btn-toolbar">
+                                                <div class="btn-group btn-group-sm my-1 me-1">
+                                                    <button type="button" class="btn btn-primary" title="Reload Tabel" id="btnReloadTabelJalur"><i class="bi bi-arrow-repeat"></i></button>
+                                                    <button type="button" class="btn btn-primary" title="Tambah Jalur" id="btnTambahJalur" data-bs-toggle="modal" data-bs-target="#modalTambahJalur"><i class="bi bi-plus-circle"></i></button>
+                                                </div>
+                                                <div class="input-group input-group-sm my-1 ms-auto">
+                                                    <input type="text" class="form-control" id="searchTabelJalur" placeholder="Cari Jalur">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="table-responsive">
+                                            <table class="table table-bordered table-hover w-100" id="tabelJalur">
                                                 <thead>
                                                     <tr>
                                                         <th class="text-bg-primary text-center align-middle">Data</th>
@@ -650,6 +674,40 @@
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
                 <button type="button" class="btn btn-primary" id="btnSimpanJadwal">Simpan</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="modalTambahJalur" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="modalTambahJalurLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="modalTambahJalur">Tambah Jalur Pendaftaran</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row mb-3">
+                    <label for="namaJalur" class="col-sm-3 col-form-label">Nama</label>
+                    <div class="col-sm-9">
+                        <input type="text" class="form-control" id="namaJalur" name="namaJalur">
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <label for="persenJalur" class="col-sm-3 col-form-label">Prosentase</label>
+                    <div class="col-sm-9">
+                        <input type="number" class="form-control" id="persenJalur" name="persenJalur">
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <label for="jumlahPdJalur" class="col-sm-3 col-form-label">Jumlah Peserta Didik </label>
+                    <div class="col-sm-9">
+                        <input type="number" class="form-control" id="jumlahPdJalur" name="jumlahPdJalur">
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+                <button type="button" class="btn btn-primary" id="btnSimpanJalur">Simpan</button>
             </div>
         </div>
     </div>

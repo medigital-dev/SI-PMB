@@ -1574,4 +1574,144 @@ $(document).ready(function () {
     tabelJadwal.ajax.reload(null, false);
     $("#modalTambahJadwal").modal("hide");
   });
+
+  const tabelJalur = $("#tabelJalur").DataTable({
+    dom: '<"mb-2"t><"d-flex justify-content-between"ip>',
+    lengthMenu: [
+      [5, 10, 25, 50, 100, -1],
+      [5, 10, 25, 50, 100, "All"],
+    ],
+    responsive: {
+      details: {
+        renderer: DataTable.Responsive.renderer.listHiddenNodes(),
+      },
+    },
+    ordering: false,
+    processing: true,
+    pagingType: "simple",
+    ajax: {
+      url: "/api/jalur.php",
+      dataSrc: "",
+    },
+    columns: [
+      {
+        data: "id",
+        className: "w-100",
+        render: (data, type, rows, meta) => {
+          return (
+            '<h6 class="mb-1">' +
+            rows.nama +
+            "</h6>" +
+            '<p class="m-0">(' +
+            rows.persen +
+            "%) " +
+            rows.jumlah +
+            " Peserta Didik</p>"
+          );
+        },
+      },
+      {
+        data: "id",
+        className: "text-center",
+        width: "70px",
+        render: (data, type, rows, meta) => {
+          return (
+            '<div class="btn-group btn-group-sm">' +
+            '<button type="button" class="btn btn-danger btnHapusJalur" data-id="' +
+            data +
+            '"><i class="bi bi-trash-fill"></i></button>' +
+            "</div>"
+          );
+        },
+      },
+    ],
+  });
+
+  tabelJalur.on("draw", function () {
+    $(".btnSwitchJalur").on("click", async function () {
+      const id = $(this).data("id");
+      const data = await fetchData("/api/jalur.php?id=" + id);
+      if (!data) return;
+
+      const resp = await fetchData({
+        url: "/api/jalur.php?id=" + id,
+        data: {
+          nama: data.nama,
+          persen: data.persen,
+          jumlah: data.jumlah,
+        },
+        method: "POST",
+      });
+      if (!resp) return;
+      toast("Data jalur pendaftaran berhasil dirubah.", "success");
+      tabelJalur.ajax.reload(null, false);
+    });
+
+    $(".btnHapusJalur").on("click", async function () {
+      const id = $(this).data("id");
+      const data = await fetchData("/api/jalur.php?id=" + id);
+      if (!data) return;
+      const conf = await toast({
+        title: "Hapus Jalur?",
+        message:
+          "Jalur pendaftaran: <strong>" +
+          data.nama +
+          "</strong> akan dihapus permanen. yakin?",
+        icon: "question",
+        position: "middle-center",
+      });
+      if (conf) {
+        const deleted = await fetchData({
+          url: "/api/jalur.php?id=" + id,
+          method: "DELETE",
+        });
+        if (!deleted) return;
+        toast(deleted.message, "success");
+        tabelJalur.ajax.reload(null, false);
+      }
+    });
+  });
+
+  $("#btnReloadTabelJalur").on("click", () =>
+    tabelJalur.ajax.reload(null, false)
+  );
+
+  $("#searchTabelJalur").on("keyup", (e) =>
+    tabelJalur.columns(0).search(e.target.value).draw()
+  );
+
+  $("#btnSimpanJalur").on("click", async function () {
+    const nama = $("#namaJalur");
+    const persen = $("#persenJalur");
+    const jumlah = $("#jumlahPdJalur");
+    if (!nama.val().trim() || !persen.val().trim() || !jumlah.val().trim()) {
+      if (!nama.val().trim()) nama.addClass("is-invalid");
+      else nama.removeClass("is-invalid");
+      if (!persen.val().trim()) persen.addClass("is-invalid");
+      else persen.removeClass("is-invalid");
+      if (!jumlah.val().trim()) jumlah.addClass("is-invalid");
+      else jumlah.removeClass("is-invalid");
+      toast("Lengkapi form terlebih dahulu.", "error");
+      return;
+    }
+    $(".is-invalid").removeClass("is-invalid");
+    const resp = await fetchData({
+      url: "/api/Jalur.php",
+      data: {
+        nama: nama.val(),
+        persen: persen.val(),
+        jumlah: jumlah.val(),
+      },
+      method: "POST",
+    });
+    if (!resp) return;
+
+    toast("Data Jalur pelaksanaan PPDB berhasil ditambahkan.", "success");
+    nama.val("");
+    persen.val("");
+    jumlah.val("");
+
+    tabelJalur.ajax.reload(null, false);
+    $("#modalTambahJalur").modal("hide");
+  });
 });

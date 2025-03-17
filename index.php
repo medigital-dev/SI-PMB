@@ -7,6 +7,7 @@ $data['header'] = db_get('header', [], true);
 $data['favicon'] = db_get('logo', ['where' => ['type' => 'favicon']], true);
 $data['heroes'] = db_get('heroes', [], true);
 $data['jadwal'] = db_get('jadwal');
+$data['jalur'] = db_get('jalur');
 
 view('./view/templates/head.php', [
   'title' => 'Informasi PPDB SMPN 2 Wonosari 2025',
@@ -184,29 +185,19 @@ view('./view/templates/toogle-theme.php')
     <h2 id="jalur-kuota" class="text-body-emphasis pt-3 mt-3">
       Jalur Pendaftaran & Kuota Peserta Didik
     </h2>
-    <h1 class="text-lg-center">
-      <span class="fs-1 h1 fw-bold badge bg-success">224</span>
+    <h1 class="text-lg-center py-3">
+      <span class="fs-1 h1 fw-bold badge bg-success"><?= array_sum(array_column($data['jalur'], 'jumlah')) ?></span>
     </h1>
     <p class="text-lg-center mb-3">
       <span class="small">Peserta Didik</span>
     </p>
-    <div class="row">
-      <div class="col-sm-3">
-        <h5 class="text-body-emphasis">Zonasi (55%)</h5>
-        <p class="fs-3">123</p>
-      </div>
-      <div class="col-sm-3">
-        <h5 class="text-body-emphasis">Afirmasi (15%)</h5>
-        <p class="fs-3">34</p>
-      </div>
-      <div class="col-sm-3">
-        <h5 class="text-body-emphasis">Perpindahan (5%)</h5>
-        <p class="fs-3">11</p>
-      </div>
-      <div class="col-sm-3">
-        <h5 class="text-body-emphasis">Prestasi (25%)</h5>
-        <p class="fs-3">56</p>
-      </div>
+    <div class="row d-flex flex-column flex-lg-row justify-content-center">
+      <?php foreach ($data['jalur'] as $jalur): ?>
+        <div class="col">
+          <h5 class="text-body-emphasis"><?= $jalur['nama']; ?> (<?= $jalur['persen']; ?>%)</h5>
+          <p class="fs-3"><?= $jalur['jumlah']; ?></p>
+        </div>
+      <?php endforeach ?>
     </div>
 
     <hr class="col-3 col-md-2 mb-2" />
