@@ -388,4 +388,22 @@ class DBBuilder
 
         return $this;
     }
+
+    public function save($data = [])
+    {
+        if (!empty($data)) {
+            $this->set($data);
+        }
+
+        if (empty($this->data)) {
+            $this->lastError = "Error: No data provided to save.";
+            return false;
+        }
+
+        if (isset($this->data[$this->primaryKey])) {
+            return $this->update($this->data[$this->primaryKey], $this->data);
+        } else {
+            return $this->insert($this->data);
+        }
+    }
 }
