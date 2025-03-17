@@ -8,6 +8,7 @@ $data['favicon'] = db_get('logo', ['where' => ['type' => 'favicon']], true);
 $data['heroes'] = db_get('heroes', [], true);
 $data['jadwal'] = db_get('jadwal');
 $data['jalur'] = db_get('jalur');
+$data['syarat'] = db_get('syarat', [], true);
 
 view('./view/templates/head.php', [
   'title' => 'Informasi PPDB SMPN 2 Wonosari 2025',
@@ -207,49 +208,7 @@ view('./view/templates/toogle-theme.php')
         <h2 id="syarat" class="text-body-emphasis pt-3 mt-3">
           Syarat
         </h2>
-
-        <ul class="list-group">
-          <li class="list-group-item">
-            Berusia paling tinggi 15 (lima belas) tahun pada tanggal 1 Juli 2024;
-          </li>
-          <li class="list-group-item">
-            Telah menyelesaikan kelas 6 (enam) SD atau sederajat dengan
-            dibuktikan dengan ijazah atau dokumen lain yang menyatakan
-            kelulusan;
-          </li>
-          <li class="list-group-item">
-            Telah melengkapi data pada Data Pokok Pendidikan di sekolah
-            asal, bagi calon peserta didik dari jenjang SD;
-          </li>
-          <li class="list-group-item">
-            Memiliki Kartu Keluarga yang diterbitkan paling singkat 1 (satu) tahun sebelum pelaksanaan PPDB kecuali
-            pada jalur perpindahan orang tua;
-          </li>
-          <li class="list-group-item">
-            Memiliki Akta Kelahiran, apabila saat mendaftar belum memiliki maka orang
-            tua/wali harus melampirkan surat pernyataan kesanggupan
-            melengkapi.
-          </li>
-          <li class="list-group-item">
-            Apabila terdapat calon peserta didik baru, baik warga negara Indonesia
-            atau warga negara asing untuk kelas 7 (tujuh) yang berasal dari
-            sekolah di luar negeri, selain memenuhi persyaratan wajib
-            mendapatkan surat keterangan dari Direktur Jenderal di Kemendikbud
-            Ristek Republik Indonesia yang menangani bidang pendidikan dasar
-            dan menengah;
-          </li>
-          <li class="list-group-item">
-            Peserta didik warga negara asing wajib mengikuti matrikulasi
-            pendidikan Bahasa Indonesia paling singkat 6 bulan yang
-            diselenggarakan oleh Sekolah yang bersangkutan;
-          </li>
-          <li class="list-group-item">
-            Pembuatan akun pendaftaran dan penitikan domisili bagi pendaftar
-            yang berasal dari luar Kabupaten Gunungkidul (termasuk untuk
-            sekolah SMP perbatasan) dilaksanakan di sekolah tujuan atau Dinas
-            Pendidikan pada hari Senin s.d. Jumat tanggal 10 s.d. 14 Juni 2024.
-          </li>
-        </ul>
+        <?= $data['syarat'] ? $data['syarat']['content'] : ''; ?>
       </div>
 
       <div class="col-md-6">

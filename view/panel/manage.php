@@ -246,7 +246,7 @@
                                     <button class="nav-link text-start" id="v-pills-heroes-tab" data-bs-toggle="pill" data-bs-target="#v-pills-heroes" type="button" role="tab" aria-controls="v-pills-heroes" aria-selected="false">Heroes</button>
                                     <button class="nav-link text-start" id="v-pills-jadwal-tab" data-bs-toggle="pill" data-bs-target="#v-pills-jadwal" type="button" role="tab" aria-controls="v-pills-jadwal" aria-selected="false">Jadwal</button>
                                     <button class="nav-link text-start" id="v-pills-jalur-tab" data-bs-toggle="pill" data-bs-target="#v-pills-jalur" type="button" role="tab" aria-controls="v-pills-jalur" aria-selected="false">Jalur</button>
-                                    <button class="nav-link text-start" id="v-pills-settings-tab" data-bs-toggle="pill" data-bs-target="#v-pills-settings" type="button" role="tab" aria-controls="v-pills-settings" aria-selected="false">Settings</button>
+                                    <button class="nav-link text-start" id="v-pills-syarat-tab" data-bs-toggle="pill" data-bs-target="#v-pills-syarat" type="button" role="tab" aria-controls="v-pills-syarat" aria-selected="false">Syarat</button>
                                 </div>
                                 <div class="tab-content w-100" id="v-pills-tabContent">
                                     <div class="tab-pane fade" id="v-pills-header" role="tabpanel" aria-labelledby="v-pills-header-tab" tabindex="0">
@@ -318,7 +318,7 @@
                                     </div>
                                     <div class="tab-pane fade" id="v-pills-heroes" role="tabpanel" aria-labelledby="v-pills-heroes-tab" tabindex="0">
                                         <div class="mb-3">
-                                            <label for="isiHeader" class="form-label">Heros Homepage</label>
+                                            <label for="isiHeroes" class="form-label">Heros Homepage</label>
                                             <div id="isiHeroes" class="form-control py-4">
                                                 <?= $data['heroes'] ? $data['heroes']['content'] : '' ?>
                                             </div>
@@ -374,7 +374,17 @@
                                             </table>
                                         </div>
                                     </div>
-                                    <div class="tab-pane fade" id="v-pills-settings" role="tabpanel" aria-labelledby="v-pills-settings-tab" tabindex="0">...</div>
+                                    <div class="tab-pane fade" id="v-pills-syarat" role="tabpanel" aria-labelledby="v-pills-syarat-tab" tabindex="0">
+                                        <div class="mb-3">
+                                            <label for="isiSyarat" class="form-label">Syarat Pendaftaran</label>
+                                            <div id="isiSyarat" class="form-control py-4">
+                                                <?= $data['syarat'] ? $data['syarat']['content'] : '' ?>
+                                            </div>
+                                        </div>
+                                        <input type="hidden" value="<?= $data['syarat'] ? $data['syarat']['syarat_id'] : '' ?>" id="idSyarat">
+                                        <button type="button" class="btn btn-sm btn-primary" id="btnEditSyarat">Edit</button>
+                                        <button type="button" class="btn btn-sm btn-success" id="btnSaveSyarat">Simpan</button>
+                                    </div>
                                 </div>
                             </div>
                         </div>

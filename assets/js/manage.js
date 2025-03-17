@@ -1714,4 +1714,32 @@ $(document).ready(function () {
     tabelJalur.ajax.reload(null, false);
     $("#modalTambahJalur").modal("hide");
   });
+
+  $("#btnEditSyarat").on("click", function () {
+    $("#isiSyarat").summernote({
+      focus: true,
+      height: 500,
+      dialogsInBody: true,
+      toolbar: [
+        ["style", ["bold", "italic", "underline"]],
+        ["fontsize", ["fontsize"]],
+        ["para", ["ul", "ol", "paragraph"]],
+      ],
+    });
+  });
+
+  $("#btnSaveSyarat").on("click", async function () {
+    const id = $("#idSyarat").val();
+    var markup = $("#isiSyarat").summernote("code");
+    $("#isiSyarat").summernote("destroy");
+    const res = fetchData({
+      url: "/api/syarat.php" + (id == "" ? "" : "?id=" + id),
+      data: {
+        content: markup.replaceAll("<p", '<p class="m-0"'),
+      },
+      method: "POST",
+    });
+    if (!res) return;
+    toast("Syarat berhasil disimpan.", "success");
+  });
 });
