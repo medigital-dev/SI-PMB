@@ -9,6 +9,7 @@ $data['heroes'] = db_get('heroes', [], true);
 $data['jadwal'] = db_get('jadwal');
 $data['jalur'] = db_get('jalur');
 $data['syarat'] = db_get('syarat', [], true);
+$data['dokumen'] = db_get('dokumen', [], true);
 
 view('./view/templates/head.php', [
   'title' => 'Informasi PPDB SMPN 2 Wonosari 2025',
@@ -215,44 +216,7 @@ view('./view/templates/toogle-theme.php')
         <h2 id="berkas" class="text-body-emphasis pt-3 mt-3">
           Berkas Upload
         </h2>
-
-        <ul class="list-group">
-          <li class="list-group-item">Bukti cetak pendaftaran online;</li>
-          <li class="list-group-item">scan surat Pernyataan Tanggungjawab Mutlak bermaterai yang
-            ditandatangani oleh orangtua/wali (diunduh dari laman PPDB)
-          </li>
-          <li class="list-group-item">Scan ijazah atau surat keterangan kelulusan;</li>
-          <li class="list-group-item">Scan pas foto 3x4;</li>
-          <li class="list-group-item">Scan Akte Kelahiran atau surat keterangan lahir;</li>
-          <li class="list-group-item">Scan Kartu Keluarga atau surat keterangan domisili;</li>
-          <li class="list-group-item">
-            Bukti keikutsertaan dalam program penanganan keluarga tidak
-            mampu dari Pemerintah Pusat atau Pemerintah Daerah (Afirmasi);
-          </li>
-          <li class="list-group-item">
-            Scan surat penyandang disabilitas/berkebutuhan khusus
-            (Afirmasi);
-          </li>
-          <li class="list-group-item">
-            Scan surat pindah tugas orangtua dari instansi, lembaga, kantor,
-            atau perusahaan yang mempekejakan (Perpindahan Orangtua/Wali);
-          </li>
-          <li class="list-group-item">
-            Scan surat keputusan Orangtua/Wali bagi calon peserta didik yang
-            orangtuanya mengajar di sekolah tersebut (Perpindahan
-            Orangtua/Wali);
-          </li>
-          <li class="list-group-item">
-            Scan surat keterangan yang mencantumkan rata-rata nilai dan
-            peringkat nilai rapor 3 (tiga) mata pelajaran (Matematika,
-            Bahasa Indonesia, dan IPA) dalam 5 (lima) semester terakhir
-            (Prestasi);
-          </li>
-          <li class="list-group-item">Scan SHASPD atau surat pengganti SHASPD (Prestasi);</li>
-          <li class="list-group-item">
-            Scan bukti hasil perlombaan dan/atau penghargaan (Prestasi);
-          </li>
-        </ul>
+        <?= $data['dokumen'] ? $data['dokumen']['content'] : ''; ?>
       </div>
     </div>
 

@@ -1742,4 +1742,32 @@ $(document).ready(function () {
     if (!res) return;
     toast("Syarat berhasil disimpan.", "success");
   });
+
+  $("#btnEditDokumen").on("click", function () {
+    $("#isiDokumen").summernote({
+      focus: true,
+      height: 500,
+      dialogsInBody: true,
+      toolbar: [
+        ["style", ["bold", "italic", "underline"]],
+        ["fontsize", ["fontsize"]],
+        ["para", ["ul", "ol", "paragraph"]],
+      ],
+    });
+  });
+
+  $("#btnSaveDokumen").on("click", async function () {
+    const id = $("#idDokumen").val();
+    var markup = $("#isiDokumen").summernote("code");
+    $("#isiDokumen").summernote("destroy");
+    const res = fetchData({
+      url: "/api/dokumen.php" + (id == "" ? "" : "?id=" + id),
+      data: {
+        content: markup.replaceAll("<p", '<p class="m-0"'),
+      },
+      method: "POST",
+    });
+    if (!res) return;
+    toast("Dokumen kelengkapan berhasil disimpan.", "success");
+  });
 });

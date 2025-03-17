@@ -247,6 +247,7 @@
                                     <button class="nav-link text-start" id="v-pills-jadwal-tab" data-bs-toggle="pill" data-bs-target="#v-pills-jadwal" type="button" role="tab" aria-controls="v-pills-jadwal" aria-selected="false">Jadwal</button>
                                     <button class="nav-link text-start" id="v-pills-jalur-tab" data-bs-toggle="pill" data-bs-target="#v-pills-jalur" type="button" role="tab" aria-controls="v-pills-jalur" aria-selected="false">Jalur</button>
                                     <button class="nav-link text-start" id="v-pills-syarat-tab" data-bs-toggle="pill" data-bs-target="#v-pills-syarat" type="button" role="tab" aria-controls="v-pills-syarat" aria-selected="false">Syarat</button>
+                                    <button class="nav-link text-start" id="v-pills-dokumen-tab" data-bs-toggle="pill" data-bs-target="#v-pills-dokumen" type="button" role="tab" aria-controls="v-pills-dokumen" aria-selected="false">Dokumen</button>
                                 </div>
                                 <div class="tab-content w-100" id="v-pills-tabContent">
                                     <div class="tab-pane fade" id="v-pills-header" role="tabpanel" aria-labelledby="v-pills-header-tab" tabindex="0">
@@ -384,6 +385,17 @@
                                         <input type="hidden" value="<?= $data['syarat'] ? $data['syarat']['syarat_id'] : '' ?>" id="idSyarat">
                                         <button type="button" class="btn btn-sm btn-primary" id="btnEditSyarat">Edit</button>
                                         <button type="button" class="btn btn-sm btn-success" id="btnSaveSyarat">Simpan</button>
+                                    </div>
+                                    <div class="tab-pane fade" id="v-pills-dokumen" role="tabpanel" aria-labelledby="v-pills-dokumen-tab" tabindex="0">
+                                        <div class="mb-3">
+                                            <label for="isiDokumen" class="form-label">Dokumen Pendaftaran</label>
+                                            <div id="isiDokumen" class="form-control py-4">
+                                                <?= $data['dokumen'] ? $data['dokumen']['content'] : '' ?>
+                                            </div>
+                                        </div>
+                                        <input type="hidden" value="<?= $data['dokumen'] ? $data['dokumen']['dokumen_id'] : '' ?>" id="idDokumen">
+                                        <button type="button" class="btn btn-sm btn-primary" id="btnEditDokumen">Edit</button>
+                                        <button type="button" class="btn btn-sm btn-success" id="btnSaveDokumen">Simpan</button>
                                     </div>
                                 </div>
                             </div>

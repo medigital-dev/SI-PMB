@@ -16,6 +16,7 @@ $data['admin'] = $_SESSION['user'];
 $data['header'] = db_get('header', [], true);
 $data['heroes'] = db_get('heroes', [], true);
 $data['syarat'] = db_get('syarat', [], true);
+$data['dokumen'] = db_get('dokumen', [], true);
 
 view('../view/templates/head.php', [
     'title' => 'Manage | SI-PPDB',
