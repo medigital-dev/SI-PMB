@@ -1753,4 +1753,21 @@ $(document).ready(function () {
     if (!res) return;
     toast("Dokumen kelengkapan berhasil disimpan.", "success");
   });
+
+  $("#btnSimpanIdentitas").on("click", async function () {
+    const form = $("#formIdentitas");
+    const data = form.serializeArray();
+    let set = {};
+    data.forEach((e) => {
+      set[e.name] = e.value == "" ? null : e.value;
+    });
+
+    const resp = await fetchData({
+      url: "/api/identitas.php",
+      data: set,
+      method: "POST",
+    });
+    if (!resp) return;
+    toast(resp.message, "success");
+  });
 });

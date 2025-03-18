@@ -10,6 +10,7 @@ $data['jadwal'] = db_get('jadwal');
 $data['jalur'] = db_get('jalur');
 $data['syarat'] = db_get('syarat', [], true);
 $data['dokumen'] = db_get('dokumen', [], true);
+$data['identitas'] = db_get('identitas', [], true);
 
 view('./view/templates/head.php', [
   'title' => 'Informasi PPDB SMPN 2 Wonosari 2025',
@@ -261,7 +262,7 @@ view('./view/templates/toogle-theme.php')
     </div>
 
     <div class="row">
-      <div class="col-md-8">
+      <div class="col-md-6">
         <h2 id="link" class="text-body-emphasis pt-3 mt-3">
           Link PPDB
         </h2>
@@ -276,60 +277,52 @@ view('./view/templates/toogle-theme.php')
           <?php endforeach; ?>
         </ul>
       </div>
-      <div class="col-md-4">
+      <div class="col-md-6">
         <h2 id="official" class="text-body-emphasis pt-3 mt-3">
-          Link Official
+          Official
         </h2>
-        <ul class="list-unstyled ps-0">
-          <li>
-            <a class="icon-link mb-1" target="_blank" href="https://www.smp2wonosari.sch.id">
-              <i class="bi bi-browser-chrome me-1"></i>
-              Website SMPN 2 Wonosari
-            </a>
-          </li>
-          <li>
-            <a class="icon-link mb-1" target="_blank" href="https://instagram.com/smp2wonosari">
-              <i class="bi bi-browser-chrome me-1"></i>
-              Instagram
-            </a>
-          </li>
-          <li>
-            <a class="icon-link mb-1" target="_blank" href="https://facebook.com/smp2wonosari">
-              <i class="bi bi-browser-chrome me-1"></i>
-              Facebook
-            </a>
-          </li>
-          <li>
-            <a class="icon-link mb-1" target="_blank" href="https://twitter.com/smp2wonosari">
-              <i class="bi bi-browser-chrome me-1"></i>
-              Twitter
-            </a>
-          </li>
-          <li>
-            <a class="icon-link mb-1" target="_blank" href="https://wa.me/+6281227774007">
-              <i class="bi bi-browser-chrome me-1"></i>
-              WA Bussiness
-            </a>
-          </li>
-          <li>
-            <a class="icon-link mb-1" target="_blank" href="mailto:hi@smp2wonosari.sch.id">
-              <i class="bi bi-browser-chrome me-1"></i>
-              Email Us
-            </a>
-          </li>
-          <li>
-            <a class="icon-link mb-1" target="_blank" href="phone:+62274391037">
-              <i class="bi bi-browser-chrome me-1"></i>
-              Telepon
-            </a>
-          </li>
-          <li>
-            <a class="icon-link mb-1" target="_blank" href="https://goo.gl/maps/8FMryRA6vSWdNgg4A">
-              <i class="bi bi-browser-chrome me-1"></i>
-              Maps
-            </a>
-          </li>
-        </ul>
+        <?php if ($data['identitas']) : ?>
+          <h4 class="fw-bold"><?= $data['identitas']['nama']; ?></h4>
+          <p class="small"><?= $data['identitas']['alamat']; ?></p>
+          <div class="row">
+            <div class="col">
+              <?php $identitas = $data['identitas']; ?>
+              <?php if ($identitas['telepon'] != ''): ?>
+                <a type="button" target="_blank" href="tel:<?= $identitas['telepon']; ?>" class="btn btn-sm btn-outline-primary my-1"><i class="bi bi-telephone-fill"></i></a>
+              <?php endif ?>
+              <?php if ($identitas['email'] != ''): ?>
+                <a type="button" target="_blank" href="mailto:<?= $identitas['email']; ?>" class="btn btn-sm btn-outline-primary my-1"><i class="bi bi-envelope-at-fill"></i></a>
+              <?php endif ?>
+              <?php if ($identitas['website'] != ''): ?>
+                <a type="button" target="_blank" href="//<?= $identitas['website']; ?>" class="btn btn-sm btn-outline-primary my-1"><i class="bi bi-browser-chrome"></i></a>
+              <?php endif ?>
+              <?php if ($identitas['maps'] != ''): ?>
+                <a type="button" target="_blank" href="//<?= $identitas['maps']; ?>" class="btn btn-sm btn-outline-primary my-1"><i class="bi bi-geo-alt-fill"></i></a>
+              <?php endif ?>
+              <?php if ($identitas['whatsapp'] != ''): ?>
+                <a type="button" target="_blank" href="//wa.me/+62<?= $identitas['whatsapp']; ?>" class="btn btn-sm btn-outline-primary my-1"><i class="bi bi-whatsapp"></i></a>
+              <?php endif ?>
+              <?php if ($identitas['telegram'] != ''): ?>
+                <a type="button" target="_blank" href="//t.me/<?= $identitas['telegram']; ?>" class="btn btn-sm btn-outline-primary my-1"><i class="bi bi-telegram"></i></a>
+              <?php endif ?>
+              <?php if ($identitas['facebook'] != ''): ?>
+                <a type="button" target="_blank" href="//facebook.com/<?= $identitas['facebook']; ?>" class="btn btn-sm btn-outline-primary my-1"><i class="bi bi-facebook"></i></a>
+              <?php endif ?>
+              <?php if ($identitas['instagram'] != ''): ?>
+                <a type="button" target="_blank" href="//instagram.com/<?= $identitas['instagram']; ?>" class="btn btn-sm btn-outline-primary my-1"><i class="bi bi-instagram"></i></a>
+              <?php endif ?>
+              <?php if ($identitas['x'] != ''): ?>
+                <a type="button" target="_blank" href="//x.com/<?= $identitas['x']; ?>" class="btn btn-sm btn-outline-primary my-1"><i class="bi bi-twitter-x"></i></a>
+              <?php endif ?>
+              <?php if ($identitas['tiktok'] != ''): ?>
+                <a type="button" target="_blank" href="//tiktok.com/<?= $identitas['tiktok']; ?>" class="btn btn-sm btn-outline-primary my-1"><i class="bi bi-tiktok"></i></a>
+              <?php endif ?>
+              <?php if ($identitas['threads'] != ''): ?>
+                <a type="button" target="_blank" href="//threads.com/<?= $identitas['threads']; ?>" class="btn btn-sm btn-outline-primary my-1"><i class="bi bi-threads"></i></a>
+              <?php endif ?>
+            </div>
+          </div>
+        <?php endif; ?>
       </div>
     </div>
   </main>

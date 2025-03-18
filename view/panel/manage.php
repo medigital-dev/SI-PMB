@@ -27,25 +27,25 @@
             </div>
             <div class="col">
                 <div class="card card-body shadow text-bg-success bg-gradient">
-                    <h6 class="card-title">Berkas/Unduhan</h6>
+                    <h6 class="card-title">Berkas</h6>
                     <div class="d-flex justify-content-between">
-                        <span class="h1 fs-1 m-0" id="totalBerkas">0/0</span>
+                        <span class="h1 fs-1 m-0" id="totalBerkas">0</span>
                     </div>
                 </div>
             </div>
             <div class="col">
                 <div class="card card-body shadow text-bg-warning bg-gradient">
-                    <h6 class="card-title">Tautan/Aktif</h6>
+                    <h6 class="card-title">Tautan</h6>
                     <div class="d-flex justify-content-between">
-                        <span class="h1 fs-1 m-0" id="totalTautan">0/0</span>
+                        <span class="h1 fs-1 m-0" id="totalTautan">0</span>
                     </div>
                 </div>
             </div>
             <div class="col">
                 <div class="card card-body shadow text-bg-info bg-gradient">
-                    <h6 class="card-title">Diskusi/Baru</h6>
+                    <h6 class="card-title">Diskusi</h6>
                     <div class="d-flex justify-content-between">
-                        <span class="h1 fs-1 m-0" id="totalForum">0/0</span>
+                        <span class="h1 fs-1 m-0" id="totalForum">0</span>
                     </div>
                 </div>
             </div>
@@ -241,7 +241,8 @@
                         <div class="card-body">
                             <div class="d-flex flex-column flex-lg-row align-items-start">
                                 <div class="nav flex-lg-column flex-row nav-pills me-lg-4 justify-content-center mb-sm-3" id="v-pills-tab" role="tablist" aria-orientation="vertical">
-                                    <button class="nav-link text-start active" id="v-pills-logo-tab" data-bs-toggle="pill" data-bs-target="#v-pills-logo" type="button" role="tab" aria-controls="v-pills-logo" aria-selected="true">Logo</button>
+                                    <button class="nav-link text-start active" id="v-pills-identitas-tab" data-bs-toggle="pill" data-bs-target="#v-pills-identitas" type="button" role="tab" aria-controls="v-pills-identitas" aria-selected="true">Identitas</button>
+                                    <button class="nav-link text-start" id="v-pills-logo-tab" data-bs-toggle="pill" data-bs-target="#v-pills-logo" type="button" role="tab" aria-controls="v-pills-logo" aria-selected="false">Logo</button>
                                     <button class="nav-link text-start" id="v-pills-header-tab" data-bs-toggle="pill" data-bs-target="#v-pills-header" type="button" role="tab" aria-controls="v-pills-header" aria-selected="false">Header</button>
                                     <button class="nav-link text-start" id="v-pills-heroes-tab" data-bs-toggle="pill" data-bs-target="#v-pills-heroes" type="button" role="tab" aria-controls="v-pills-heroes" aria-selected="false">Heroes</button>
                                     <button class="nav-link text-start" id="v-pills-jadwal-tab" data-bs-toggle="pill" data-bs-target="#v-pills-jadwal" type="button" role="tab" aria-controls="v-pills-jadwal" aria-selected="false">Jadwal</button>
@@ -250,6 +251,105 @@
                                     <button class="nav-link text-start" id="v-pills-dokumen-tab" data-bs-toggle="pill" data-bs-target="#v-pills-dokumen" type="button" role="tab" aria-controls="v-pills-dokumen" aria-selected="false">Dokumen</button>
                                 </div>
                                 <div class="tab-content w-100" id="v-pills-tabContent">
+                                    <div class="tab-pane fade show active" id="v-pills-identitas" role="tabpanel" aria-labelledby="v-pills-identitas-tab" tabindex="0">
+                                        <form id="formIdentitas">
+                                            <div class="row mb-3">
+                                                <label for="namaIndentitas" class="col-sm-2 col-form-label">Nama Sekolah</label>
+                                                <div class="col-sm-10">
+                                                    <input type="text" class="form-control" id="namaIndentitas" name="nama" value="<?= $data['identitas'] ? $data['identitas']['nama'] : ''; ?>">
+                                                </div>
+                                            </div>
+                                            <div class="row mb-3">
+                                                <label for="alamatIdentitas" class="col-sm-2 col-form-label">Alamat</label>
+                                                <div class="col-sm-10">
+                                                    <input type="text" class="form-control" id="alamatIdentitas" name="alamat" value="<?= $data['identitas'] ? $data['identitas']['alamat'] : ''; ?>">
+                                                </div>
+                                            </div>
+                                            <label class="form-label">Kontak dan Media Sosial</label>
+                                            <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3">
+                                                <div class="col">
+                                                    <div class="input-group mb-3">
+                                                        <span class="input-group-text" id="basic-telephone"><i class="bi bi-telephone-fill"></i></span>
+                                                        <input type="text" class="form-control" id="telephoneIndentitas" name="telepon" value="<?= $data['identitas'] ? $data['identitas']['telepon'] : ''; ?>" placeholder="Nomor Telepon" aria-label="telephone" aria-describedby="basic-telephone">
+                                                    </div>
+                                                </div>
+                                                <div class="col">
+                                                    <div class="input-group mb-3">
+                                                        <span class="input-group-text" id="basic-email"><i class="bi bi-envelope-at-fill"></i></span>
+                                                        <input type="email" class="form-control" id="emailIdentitas" name="email" placeholder="Alamat email" value="<?= $data['identitas'] ? $data['identitas']['email'] : ''; ?>" aria-label="email" aria-describedby="basic-email">
+                                                    </div>
+                                                </div>
+                                                <div class="col">
+                                                    <div class="input-group mb-3">
+                                                        <span class="input-group-text" id="basic-web"><i class="bi bi-browser-chrome"></i></span>
+                                                        <input type="text" class="form-control" id="webIdentitas" name="website" placeholder="Alamat website" aria-label="web" aria-describedby="basic-web" value="<?= $data['identitas'] ? $data['identitas']['website'] : ''; ?>">
+                                                    </div>
+                                                </div>
+                                                <div class="col">
+                                                    <div class="input-group mb-3">
+                                                        <span class="input-group-text" id="basic-whatsapp"><i class="bi bi-whatsapp"></i></span>
+                                                        <input type="text" class="form-control" id="whatsappIdentitas" name="whatsapp" placeholder="Nomor Whatsapp" aria-label="whatsapp" aria-describedby="basic-whatsapp" value="<?= $data['identitas'] ? $data['identitas']['whatsapp'] : ''; ?>">
+                                                    </div>
+                                                </div>
+                                                <div class="col">
+                                                    <div class="input-group mb-3">
+                                                        <span class="input-group-text" id="basic-telegram"><i class="bi bi-telegram"></i></span>
+                                                        <input type="text" class="form-control" id="telegramIdentitas" name="telegram" placeholder="Nomor telegram" aria-label="telegram" aria-describedby="basic-telegram" value="<?= $data['identitas'] ? $data['identitas']['telegram'] : ''; ?>">
+                                                    </div>
+                                                </div>
+                                                <div class="col">
+                                                    <div class="input-group mb-3">
+                                                        <span class="input-group-text" id="basic-facebook"><i class="bi bi-facebook"></i></span>
+                                                        <span class="input-group-text" id="basic-facebook">@</span>
+                                                        <input type="text" class="form-control" id="facebookIdentitas" name="facebook" placeholder="Akun facebook" aria-label="facebook" aria-describedby="basic-facebook" value="<?= $data['identitas'] ? $data['identitas']['facebook'] : ''; ?>">
+                                                    </div>
+                                                </div>
+                                                <div class="col">
+                                                    <div class="input-group mb-3">
+                                                        <span class="input-group-text" id="basic-instagram"><i class="bi bi-instagram"></i></span>
+                                                        <span class="input-group-text" id="basic-facebook">@</span>
+                                                        <input type="text" class="form-control" id="instagramIdentitas" name="instagram" placeholder="Akun instagram" aria-label="instagram" aria-describedby="basic-instagram" value="<?= $data['identitas'] ? $data['identitas']['instagram'] : ''; ?>">
+                                                    </div>
+                                                </div>
+                                                <div class="col">
+                                                    <div class="input-group mb-3">
+                                                        <span class="input-group-text" id="basic-twitterX"><i class="bi bi-twitter-x"></i></span>
+                                                        <span class="input-group-text" id="basic-facebook">@</span>
+                                                        <input type="text" class="form-control" id="twitterXIdentitas" name="x" placeholder="Akun X" aria-label="twitterX" aria-describedby="basic-twitterX" value="<?= $data['identitas'] ? $data['identitas']['x'] : ''; ?>">
+                                                    </div>
+                                                </div>
+                                                <div class="col">
+                                                    <div class="input-group mb-3">
+                                                        <span class="input-group-text" id="basic-threads"><i class="bi bi-threads"></i></span>
+                                                        <span class="input-group-text" id="basic-facebook">@</span>
+                                                        <input type="text" class="form-control" id="threadsIdentitas" name="threads" placeholder="Akun threads" aria-label="threads" aria-describedby="basic-threads" value="<?= $data['identitas'] ? $data['identitas']['threads'] : ''; ?>">
+                                                    </div>
+                                                </div>
+                                                <div class="col">
+                                                    <div class="input-group mb-3">
+                                                        <span class="input-group-text" id="basic-tiktok"><i class="bi bi-tiktok"></i></span>
+                                                        <span class="input-group-text" id="basic-facebook">@</span>
+                                                        <input type="text" class="form-control" id="tiktokIdentitas" name="tiktok" placeholder="Akun tiktok" aria-label="tiktok" aria-describedby="basic-tiktok" value="<?= $data['identitas'] ? $data['identitas']['tiktok'] : ''; ?>">
+                                                    </div>
+                                                </div>
+                                                <div class="col">
+                                                    <div class="input-group mb-3">
+                                                        <span class="input-group-text" id="basic-youtube"><i class="bi bi-youtube"></i></span>
+                                                        <span class="input-group-text" id="basic-facebook">url</span>
+                                                        <input type="text" class="form-control" id="youtubeIdentitas" name="youtube" placeholder="Alamat youtube" aria-label="youtube" aria-describedby="basic-youtube" value="<?= $data['identitas'] ? $data['identitas']['youtube'] : ''; ?>">
+                                                    </div>
+                                                </div>
+                                                <div class="col">
+                                                    <div class="input-group mb-3">
+                                                        <span class="input-group-text" id="basic-maps"><i class="bi bi-geo-alt-fill"></i></span>
+                                                        <span class="input-group-text" id="basic-facebook">url</span>
+                                                        <input type="text" class="form-control" id="mapsIdentitas" name="maps" placeholder="Alamat maps" aria-label="maps" aria-describedby="basic-maps" value="<?= $data['identitas'] ? $data['identitas']['maps'] : ''; ?>">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </form>
+                                        <button type="button" class="btn btn-sm btn-primary" id="btnSimpanIdentitas">Simpan</button>
+                                    </div>
                                     <div class="tab-pane fade" id="v-pills-header" role="tabpanel" aria-labelledby="v-pills-header-tab" tabindex="0">
                                         <div class="mb-3">
                                             <label for="isiHeader" class="form-label">Header Homepage</label>
@@ -261,7 +361,7 @@
                                         <button type="button" class="btn btn-sm btn-primary" id="btnEditHeader">Edit</button>
                                         <button type="button" class="btn btn-sm btn-success" id="btnSaveHeader">Simpan</button>
                                     </div>
-                                    <div class="tab-pane fade show active" id="v-pills-logo" role="tabpanel" aria-labelledby="v-pills-logo-tab" tabindex="0">
+                                    <div class="tab-pane fade" id="v-pills-logo" role="tabpanel" aria-labelledby="v-pills-logo-tab" tabindex="0">
                                         <div class="row">
                                             <div class="col-md-6 mb-3">
                                                 <div class="mb-3">
