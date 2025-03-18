@@ -25,6 +25,11 @@ class DBBuilder
         $this->conn = $conn;
     }
 
+    public function setDebug($debug = false)
+    {
+        $this->debug = $debug;
+    }
+
     public function set($data)
     {
         if (empty($data)) return $this;
