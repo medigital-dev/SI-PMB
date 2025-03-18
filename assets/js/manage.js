@@ -1374,30 +1374,13 @@ $(document).ready(function () {
   $("#btnEditHeroes").on("click", function () {
     $("#isiHeroes").summernote({
       focus: true,
-      height: 100,
+      height: 300,
       dialogsInBody: true,
-      fontSizes: [
-        "11",
-        "12",
-        "16",
-        "18",
-        "20",
-        "24",
-        "26",
-        "32",
-        "36",
-        "40",
-        "48",
-        "54",
-        "64",
-        "82",
-        "150",
-      ],
       toolbar: [
+        ["misc", ["undo", "redo"]],
+        ["paragraph", ["style", "clear"]],
         ["style", ["bold", "italic", "underline"]],
-        ["fontsize", ["fontsize"]],
-        ["color", ["color"]],
-        ["height", ["height"]],
+        ["font", ["fontname", "fontsize"]],
       ],
     });
   });
