@@ -969,13 +969,16 @@ $(document).ready(function () {
             data +
             '" role="button" data-bs-toggle="collapse" href="#collapse-' +
             rows.id +
-            '"><h6 class="m-0 ' +
+            '"><h6 class="m-0 dropdown-toggle ' +
             (rows.dibaca == 1 ? "fw-light" : "fw-bold") +
             '">' +
             rows.nama +
             "</h6></a>" +
             '<span class="text-muted small">' +
             tanggal(rows.tanggal, "d F Y H:i WIB") +
+            " (" +
+            rows.balasan +
+            " Balasan)" +
             "</span>" +
             '<div class="collapse collapse-forum" data-dibaca="' +
             rows.dibaca +
@@ -1112,8 +1115,6 @@ $(document).ready(function () {
         parent_id: parent.val(),
         nama: nama.val(),
         isi: isi.summernote("code"),
-        dibaca: 1,
-        aktif: 1,
       },
       method: "POST",
     });

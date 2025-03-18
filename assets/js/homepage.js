@@ -96,7 +96,7 @@ $(document).ready(function () {
     processing: true,
     pagingType: "simple",
     ajax: {
-      url: "/api/public/forum.php",
+      url: "/api/forum.php",
       dataSrc: "",
     },
     columns: [
@@ -165,9 +165,7 @@ $(document).ready(function () {
       data: {
         parent_id: parent.val(),
         isi: isi.summernote("code"),
-        nama: nama.val(),
-        aktif: 1,
-        dibaca: 0,
+        nama: '<i class="bi bi-person-fill"></i> ' + nama.val(),
       },
       method: "POST",
     });
@@ -256,10 +254,8 @@ $(document).ready(function () {
     const set = await fetchData({
       url: "/api/forum.php",
       data: {
-        nama: nama.val(),
+        nama: '<i class="bi bi-person-fill"></i> ' + nama.val(),
         isi: isiVal,
-        aktif: 1,
-        dibaca: 0,
       },
       method: "POST",
     });
