@@ -266,7 +266,7 @@
                                                 </div>
                                             </div>
                                             <label class="form-label">Kontak dan Media Sosial</label>
-                                            <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3">
+                                            <div class="row row-cols-1 row-cols-md-2 row-cols-lg-2">
                                                 <div class="col">
                                                     <div class="input-group mb-3">
                                                         <span class="input-group-text" id="basic-telephone"><i class="bi bi-telephone-fill"></i></span>
