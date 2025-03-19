@@ -1,8 +1,11 @@
 <?php
 session_start();
 header('Content-Type: application/json; charset=utf-8');
-include '../core/functions.php';
-include '../auth/filter.php';
+require_once '../core/functions.php';
+require_once '../auth/filter.php';
+require_once '../core/DBBuilder.php';
+$db = new DBBuilder();
+$table = $db->table('event');
 
 global $conn;
 
@@ -13,17 +16,16 @@ $id = isset($_GET['id']) ? mysqli_real_escape_string($conn, $_GET['id']) : null;
 switch ($method) {
     case 'GET':
         if ($id == null) {
-            $sql = "SELECT event_id as id, tanggal, `status`, `name`, created_at FROM `event` ORDER BY tanggal ASC";
-            $result = query($sql);
+            $result = $table
+                ->select('event_id as id, tanggal, status, name, created_at')
+                ->orderBy('created_at')
+                ->findAll();
             echo json_encode($result, JSON_PRETTY_PRINT);
         } else {
-            $sql = "SELECT event_id as id, tanggal, `status`, `name`, created_at FROM `event` WHERE event_id = ?";
-            $stmt = mysqli_prepare($conn, $sql);
-            mysqli_stmt_bind_param($stmt, "s", $id);
-            mysqli_stmt_execute($stmt);
-            $query = mysqli_stmt_get_result($stmt);
-            $data = mysqli_fetch_assoc($query);
-
+            $data = $table
+                ->select('event_id as id, tanggal, status, name, created_at')
+                ->where('event_id', $id)
+                ->first();
             if ($data) {
                 echo json_encode($data, JSON_PRETTY_PRINT);
             } else {
@@ -41,14 +43,17 @@ switch ($method) {
             die;
         }
 
-        $sql = "DELETE FROM `event` WHERE event_id = ?";
-        $stmt = mysqli_prepare($conn, $sql);
-        mysqli_stmt_bind_param($stmt, "s", $id);
-        $result = mysqli_stmt_execute($stmt);
-
-        if (!$result || mysqli_affected_rows($conn) == 0) {
+        $data = $table->where('event_id', $id)
+            ->first();
+        if (!$data) {
             http_response_code(404);
-            echo json_encode(['message' => 'Data tidak ditemukan atau gagal dihapus.']);
+            echo json_encode(['message' => 'Data tidak ditemukan.']);
+            die;
+        }
+
+        if (!$table->delete($data['id'])) {
+            http_response_code(400);
+            echo json_encode(['message' => 'Data gagal dihapus.']);
             die;
         }
 
@@ -57,6 +62,7 @@ switch ($method) {
             'message' => 'Event berhasil dihapus permanen.',
             'data' => ['id' => $id]
         ];
+
         http_response_code(200);
         echo json_encode($response, JSON_PRETTY_PRINT);
 
@@ -64,75 +70,44 @@ switch ($method) {
 
     case 'POST':
         requireLogin();
-        $name = $_POST['name'] ?? null;
-        $tanggal = $_POST['tanggal'] ?? null;
-        $status = $_POST['status'] ?? null;
+        $set = $_POST;
 
-        if (!$name || !$tanggal) {
-            http_response_code(400);
-            echo json_encode(['message' => 'Nama dan tanggal event tidak boleh kosong.']);
+        if ($id == null) {
+            do {
+                $unique = random_string();
+            } while ($table->where('event_id', $id)->first());
+            $set['event_id'] = $unique;
+            http_response_code(201);
+        } else {
+            $data = $table->where('event_id', $id)->first();
+            if (!$data) {
+                http_response_code(404);
+                echo json_encode(['message' => 'Data tidak ditemukan.']);
+                die;
+            }
+            $set['id'] = $data['id'];
+            http_response_code(200);
+        }
+
+        if (!$table->save($set)) {
+            http_response_code(500);
+            echo json_encode(['message' => 'Database error.', 'error' => $table->getLastError()]);
             die;
         }
 
-        if ($id && $id !== '') {
-            $sql = "UPDATE `event` SET `name` = ?, tanggal = ?, `status` = ? WHERE event_id = ?";
-            $stmt = mysqli_prepare($conn, $sql);
-            mysqli_stmt_bind_param($stmt, "ssss", $name, $tanggal, $status, $id);
-            $result = mysqli_stmt_execute($stmt);
-
-            if (!$result || mysqli_affected_rows($conn) == 0) {
-                http_response_code(404);
-                echo json_encode(['message' => 'Data tidak ditemukan atau gagal diperbarui.']);
-                die;
-            }
-
-            $response = [
-                'status' => true,
-                'message' => 'Event berhasil diperbarui.',
-                'data' => [
-                    'id' => $id,
-                    'name' => $name,
-                    'tanggal' => $tanggal,
-                    'status' => $status,
-                ]
-            ];
-            http_response_code(200);
-        } else {
-            $timestamp = date('Y-m-d H:i:s');
-
-            do {
-                $unique = random_string();
-            } while (count(query("SELECT * FROM `event` WHERE event_id = '$unique'")) > 0);
-
-            $sql = "INSERT INTO `event` (event_id, `name`, tanggal, `status`, created_at) VALUES (?, ?, ?, ?, ?)";
-            $stmt = mysqli_prepare($conn, $sql);
-            mysqli_stmt_bind_param($stmt, "sssss", $unique, $name, $tanggal, $status, $timestamp);
-            $result = mysqli_stmt_execute($stmt);
-
-            if (!$result) {
-                http_response_code(500);
-                echo json_encode(['message' => 'Database error.', 'error' => mysqli_error($conn)]);
-                die;
-            }
-
-            $response = [
-                'status' => true,
-                'message' => 'Event berhasil ditambahkan.',
-                'data' => [
-                    'id' => $id,
-                    'name' => $name,
-                    'tanggal' => $tanggal,
-                    'status' => $status,
-                ]
-            ];
-            http_response_code(201);
-        }
+        $response = [
+            'status' => true,
+            'message' => 'Event berhasil diperbarui.',
+            'data' => [
+                'id' => $id ?? $unique,
+            ]
+        ];
 
         echo json_encode($response, JSON_PRETTY_PRINT);
-
         break;
 
     default:
-        # code...
+        http_response_code(405);
+        echo json_encode(['message' => 'Method not allowed']);
         break;
 }
