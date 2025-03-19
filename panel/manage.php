@@ -7,17 +7,19 @@ if (!isset($_SESSION["login"])) {
 }
 
 require_once '../core/functions.php';
+require_once '../core/DBBuilder.php';
+$db = new DBBuilder();
 
-$data['logo']['dark'] = db_get('logo', ['where' => ['type' => 'dark']], true);
-$data['logo']['light'] = db_get('logo', ['where' => ['type' => 'light']], true);
-$data['logo']['default'] = db_get('logo', ['where' => ['type' => 'default']], true);
-$data['logo']['favicon'] = db_get('logo', ['where' => ['type' => 'favicon']], true);
-$data['admin'] = $_SESSION['user'];
-$data['header'] = db_get('header', [], true);
-$data['heroes'] = db_get('heroes', [], true);
-$data['syarat'] = db_get('syarat', [], true);
-$data['dokumen'] = db_get('dokumen', [], true);
-$data['identitas'] = db_get('identitas', [], true);
+$data['logo']['dark'] = $db->table('logo')->where('type', 'dark')->first();
+$data['logo']['light'] = $db->table('logo')->where('type', 'light')->first();
+$data['logo']['default'] = $db->table('logo')->where('type', 'default')->first();
+$data['logo']['favicon'] = $db->table('logo')->where('type', 'favicon')->first();
+$data['admin'] = $db->table('admin')->select('id, username, name')->where('username', $_SESSION['user']['username'])->first();
+$data['header'] = $db->table('header')->first();
+$data['heroes'] = $db->table('heroes')->first();
+$data['syarat'] = $db->table('syarat')->first();
+$data['dokumen'] = $db->table('dokumen')->first();
+$data['identitas'] = $db->table('identitas')->first();
 
 view('../view/templates/head.php', [
     'title' => 'Manage | SI-PPDB',
