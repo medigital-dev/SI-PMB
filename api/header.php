@@ -2,8 +2,11 @@
 session_start();
 header('Content-Type: application/json; charset=utf-8');
 
-include '../core/functions.php';
-include '../auth/filter.php';
+require_once '../core/functions.php';
+require_once '../auth/filter.php';
+require_once '../core/DBBuilder.php';
+$db = new DBBuilder();
+$table = $db->table('header');
 
 global $conn;
 $tableName = 'header';
@@ -15,11 +18,10 @@ $id = isset($_GET['id']) ? mysqli_real_escape_string($conn, $_GET['id']) : null;
 switch ($method) {
     case 'GET':
         if ($id == null) {
-            $result = db_get($tableName, ['select' => ['header_id as id', 'isi', 'updated_at']]);
+            $result = $table->select(['header_id as id', 'isi', 'updated_at'])->findAll();
             echo json_encode($result, JSON_PRETTY_PRINT);
         } else {
-            $data = db_get($tableName, ['header_id' => $id]);
-
+            $data = $table->where('header_id', $id)->first();
             if ($data) {
                 echo json_encode($data, JSON_PRETTY_PRINT);
             } else {
@@ -31,52 +33,40 @@ switch ($method) {
 
     case 'POST':
         requireLogin();
-        $isi = $_POST['isi'] ?? null;
-        $timestamp = date('Y-m-d H:i:s');
-
-        if (!$isi) {
-            http_response_code(400);
-            echo json_encode(['message' => 'Isi header harus ada', 'status' => false]);
-            die;
-        }
+        $set = $_POST;
 
         if ($id == null) {
             do {
                 $unique = random_string();
-            } while (db_get($tableName, ['where' => ['header_id' => $unique]]) != null);
-
-            $result = db_save($tableName, ['set' => ['header_id' => $unique, 'isi' => $isi, 'updated_at' => $timestamp]]);
-
-            if (!$result) {
-                http_response_code(500);
-                echo json_encode(['message' => 'Database error.', 'error' => mysqli_error($conn)]);
-                die;
-            }
-
-            $response = [
-                'status' => true,
-                'message' => 'Header berhasil disimpan.',
-                'data' => [
-                    'id' => $unique,
-                ]
-            ];
+            } while ($table->where('header_id', $unique)->first());
+            $set['header_id'] = $unique;
             http_response_code(201);
         } else {
-            $result = db_save($tableName, ['set' => ['isi' => $isi, 'updated_at' => $timestamp], 'where' => ['header_id' => $id]]);
-            if (!$result) {
-                http_response_code(500);
-                echo json_encode(['message' => 'Database error.', 'error' => mysqli_error($conn)]);
+            $data = $table->where('header_id', $id)->first();
+            if (!$data) {
+                http_response_code(404);
+                echo json_encode(['message' => 'Data logo tidak ditemukan.']);
                 die;
             }
-
-            $response = [
-                'status' => true,
-                'message' => 'Header berhasil diperbaharui.',
-                'data' => ['id' => $id]
-            ];
+            $set['id'] = $data['id'];
+            $set['updated_at'] = date('Y-m-d H:i:s');
+            http_response_code(200);
         }
 
-        echo json_encode($response);
+        $result = $table->save($set);
+        if (!$result) {
+            http_response_code(500);
+            echo json_encode(['message' => 'Database error.', 'error' => mysqli_error($conn)]);
+            die;
+        }
+
+        $response = [
+            'status' => true,
+            'message' => 'Header berhasil disimpan.',
+            'data' => ['id' => $id]
+        ];
+
+        echo json_encode($response, JSON_PRETTY_PRINT);
         break;
 
     default:
