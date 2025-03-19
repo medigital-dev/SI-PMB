@@ -87,6 +87,7 @@ switch ($method) {
         break;
 
     default:
-        # code...
+        http_response_code(405);
+        echo json_encode(['message' => 'Method not allowed']);
         break;
 }
