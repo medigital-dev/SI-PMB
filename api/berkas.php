@@ -4,6 +4,9 @@ session_start();
 header('Content-Type: application/json; charset=utf-8');
 include '../core/functions.php';
 include '../auth/filter.php';
+include '../core/DBBuilder.php';
+$db = new DBBuilder();
+$table = $db->table('berkas');
 
 global $conn;
 
@@ -15,24 +18,17 @@ $status = isset($_GET['s']) ? mysqli_real_escape_string($conn, $_GET['s']) : nul
 switch ($method) {
     case 'GET':
         if ($id == null) {
-            $sql = "SELECT berkas_id as id, created_at as tanggal, `filename`, title, `type`, src, `size`, `status` FROM berkas";
-
-            if (!empty($status)) {
-                $status = mysqli_real_escape_string($conn, $status);
-                $sql .= " WHERE status = '$status'";
-            }
-
-            $sql .= " ORDER BY created_at DESC";
-
-            $result = query($sql);
+            $table->select('berkas_id as id, created_at as tanggal, filename, title, type, src, size, status');
+            if ($status) $table->where('status', $status);
+            $result = $table
+                ->orderBy('created_at', 'DESC')
+                ->findAll();
             echo json_encode($result, JSON_PRETTY_PRINT);
         } else {
-            $sql = "SELECT berkas_id as id, created_at as tanggal, `filename`, title, `type`, src, `size`, `status` FROM berkas WHERE berkas_id = ?";
-            $stmt = mysqli_prepare($conn, $sql);
-            mysqli_stmt_bind_param($stmt, "s", $id);
-            mysqli_stmt_execute($stmt);
-            $query = mysqli_stmt_get_result($stmt);
-            $data = mysqli_fetch_assoc($query);
+            $data = $table
+                ->select('berkas_id as id, created_at as tanggal, filename, title, type, src, size, status')
+                ->where('berkas_id', $id)
+                ->first();
 
             if ($data) {
                 echo json_encode($data, JSON_PRETTY_PRINT);
@@ -45,18 +41,10 @@ switch ($method) {
 
     case 'POST':
         requireLogin();
-        $title = $_POST['title'] ?? null;
-        $status = $_POST['status'] ?? null;
+        $set = $_POST;
         $file = $_FILES['file'] ?? null;
-        $timestamp = date('Y-m-d H:i:s');
 
-        if ($id == null) {
-            if (!$file) {
-                http_response_code(400);
-                echo json_encode(['message' => 'File tidak ditemukan', 'status' => false]);
-                die;
-            }
-
+        if ($file) {
             $oldName = $file['name'];
             $mime_type = mime_content_type($file['tmp_name']);
             $ext = strtolower(pathinfo($oldName, PATHINFO_EXTENSION));
@@ -77,55 +65,42 @@ switch ($method) {
                 echo json_encode(['message' => 'Upload error', 'status' => false]);
                 die;
             }
+            $set['filename'] = $filename;
+            $set['src'] = $loc;
+            $set['type'] = $mime_type;
+            $set['size'] = $size;
+        }
 
+        if ($id == null) {
             do {
                 $unique = random_string();
-            } while (count(query("SELECT * FROM berkas WHERE berkas_id = '$unique'")) > 0);
-
-            $sql = "INSERT INTO berkas (berkas_id, `filename`, title, src, created_at, `type`, `size`) 
-                    VALUES (?,?,?,?,?,?,?)";
-            $stmt = mysqli_prepare($conn, $sql);
-            mysqli_stmt_bind_param($stmt, "sssssss", $unique, $filename, $title, $loc, $timestamp, $mime_type, $size);
-            $result = mysqli_stmt_execute($stmt);
-
-            if (!$result) {
-                http_response_code(500);
-                echo json_encode(['message' => 'Database error.', 'error' => mysqli_error($conn)]);
-                die;
-            }
-
-            $response = [
-                'status' => true,
-                'message' => 'Berkas berhasil ditambahkan.',
-                'data' => [
-                    'id' => $unique,
-                    'type' => $mime_type,
-                    'ext' => $ext,
-                    'size' => $size,
-                    'src' => $loc,
-                    'filename' => $filename,
-                    'title' => $title
-                ]
-            ];
+            } while ($table->where('berkas_id', $unique)->first());
+            $set['berkas_id'] = $unique;
             http_response_code(201);
         } else {
-            $sql = "UPDATE berkas SET title = ?, `status` = ? WHERE berkas_id = ?";
-            $stmt = mysqli_prepare($conn, $sql);
-            mysqli_stmt_bind_param($stmt, "sss", $title, $status, $id);
-            $result = mysqli_stmt_execute($stmt);
-
-            if (!$result) {
-                http_response_code(500);
-                echo json_encode(['message' => 'Database error.', 'error' => mysqli_error($conn)]);
+            $data = $table->where('berkas_id', $id)->first();
+            if (!$data) {
+                http_response_code(404);
+                echo json_encode(['message' => 'Berkas tidak ditemukan']);
                 die;
             }
-
-            $response = [
-                'status' => true,
-                'message' => 'Berkas berhasil diperbaharui.',
-                'data' => ['id' => $id]
-            ];
+            $set['id'] = $data['id'];
+            http_response_code(200);
         }
+
+        if (!$table->save($set)) {
+            http_response_code(500);
+            echo json_encode(['message' => 'Database error.', 'error' => $table->getLastError()]);
+            die;
+        }
+
+        $response = [
+            'status' => true,
+            'message' => 'Berkas berhasil disimpan.',
+            'data' => [
+                'id' => $unique ?? $id,
+            ]
+        ];
 
         echo json_encode($response);
         break;
@@ -137,31 +112,22 @@ switch ($method) {
             echo json_encode(['message' => 'ID tidak boleh kosong']);
             die;
         }
-
-        $dataDeleted = query("SELECT * FROM berkas WHERE berkas_id = '$id'");
-
-        if (!$dataDeleted) {
+        $data = $table->where('berkas_id', $id)->first();
+        if (!$data) {
             http_response_code(404);
             echo json_encode(['message' => 'Berkas tidak ditemukan']);
             die;
         }
 
-        // Hapus file dari folder
-        $filePath = str_replace('./', '../', $dataDeleted[0]['src']);
-        if (file_exists($filePath)) {
-            unlink($filePath);
-        }
-
-        // Hapus dari database
-        $sql = "DELETE FROM berkas WHERE berkas_id = ?";
-        $stmt = mysqli_prepare($conn, $sql);
-        mysqli_stmt_bind_param($stmt, "s", $id);
-        $result = mysqli_stmt_execute($stmt);
-
-        if (!$result) {
+        if (!$table->delete($data['id'])) {
             http_response_code(500);
             echo json_encode(['message' => 'Database error.', 'error' => mysqli_error($conn)]);
             die;
+        }
+
+        $filePath = '..' . $data['src'];
+        if (file_exists($filePath)) {
+            unlink($filePath);
         }
 
         $response = [
