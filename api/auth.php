@@ -3,7 +3,11 @@
 
     header('Content-Type: application/json; charset=utf-8');
     include '../core/functions.php';
+    include '../core/DBBuilder.php';
+
     global $conn;
+    $db = new DBBuilder();
+    $table = $db->table('admin');
 
     $method = $_SERVER['REQUEST_METHOD'];
 
@@ -15,12 +19,9 @@
         case 'GET':
             if ($by === 'id' || $by === 'username') {
                 $column = $by === 'id' ? 'id' : 'username';
-                $sql = "SELECT username, `password`, `name`, created_at AS tanggal FROM `admin` WHERE $column = ?";
-                $stmt = mysqli_prepare($conn, $sql);
-                mysqli_stmt_bind_param($stmt, "s", $key);
-                mysqli_stmt_execute($stmt);
-                $query = mysqli_stmt_get_result($stmt);
-                $data = mysqli_fetch_assoc($query);
+                $data = $table->select('username, password, name, created_at as tanggal')
+                    ->where($column, $key)
+                    ->first();
 
                 if ($data) {
                     echo json_encode($data, JSON_PRETTY_PRINT);
@@ -31,36 +32,32 @@
                 exit;
             }
 
-            $sql = "SELECT username, `password`, `name`, created_at AS tanggal FROM `admin`";
-            $result = query($sql);
+            $result = $table->select('username, password, name, created_at as tanggal')->findAll();
             echo json_encode($result, JSON_PRETTY_PRINT);
-
             break;
 
         case 'POST':
+            $username = $_POST["username"] ?? '';
+            $password = $_POST["password"] ?? '';
+            $remember = $_POST['remember'] ?? null;
+            $name = $_POST['name'] ?? null;
+
             if ($type == 'login') {
-                $username = $_POST["username"] ?? '';
-                $password = $_POST["password"] ?? '';
-                $remember = $_POST['remember'] ?? null;
-
                 $result = mysqli_query($conn, "SELECT * FROM `admin` WHERE username = '$username'");
+                $result = $table->where('username', $username)->first();
 
-                if (mysqli_num_rows($result) === 1) {
-
-                    $row = mysqli_fetch_assoc($result);
-                    if (password_verify($password, $row["password"])) {
-
+                if ($result) {
+                    if (password_verify($password, $result["password"])) {
                         $_SESSION["login"] = true;
                         $_SESSION['user'] = [
-                            'username' => $row['username'],
-                            'name' => $row['name'],
+                            'username' => $result['username'],
+                            'name' => $result['name'],
                         ];
 
                         if ($remember) {
-                            setcookie('id', $row['id'], time() + 1440);
-                            setcookie('key', hash('sha384', $row['username']), time() + 1440);
+                            setcookie('id', $result['id'], time() + 1440);
+                            setcookie('key', hash('sha384', $result['username']), time() + 1440);
                         }
-
                         echo json_encode(1, JSON_PRETTY_PRINT);
                     } else {
                         http_response_code(401);
@@ -71,16 +68,10 @@
                     echo json_encode(['message' => 'Username: <strong>' . $username . '</strong> tidak ditemukan.'], JSON_PRETTY_PRINT);
                 }
             } else if ($type == 'registrasi') {
-                $username = $_POST['username'] ?? null;
-                $password = password_hash($_POST['password'], PASSWORD_DEFAULT) ?? null;
-                $name = $_POST['name'] ?? null;
+                $password = password_hash($password, PASSWORD_DEFAULT);
                 $timestamp = date('Y-m-d H:i:s');
 
-                $sql = "INSERT INTO `admin` (username, `password`, `name`, created_at) VALUES (?, ?, ?, ?)";
-                $stmt = mysqli_prepare($conn, $sql);
-                mysqli_stmt_bind_param($stmt, "ssss", $username, $password, $name, $timestamp);
-                $result = mysqli_stmt_execute($stmt);
-
+                $result = $table->set(['username' => $username, 'password' => $password, 'name' => $name, 'created_at' => $timestamp])->insert();
                 if (!$result) {
                     http_response_code(500);
                     echo json_encode(['message' => 'Database error.', 'error' => mysqli_error($conn)]);

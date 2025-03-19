@@ -2,30 +2,14 @@
 session_start();
 
 include '../core/functions.php';
+include '../core/DBBuilder.php';
 
-if (isset($_COOKIE['id']) && isset($_COOKIE['key'])) {
-    $id = $_COOKIE['id'];
-    $key = $_COOKIE['key'];
+$db = new DBBuilder();
+$table = $db->table('admin');
+if ($table->findAll()) die('Anda tidak diizinkan untuk mengakses halaman ini, silahkan <a href="/auth/login.php">Login</a> atau Kembali ke <a href="/index.php">Homepage</a>');
+$table = $db->table('logo');
+$favicon = $table->where('type', 'favicon')->first();
 
-    $result = mysqli_query($conn, "SELECT username FROM admin WHERE id = $id");
-    $row = mysqli_fetch_assoc($result);
-
-    if ($key === hash('sha384', $row['username'])) {
-        $_SESSION['login'] = true;
-    }
-}
-
-if (isset($_SESSION["login"])) {
-    header("Location: /panel/manage.php");
-    exit;
-}
-
-$admin = query("SELECT * FROM `admin`");
-if ($admin)
-    die('Anda tidak diizinkan untuk mengakses halaman ini, silahkan <a href="/auth/login.php">Login</a> atau Kembali ke <a href="/index.php">Homepage</a>');
-?>
-
-<?php
 view('../view/templates/head.php', [
     'title' => 'Login ke sistem',
     'style' => [
@@ -34,6 +18,7 @@ view('../view/templates/head.php', [
         '/assets/css/style.css',
         '/assets/css/sign-in.css',
     ],
+    'favicon' => [$favicon ? $favicon['src'] : ''],
     'body' => [
         'className' => 'd-flex align-items-center py-4 bg-body-tertiary'
     ]
@@ -44,7 +29,9 @@ view('../view/templates/toogle-theme.php');
 
 <main class="form-signin w-100 m-auto bg-body rounded rounded-4 shadow">
     <form class="mb-3" action="" method="post">
-        <img class="mb-4" src="./assets/images/smp2wonosari-shadow_black.png" alt="" width="100">
+        <div style="height: 100px;" class="mb-2 d-flex justify-content-center w-100">
+            <img src="" alt="" id="logo" class="img-fluid h-100">
+        </div>
         <h1 class="h3 fw-bold">Registrasi Admin</h1>
         <h6 class="">Silahkan registrasi</h6>
         <div class="form-floating mb-2">

@@ -43,9 +43,6 @@ $(document).ready(function () {
         name: name.val(),
       },
       method: "POST",
-    }).catch((err) => {
-      toast(err.responseJSON.message, "error");
-      return false;
     });
     if (!user) {
       toggleButton($(this), "Registrasi");
@@ -53,6 +50,7 @@ $(document).ready(function () {
     }
     toast({
       title: "Registrasi Sukses.",
+      icon: "success",
       message:
         "Username: <strong>" +
         username.val() +
@@ -61,7 +59,7 @@ $(document).ready(function () {
     });
     toggleButton($(this), "Mengarahkan ke Login...", true);
     setTimeout(() => {
-      window.location.reload();
+      window.location.href = "/auth/login.php";
     }, 3000);
   });
 });

@@ -1,4 +1,11 @@
-$(document).ready(function () {
+$(document).ready(async function () {
+  const admin = await fetchData("/api/auth.php");
+  if (admin.length == 0)
+    $("#registrasiElm").html(
+      '<div class="alert alert-primary">Administrator tidak ditemukan. Silahkan <a href="registrasi.php">registrasi</a> terlebih dahulu.</div>'
+    );
+  else $("#registrasiElm").html("");
+
   $("#btnSignIn").on("click", async function (e) {
     e.preventDefault();
     const username = $("#username");
@@ -24,12 +31,11 @@ $(document).ready(function () {
         remember: remember.prop("checked"),
       },
       method: "POST",
-    }).catch((err) => {
-      toast(err.responseJSON.message, "error");
-      toggleButton($(this), "Login");
-      return false;
     });
-    if (!res) return;
+    if (!res) {
+      toggleButton($(this), "Login");
+      return;
+    }
     toggleButton($(this), "Mengalihkan...", true);
     toast(
       "Login berhasil, mengalihkan ke halaman panel...",
