@@ -1,6 +1,6 @@
 <?php
 require './core/functions.php';
-$data['banner'] = query("SELECT banner.title, `description`, `order`, src FROM banner LEFT JOIN berkas ON banner.berkas_id =  berkas.berkas_id");
+$data['banner'] = query("SELECT banner.title, `description`, src FROM banner LEFT JOIN berkas ON banner.berkas_id =  berkas.berkas_id");
 $data['tautan'] = query("SELECT * FROM tautan WHERE aktif = 1");
 $data['on_menu'] = query("SELECT * FROM tautan WHERE aktif = 1 AND on_menu = 1");
 $data['header'] = db_get('header', [], true);
