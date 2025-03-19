@@ -643,11 +643,14 @@ $(document).ready(function () {
       data: {
         title: titleElm.val(),
         description: description.val(),
-        idBerkas: sendImage.data.id,
+        berkas_id: sendImage.data.id,
       },
       method: "POST",
     });
-    if (!setData) return;
+    if (!setData) {
+      toggleButton(btnElm, "Simpan");
+      return;
+    }
     toggleButton(btnElm, "Simpan");
     fileElm.val("");
     titleElm.val("");
