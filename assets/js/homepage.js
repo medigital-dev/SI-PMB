@@ -1,4 +1,6 @@
 $(document).ready(function () {
+  Fancybox.bind("[data-fancybox]");
+
   counterInner();
 
   const tableUnduhan = $("#tabelUnduhan").DataTable({
