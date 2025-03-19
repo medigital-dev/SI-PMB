@@ -535,7 +535,8 @@
 </div>
 <div class="modal fade" data-bs-backdrop="static" data-bs-keyboard="false" id="modalProfil" tabindex="-1" aria-labelledby="modalProfilLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-scrollable">
-        <form action="" method="post">
+        <input type="hidden" name="id" id="idAdmin" value="<?= $data['admin']['id']; ?>">
+        <form action="" method="post" id="formProfil">
             <div class="modal-content">
                 <div class="modal-header">
                     <h1 class="modal-title fs-5" id="modalProfilLabel">Profil Pengguna</h1>
@@ -544,7 +545,7 @@
                 <div class="modal-body">
                     <div class="mb-3">
                         <label for="nama" class="form-label">Nama User</label>
-                        <input type="text" class="form-control" name="nama" id="nama" value="<?= $admin['name']; ?>">
+                        <input type="text" class="form-control" name="name" id="nama" value="<?= $admin['name']; ?>">
                     </div>
                     <div class="mb-3">
                         <label for="username" class="form-label">Username</label>

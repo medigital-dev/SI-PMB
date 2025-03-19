@@ -75,6 +75,7 @@ view('../view/templates/footer.php', [
         '/plugins/bootstrap/bootstrap.bundle.min.js',
         '/plugins/fetchData/fetchData.js',
         '/assets/js/functions.js',
+        '/assets/js/global.js',
         '/plugins/simple-toast/toast.js',
         '/assets/js/sign-in.js',
     ]

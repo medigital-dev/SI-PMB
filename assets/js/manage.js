@@ -1773,4 +1773,26 @@ $(document).ready(function () {
     if (!resp) return;
     toast(resp.message, "success");
   });
+
+  $("#btnSaveProfil").on("click", async function (e) {
+    e.preventDefault();
+    const id = $("#idAdmin").val();
+    const form = $("#formProfil");
+    const data = form.serializeArray();
+    let set = {};
+    data.forEach((e) => (set[e.name] = e.value));
+    const result = await fetchData({
+      url: "/api/auth.php?type=update&key=" + id,
+      data: set,
+      method: "POST",
+    });
+    if (!result) return;
+    toast(result.message, "success");
+    if (result.data.affected !== 0) {
+      toast("Session berubah, silahkan login kembali.", "info", "", 3000);
+      setTimeout(() => {
+        window.location.href = "/auth/logout.php";
+      }, 3000);
+    }
+  });
 });
