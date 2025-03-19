@@ -88,6 +88,8 @@ switch ($method) {
             http_response_code(201);
             echo json_encode($response, JSON_PRETTY_PRINT);
         } else if ($type == 'update') {
+            requireLogin();
+
             $data = $table->where('id', $key)->first();
             if (!$data) {
                 http_response_code(404);
