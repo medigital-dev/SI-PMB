@@ -8,7 +8,7 @@ require_once '../auth/filter.php';
 require_once '../core/DBBuilder.php';
 
 $builder = new DBBuilder();
-$model = $builder->table('jalur');
+$model = $builder->table('jalur')->addIndex('jalur_id');
 
 $method = $_SERVER['REQUEST_METHOD'];
 
@@ -23,8 +23,7 @@ switch ($method) {
             echo json_encode($result, JSON_PRETTY_PRINT);
         } else {
             $result = $model->select('jalur_id as id, nama, persen, jumlah')
-                ->where('jalur_id', $id)
-                ->first();
+                ->find($id);
             if ($result) {
                 echo json_encode($result, JSON_PRETTY_PRINT);
             } else {
@@ -36,39 +35,39 @@ switch ($method) {
 
     case 'POST':
         requireLogin();
-        $nama = $_POST['nama'] ?? null;
-        $persen = $_POST['persen'] ?? null;
-        $jumlah = $_POST['jumlah'] ?? null;
+        $set = $_POST;
 
-        if (!$nama || !$persen || !$jumlah) {
-            http_response_code(400);
-            echo json_encode(['message' => 'Nama, Persentase dan Jumlah dari setiap jalur wajib diisi', 'status' => false]);
+        if ($id == null) {
+            do {
+                $unique = random_string();
+            } while ($model->find($unique));
+            $set['jalur_id'] = $unique;
+            http_response_code(201);
+        } else {
+            $data = $model->find($id);
+            if (!$data) {
+                http_response_code(404);
+                echo json_encode(['message' => 'Data jalur tidak ditemukan.']);
+                die;
+            }
+            $set['id'] = $data['id'];
+            $set['updated_at'] = date('Y-m-d H:i:s');
+        }
+
+        $result = $model->save($set);
+        if (!$result) {
+            http_response_code(500);
+            echo json_encode(['message' => 'Database error.', 'error' => mysqli_error($conn)]);
             die;
         }
 
-        if ($id == null) {
-            $timestamp = date('Y-m-d H:i:s');
-
-            do {
-                $unique = random_string();
-            } while ($model->where('jalur_id', $id)->first());
-
-            $result = $model->set(['jalur_id' => $unique, 'nama' => $nama, 'persen' => $persen, 'jumlah' => $jumlah, 'created_at' => $timestamp])->insert();
-            if (!$result) {
-                http_response_code(500);
-                echo json_encode(['message' => 'Database error.', 'error' => mysqli_error($conn)]);
-                die;
-            }
-
-            $response = [
-                'status' => true,
-                'message' => 'Jalur pendaftaran berhasil disimpan.',
-                'data' => [
-                    'id' => $unique,
-                ]
-            ];
-            http_response_code(201);
-        }
+        $response = [
+            'status' => true,
+            'message' => 'Jalur pendaftaran berhasil disimpan.',
+            'data' => [
+                'id' => $unique,
+            ]
+        ];
 
         echo json_encode($response, JSON_PRETTY_PRINT);
         break;
@@ -81,7 +80,7 @@ switch ($method) {
             die;
         }
 
-        $result = $model->where('jalur_id', $id)->delete();
+        $result = $model->delete($id);
 
         if (!$result) {
             http_response_code(404);

@@ -86,6 +86,7 @@ switch ($method) {
                 die;
             }
             $set['id'] = $data['id'];
+            $set['updated_at'] = date('Y-m-d H:i:s');
             http_response_code(200);
         }
 

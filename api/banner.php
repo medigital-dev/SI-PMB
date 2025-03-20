@@ -1,10 +1,9 @@
 <?php
 session_start();
-
 header('Content-Type: application/json; charset=utf-8');
-include '../core/functions.php';
-include '../auth/filter.php';
-include '../core/DBBuilder.php';
+require_once '../core/functions.php';
+require_once '../auth/filter.php';
+require_once '../core/DBBuilder.php';
 $db = new DBBuilder();
 $table = $db->table('banner');
 

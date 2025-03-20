@@ -82,6 +82,7 @@ switch ($method) {
                 echo json_encode(['message' => 'Data jalur tidak ditemukan.']);
             }
             $set['id'] = $data['id'];
+            $set['updated_at'] = date('Y-m-d H:i:s');
             http_response_code(200);
         }
 

@@ -9,7 +9,6 @@ $db = new DBBuilder();
 $table = $db->table('header');
 
 global $conn;
-$tableName = 'header';
 
 $method = $_SERVER['REQUEST_METHOD'];
 

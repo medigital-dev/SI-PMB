@@ -28,60 +28,46 @@ switch ($method) {
                 echo json_encode($result, JSON_PRETTY_PRINT);
             } else {
                 http_response_code(404);
-                echo json_encode(['message' => 'Data jalur tidak ditemukan.']);
+                echo json_encode(['message' => 'Data tidak ditemukan.']);
             }
         }
         break;
 
     case 'POST':
         requireLogin();
-        $content = $_POST['content'] ?? null;
-        $timestamp = date('Y-m-d H:i:s');
-
-        if (!$content) {
-            http_response_code(400);
-            echo json_encode(['message' => 'Konten berkas kelengkapan pendaftaran wajib diisi', 'status' => false]);
-            die;
-        }
+        $set = $_POST;
 
         if ($id == null) {
             do {
                 $unique = random_string();
             } while ($model->where('dokumen_id', $unique)->first());
-
-            $result = $model->insert(['dokumen_id' => $unique, 'content' => $content]);
-            if (!$result) {
-                http_response_code(500);
-                echo json_encode(['message' => 'Database error.', 'error' => mysqli_error($conn)]);
-                die;
-            }
-
-            $response = [
-                'status' => true,
-                'message' => 'Dokumen kelengkapan pendaftaran berhasil disimpan.',
-                'data' => [
-                    'id' => $unique,
-                ]
-            ];
+            $set['dokument_id'] = $unique;
             http_response_code(201);
         } else {
-            $result = $model
-                ->set(['content' => $content, 'updated_at' => $timestamp])
-                ->where('dokumen_id', $id)
-                ->update();
-
-            if (!$result) {
-                http_response_code(500);
-                echo json_encode(['message' => 'Database error.', 'error' => mysqli_error($conn)]);
+            $data = $model->where('dokument_id', $id)->first();
+            if (!$data) {
+                http_response_code(404);
+                echo json_encode(['message' => 'Data tidak ditemukan.']);
                 die;
             }
-
-            $response = [
-                'status' => true,
-                'message' => 'Dokumen kelengkapan pendaftaran berhasil diperbaharui.',
-                'data' => ['id' => $id]
-            ];
+            $set['id'] = $data['id'];
+            $set['updated_at'] = date('Y-m-d H:i:s');
+            http_response_code(200);
         }
+        $result = $model->save($set);
+        if (!$result) {
+            http_response_code(500);
+            echo json_encode(['message' => 'Database error.', 'error' => $model->getLastError()]);
+            die;
+        }
+
+        $response = [
+            'status' => true,
+            'message' => 'Dokumen kelengkapan pendaftaran berhasil disimpan.',
+            'data' => [
+                'id' => $unique,
+            ]
+        ];
 
         echo json_encode($response, JSON_PRETTY_PRINT);
         break;

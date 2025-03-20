@@ -2,12 +2,13 @@
 session_start();
 header('Content-Type: application/json; charset=utf-8');
 
-include '../core/functions.php';
-include '../auth/filter.php';
+require_once '../core/functions.php';
+require_once '../auth/filter.php';
+require_once '../core/DBBuilder.php';
+$db = new DBBuilder();
+$table = $db->table('heroes');
 
 global $conn;
-$tableName = 'heroes';
-$primaryKey = 'hero_id';
 
 $method = $_SERVER['REQUEST_METHOD'];
 
@@ -16,66 +17,55 @@ $id = isset($_GET['id']) ? mysqli_real_escape_string($conn, $_GET['id']) : null;
 switch ($method) {
     case 'GET':
         if ($id == null) {
-            $result = db_get($tableName, ['select' => ["$primaryKey as id", 'content', 'updated_at']]);
+            $result = $table->select(['hero_id as id', 'content', 'updated_at', 'created_at'])->findAll();
             echo json_encode($result, JSON_PRETTY_PRINT);
         } else {
-            $data = db_get($tableName, [$primaryKey => $id]);
-
+            $data = $table->where('heros_id', $id)->first();
             if ($data) {
                 echo json_encode($data, JSON_PRETTY_PRINT);
             } else {
                 http_response_code(404);
-                echo json_encode(['message' => 'Data logo tidak ditemukan.']);
+                echo json_encode(['message' => 'Data tidak ditemukan.']);
             }
         }
         break;
 
     case 'POST':
         requireLogin();
-        $content = $_POST['content'] ?? null;
-        $timestamp = date('Y-m-d H:i:s');
-
-        if (!$content) {
-            http_response_code(400);
-            echo json_encode(['message' => 'Konten heros wajib diisi', 'status' => false]);
-            die;
-        }
+        $set = $_POST;
 
         if ($id == null) {
             do {
                 $unique = random_string();
-            } while (db_get($tableName, ['where' => [$primaryKey => $unique]]) != null);
-
-            $result = db_save($tableName, ['set' => [$primaryKey => $unique, 'content' => $content, 'updated_at' => $timestamp]]);
-
-            if (!$result) {
-                http_response_code(500);
-                echo json_encode(['message' => 'Database error.', 'error' => mysqli_error($conn)]);
-                die;
-            }
-
-            $response = [
-                'status' => true,
-                'message' => 'Heroes berhasil disimpan.',
-                'data' => [
-                    'id' => $unique,
-                ]
-            ];
+            } while ($table->where('hero_id', $unique)->first());
+            $set['hero_id'] = $unique;
             http_response_code(201);
         } else {
-            $result = db_save($tableName, ['set' => ['content' => $content, 'updated_at' => $timestamp], 'where' => [$primaryKey => $id]]);
-            if (!$result) {
-                http_response_code(500);
-                echo json_encode(['message' => 'Database error.', 'error' => mysqli_error($conn)]);
+            $data = $table->where('hero_id', $id)->first();
+            if (!$data) {
+                http_response_code(404);
+                echo json_encode(['message' => 'Data tidak ditemukan.']);
                 die;
             }
-
-            $response = [
-                'status' => true,
-                'message' => 'Heroes berhasil diperbaharui.',
-                'data' => ['id' => $id]
-            ];
+            $set['id'] = $data['id'];
+            $set['updated_at'] = date('Y-m-d H:i:s');
+            http_response_code(200);
         }
+
+        $result = $table->save($set);
+        if (!$result) {
+            http_response_code(500);
+            echo json_encode(['message' => 'Database error.', 'error' => $table->getLastError()]);
+            die;
+        }
+
+        $response = [
+            'status' => true,
+            'message' => 'Heroes berhasil disimpan.',
+            'data' => [
+                'id' => $unique,
+            ]
+        ];
 
         echo json_encode($response);
         break;

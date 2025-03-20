@@ -1,9 +1,8 @@
 <?php
 session_start();
-
 header('Content-Type: application/json; charset=utf-8');
-include '../core/functions.php';
-include '../core/DBBuilder.php';
+require_once '../core/functions.php';
+require_once '../core/DBBuilder.php';
 
 global $conn;
 $db = new DBBuilder();

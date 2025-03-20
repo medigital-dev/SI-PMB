@@ -2,12 +2,13 @@
 session_start();
 header('Content-Type: application/json; charset=utf-8');
 
-include '../core/functions.php';
-include '../auth/filter.php';
+require_once '../core/functions.php';
+require_once '../auth/filter.php';
+require_once '../core/DBBuilder.php';
+$db = new DBBuilder();
+$table = $db->table('jadwal')->addIndex('jadwal_id');
 
 global $conn;
-$tableName = 'jadwal';
-$primaryKey = 'jadwal_id';
 
 $method = $_SERVER['REQUEST_METHOD'];
 
@@ -16,10 +17,14 @@ $id = isset($_GET['id']) ? mysqli_real_escape_string($conn, $_GET['id']) : null;
 switch ($method) {
     case 'GET':
         if ($id == null) {
-            $result = db_get($tableName, ['select' => ["$primaryKey as id", 'title', 'content', 'created_at as tanggal', 'aktif']]);
+            $result = $table
+                ->select(["jadwal_id as id", 'title', 'content', 'created_at as tanggal', 'aktif', 'updated_at'])
+                ->findAll();
             echo json_encode($result, JSON_PRETTY_PRINT);
         } else {
-            $data = db_get($tableName, ['where' => [$primaryKey => $id], 'select' => ["$primaryKey as id", 'title', 'content', 'created_at as tanggal', 'aktif']], true);
+            $data = $table
+                ->select(["jadwal_id as id", 'title', 'content', 'created_at as tanggal', 'aktif', 'updated_at'])
+                ->find($id);
 
             if ($data) {
                 echo json_encode($data, JSON_PRETTY_PRINT);
@@ -32,54 +37,40 @@ switch ($method) {
 
     case 'POST':
         requireLogin();
-        $title = $_POST['title'] ?? null;
-        $content = $_POST['content'] ?? null;
-        $aktif = $_POST['aktif'] ?? null;
-        $timestamp = date('Y-m-d H:i:s');
-
-        if (!$content || !$title) {
-            http_response_code(400);
-            echo json_encode(['message' => 'Title dan content wajib diisi', 'status' => false]);
-            die;
-        }
+        $set = $_POST;
 
         if ($id == null) {
             do {
                 $unique = random_string();
-            } while (db_get($tableName, ['where' => [$primaryKey => $unique]]) != null);
-
-            $result = db_save($tableName, ['set' => [$primaryKey => $unique, 'title' => $title, 'content' => $content, 'aktif' => $aktif, 'created_at' => $timestamp]]);
-
-            if (!$result) {
-                http_response_code(500);
-                echo json_encode(['message' => 'Database error.', 'error' => mysqli_error($conn)]);
-                die;
-            }
-
-            $response = [
-                'status' => true,
-                'message' => 'Jadwal berhasil disimpan.',
-                'data' => [
-                    'id' => $unique,
-                ]
-            ];
+            } while ($table->find($unique));
+            $set['jadwal_id'] = $unique;
             http_response_code(201);
         } else {
-            $result = db_save($tableName, ['set' => ['content' => $content, 'aktif' => $aktif, 'created_at' => $timestamp], 'where' => [$primaryKey => $id]]);
-            if (!$result) {
-                http_response_code(500);
-                echo json_encode(['message' => 'Database error.', 'error' => mysqli_error($conn)]);
+            $data = $table->find($id);
+            if (!$data) {
+                http_response_code(404);
+                echo json_encode(['message' => 'Data tidak ditemukan.']);
                 die;
             }
-
-            $response = [
-                'status' => true,
-                'message' => 'Jadwal pelaksanaan berhasil diperbaharui.',
-                'data' => ['id' => $id]
-            ];
+            $set['id'] = $data['id'];
+            http_response_code(200);
         }
 
-        echo json_encode($response);
+        if (!$table->save($set)) {
+            http_response_code(500);
+            echo json_encode(['message' => 'Database error.', 'error' => mysqli_error($conn)]);
+            die;
+        }
+
+        $response = [
+            'status' => true,
+            'message' => 'Jadwal berhasil disimpan.',
+            'data' => [
+                'id' => $unique,
+            ]
+        ];
+
+        echo json_encode($response, JSON_PRETTY_PRINT);
         break;
 
     case 'DELETE':
@@ -90,11 +81,11 @@ switch ($method) {
             die;
         }
 
-        $result = db_delete($tableName, ['where' => [$primaryKey => $id]]);
+        $result = $table->delete($id);
 
-        if (!$result || mysqli_affected_rows($conn) == 0) {
+        if (!$result) {
             http_response_code(404);
-            echo json_encode(['message' => 'Data jadwal pelaksanaan tidak ditemukan atau gagal dihapus.']);
+            echo json_encode(['message' => 'Data jadwal pelaksanaan gagal dihapus.']);
             die;
         }
 
