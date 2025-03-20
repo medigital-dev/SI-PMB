@@ -63,14 +63,12 @@ class DBBuilder
         return $this;
     }
 
-
     private function escapeColumnWithAlias($column)
     {
         if (preg_match('/\s+as\s+/i', $column)) {
             list($col, $alias) = preg_split('/\s+as\s+/i', $column);
             return $this->escapeColumn(trim($col)) . ' AS ' . $this->escapeColumn(trim($alias));
         }
-
         return $this->escapeColumn($column);
     }
 
@@ -91,12 +89,12 @@ class DBBuilder
         }
 
         $field = $this->escapeColumn($field);
-        $prefix = empty($this->where) ? '' : " $type ";
+        $prefix = (empty($this->where) || end($this->where) === '(') ? '' : " $type ";
 
         if (is_null($value)) {
             $this->where[] = "$prefix$field IS NULL";
         } elseif (is_bool($value)) {
-            $this->where[] = "$prefix$field = " . (int)$value;
+            $this->where[] = "$field = " . (int)$value;
         } elseif (is_numeric($value)) {
             $this->where[] = "$prefix$field = $value";
         } elseif (!empty($value)) {
@@ -267,8 +265,13 @@ class DBBuilder
 
     private function escapeColumn($column)
     {
-        return '`' . preg_replace('/[^a-zA-Z0-9_.]/', '', $column) . '`';
+        if (strpos($column, '.') !== false) {
+            list($table, $col) = explode('.', $column, 2);
+            return "`$table`.`$col`";  // ✅ Format yang benar: `table`.`column`
+        }
+        return "`$column`";
     }
+
 
     private function prepareValue($value)
     {
@@ -469,7 +472,6 @@ class DBBuilder
     public function addIndex($key)
     {
         $this->indexKey[] = $this->escapeColumn($key);
-        return $this;
     }
 
     public function find($value)
