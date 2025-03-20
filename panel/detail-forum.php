@@ -1,13 +1,14 @@
 <?php
 session_start();
 header("Content-Type: text/html; charset=UTF-8");
-include '../core/functions.php';
-global $conn;
+require_once '../core/functions.php';
+require_once '../core/DBBuilder.php';
+
+$db = new DBBuilder();
+$db->addIndex('forum_id');
 
 $id = $_GET['id'] ?? null;
-$sql = "SELECT * FROM forum WHERE forum_id = '$id'";
-$query = mysqli_query($conn, $sql);
-$result = mysqli_fetch_assoc($query);
+$result = $db->find($id);
 $html = '';
 if (!$result) echo 'Diskusi tidak ditemukan.';
 $html .= '<div class="card card-body border-primary mb-2">
@@ -20,9 +21,9 @@ $html .= '<div class="card card-body border-primary mb-2">
             </div>
             <p class="card-text">' . $result['isi'] . '</p>
           </div>';
-$jawaban = query("SELECT * FROM forum WHERE parent_id = '$id' ORDER BY created_at ASC");
+$jawaban = $db->where('parent_id', $id)->orderBy('created_at', 'ASC')->findAll();
 foreach ($jawaban as $row) {
-    $html .= '<div class="card card-body mb-2">
+  $html .= '<div class="card card-body mb-2">
             <div class="d-flex justify-content-between">
               <div>
                 <h6 class="card-title m-0">' . $row['nama'] . '</h6>

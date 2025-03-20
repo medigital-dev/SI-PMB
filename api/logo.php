@@ -17,11 +17,11 @@ $id = isset($_GET['id']) ? mysqli_real_escape_string($conn, $_GET['id']) : null;
 switch ($method) {
     case 'GET':
         if ($id == null) {
-            $result = $db->select('logo_id as id, created_at as tanggal, src, updated_at')
+            $result = $db->select('logo_id as id, created_at as tanggal, src,type, updated_at')
                 ->findAll();
             echo json_encode($result, JSON_PRETTY_PRINT);
         } else {
-            $data = $db->select('logo_id as id, created_at as tanggal, src, updated_at')
+            $data = $db->select('logo_id as id, created_at as tanggal, src,type, updated_at')
                 ->find($id);
             if ($data) {
                 echo json_encode($data, JSON_PRETTY_PRINT);

@@ -1,16 +1,58 @@
 <?php
-require './core/functions.php';
-$data['banner'] = query("SELECT banner.title, `description`, src FROM banner LEFT JOIN berkas ON banner.berkas_id =  berkas.berkas_id");
-$data['tautan'] = query("SELECT * FROM tautan WHERE aktif = 1");
-$data['on_menu'] = query("SELECT * FROM tautan WHERE aktif = 1 AND on_menu = 1");
-$data['header'] = db_get('header', [], true);
-$data['favicon'] = db_get('logo', ['where' => ['type' => 'favicon']], true);
-$data['heroes'] = db_get('heroes', [], true);
-$data['jadwal'] = db_get('jadwal');
-$data['jalur'] = db_get('jalur');
-$data['syarat'] = db_get('syarat', [], true);
-$data['dokumen'] = db_get('dokumen', [], true);
-$data['identitas'] = db_get('identitas', [], true);
+require_once './core/functions.php';
+require_once './core/DBBuilder.php';
+$db = new DBBuilder();
+
+$data['banner'] =
+  $db
+  ->table('banner')
+  ->select('banner.title, description, src')
+  ->join('berkas', 'banner.berkas_id = berkas.berkas_id', 'LEFT')
+  ->findAll();
+$data['tautan'] =
+  $db
+  ->table('tautan')
+  ->where('aktif', true)
+  ->findAll();
+$data['on_menu'] =
+  $db
+  ->table('tautan')
+  ->where('aktif', true)
+  ->where('on_menu', true)
+  ->findAll();
+$data['header'] =
+  $db
+  ->table('header')
+  ->first();
+$data['favicon'] =
+  $db
+  ->table('logo')
+  ->where('type', 'favicon')
+  ->first();
+$data['heroes'] =
+  $db
+  ->table('heroes')
+  ->first();
+$data['jadwal'] =
+  $db
+  ->table('jadwal')
+  ->findAll();
+$data['jalur'] =
+  $db
+  ->table('jalur')
+  ->findAll();
+$data['syarat'] =
+  $db
+  ->table('syarat')
+  ->first();
+$data['dokumen'] =
+  $db
+  ->table('dokumen')
+  ->first();
+$data['identitas'] =
+  $db
+  ->table('identitas')
+  ->first();
 
 view('./view/templates/head.php', [
   'title' => 'Informasi PPDB SMPN 2 Wonosari 2025',

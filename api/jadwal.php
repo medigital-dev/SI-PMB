@@ -6,7 +6,8 @@ require_once '../core/functions.php';
 require_once '../auth/filter.php';
 require_once '../core/DBBuilder.php';
 $db = new DBBuilder();
-$table = $db->table('jadwal')->addIndex('jadwal_id');
+$db->addIndex('jadwal_id');
+$table = $db->table('jadwal');
 
 global $conn;
 
