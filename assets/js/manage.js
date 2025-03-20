@@ -1264,7 +1264,6 @@ $(document).ready(function () {
     let set = new FormData();
     set.append("file", file.prop("files")[0]);
     set.append("type", "dark");
-    set.append("aktif", 1);
     const resp = await fetchData({
       url: "/api/logo.php" + (idDark.length > 0 ? "?id=" + idDark.val() : ""),
       data: set,
@@ -1287,7 +1286,6 @@ $(document).ready(function () {
     let set = new FormData();
     set.append("file", file.prop("files")[0]);
     set.append("type", "light");
-    set.append("aktif", 1);
     const resp = await fetchData({
       url: "/api/logo.php" + (idLight.length > 0 ? "?id=" + idLight.val() : ""),
       data: set,
@@ -1310,7 +1308,6 @@ $(document).ready(function () {
     let set = new FormData();
     set.append("file", file.prop("files")[0]);
     set.append("type", "default");
-    set.append("aktif", 1);
     const resp = await fetchData({
       url:
         "/api/logo.php" +
@@ -1335,7 +1332,6 @@ $(document).ready(function () {
     let set = new FormData();
     set.append("file", file.prop("files")[0]);
     set.append("type", "favicon");
-    set.append("aktif", 1);
     const resp = await fetchData({
       url:
         "/api/logo.php" +
