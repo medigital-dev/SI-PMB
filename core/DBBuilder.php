@@ -1,6 +1,6 @@
 <?php
 
-require_once 'dbconn.php';
+require_once 'config.php';
 
 class DBBuilder
 {
@@ -18,11 +18,15 @@ class DBBuilder
     protected $lastAffectedRows;
     protected $lastError;
     protected $groupStarted = false;
+    protected $indexKey = [];
 
-    public function __construct()
+    public function __construct($tableName = null)
     {
-        global $conn;
-        $this->conn = $conn;
+        $this->conn = new mysqli(DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME);
+        if ($this->conn->connect_error) {
+            die("Connection failed: " . $this->conn->connect_error);
+        }
+        $this->table = $tableName;
     }
 
     public function setDebug($debug = false)
@@ -39,9 +43,10 @@ class DBBuilder
     }
 
 
-    public function table($table)
+    public function table($tableName = null)
     {
-        $this->table = $this->escapeColumn($table);
+        $this->indexKey = [];
+        $this->table = $this->escapeColumn($tableName);
         return $this;
     }
 
@@ -69,21 +74,42 @@ class DBBuilder
         return $this->escapeColumn($column);
     }
 
-    public function where($namaField, $value, $type = 'AND')
+    public function where($field, $value = null, $type = 'AND')
     {
-        $namaField = $this->escapeColumn($namaField);
+        if (is_array($field)) {
+            if ($value !== null) {
+                throw new InvalidArgumentException("Invalid usage: when using an array, the second parameter must be null.");
+            }
+            foreach ($field as $key => $val) {
+                $this->where($key, $val, $type);
+            }
+            return $this;
+        }
+
+        if (empty($field)) {
+            return $this;
+        }
+
+        $field = $this->escapeColumn($field);
         $prefix = empty($this->where) ? '' : " $type ";
 
         if (is_null($value)) {
-            $this->where[] = "$prefix$namaField IS NULL";
+            $this->where[] = "$prefix$field IS NULL";
         } elseif (is_bool($value)) {
-            $this->where[] = "$prefix$namaField = " . (int)$value;
+            $this->where[] = "$prefix$field = " . (int)$value;
         } elseif (is_numeric($value)) {
-            $this->where[] = "$prefix$namaField = $value";
-        } else {
-            $this->where[] = "$prefix$namaField = '" . mysqli_real_escape_string($this->conn, $value) . "'";
+            $this->where[] = "$prefix$field = $value";
+        } elseif (!empty($value)) {
+            $escapedValue = mysqli_real_escape_string($this->conn, trim($value));
+            $this->where[] = "$prefix$field = '$escapedValue'";
         }
+
         return $this;
+    }
+
+    public function orWhere($field, $value = null)
+    {
+        return $this->where($field, $value, 'OR');
     }
 
     public function groupStart()
@@ -278,18 +304,41 @@ class DBBuilder
 
     public function delete($id = null)
     {
-        if ($id)
-            $this->where($this->primaryKey, $id);
-
-        if (empty($this->table) || empty($this->where)) {
-            $this->lastError = "Error: Table name and WHERE condition are required";
+        if (empty($this->table)) {
+            $this->lastError = "Error: Table name is required";
             return false;
         }
 
-        $sql = "DELETE FROM $this->table WHERE " . implode(' AND ', $this->where);
-        $result = mysqli_query($this->conn, $sql);
+        $escapedValue = mysqli_real_escape_string($this->conn, trim($id));
 
-        $this->resetQuery();  // ✅ Pastikan query tidak bercampur dengan yang lain
+        // Coba cari data berdasarkan primary key dulu
+        $checkQuery = "SELECT * FROM $this->table WHERE $this->primaryKey = '$escapedValue' LIMIT 1";
+        $checkResult = mysqli_query($this->conn, $checkQuery);
+
+        if ($checkResult && mysqli_num_rows($checkResult) > 0) {
+            // Data ditemukan berdasarkan primary key, hapus berdasarkan primary key
+            $sql = "DELETE FROM $this->table WHERE $this->primaryKey = '$escapedValue'";
+        } else {
+            // Jika ID tidak ditemukan, coba cari berdasarkan index key
+            $conditions = [];
+            foreach ($this->indexKey as $index) {
+                $conditions[] = "$index = '$escapedValue'";
+            }
+
+            if (!empty($conditions)) {
+                $sql = "DELETE FROM $this->table WHERE " . implode(' OR ', $conditions);
+            } else {
+                $this->lastError = "Error: No valid primary key or index key found";
+                return false;
+            }
+        }
+
+        if ($this->debug) {
+            echo "Debug Query: " . $sql . "<br>";
+        }
+
+        $result = mysqli_query($this->conn, $sql);
+        $this->resetQuery(); // Reset query setelah eksekusi
 
         if (!$result) {
             $this->lastError = mysqli_error($this->conn);
@@ -318,14 +367,19 @@ class DBBuilder
 
         $sql = "SELECT COUNT(*) AS total FROM $this->table";
 
-        if (!empty($this->where)) {
-            $sql .= " WHERE " . implode(' AND ', $this->where);
+        $validWhere = array_filter($this->where, fn($w) => trim($w) !== "");
+        if (!empty($validWhere)) {
+            $sql .= " WHERE " . implode(' ', $validWhere);
+        }
+
+        if ($this->debug) {
+            echo "Debug Query: " . $sql . "<br>";
         }
 
         $result = mysqli_query($this->conn, $sql);
-
         if ($result) {
             $row = mysqli_fetch_assoc($result);
+            $this->resetQuery(); // Reset setelah eksekusi countAll
             return (int) $row['total'];
         }
 
@@ -410,5 +464,42 @@ class DBBuilder
         } else {
             return $this->insert($this->data);
         }
+    }
+
+    public function addIndex($key)
+    {
+        $this->indexKey[] = $this->escapeColumn($key);
+        return $this;
+    }
+
+    public function find($value)
+    {
+        if (empty($this->table)) {
+            $this->lastError = "Error: Table name is required";
+            return false;
+        }
+
+        $escapedValue = mysqli_real_escape_string($this->conn, trim($value));
+
+        // Cek apakah data ditemukan berdasarkan primary key
+        $sql = "SELECT * FROM $this->table WHERE $this->primaryKey = '$escapedValue' LIMIT 1";
+        $result = mysqli_query($this->conn, $sql);
+
+        if ($result && $row = mysqli_fetch_assoc($result)) {
+            return $row; // Langsung return jika ditemukan
+        }
+
+        // Jika tidak ditemukan, coba cari berdasarkan index key
+        foreach ($this->indexKey as $index) {
+            $sql = "SELECT * FROM $this->table WHERE $index = '$escapedValue' LIMIT 1";
+            $result = mysqli_query($this->conn, $sql);
+
+            if ($result && $row = mysqli_fetch_assoc($result)) {
+                return $row; // Return jika ditemukan berdasarkan index key
+            }
+        }
+
+        $this->lastError = "Data not found";
+        return false;
     }
 }
