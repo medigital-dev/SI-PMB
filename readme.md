@@ -26,12 +26,14 @@ SI-PMB adalah sebuah Sistem Informasi Penerimaan Murid Baru. Konten yang ada did
 - Ekstract ke root folder
 - Setting database pada file `Core/config.php`
 - Jalankan `composer install` pada root direktori
+- Jalankan migrasi database `vendor/bin/phinx migrate -e development`
 - Done
 
 # Base System
 
 - PHP Native
 - [Bootstrap](https://getbootstrap.com)
+- [Phinx DB Migration](https://phinx.org/)
 
 # Kontak
 
@@ -40,7 +42,7 @@ SI-PMB adalah sebuah Sistem Informasi Penerimaan Murid Baru. Konten yang ada did
 
 # Lisensi
 
-&copy; 2025 Desain by [@mesaidlg](https://muhsaidlg.my.id) dibawah [lisensi MIT](LICENSE).
+&copy; 2025 Dibuat dan dikembangkan oleh [@mesaidlg](https://muhsaidlg.my.id) dibawah [lisensi MIT](LICENSE).
 
 # Donation
 
