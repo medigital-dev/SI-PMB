@@ -4,13 +4,13 @@ header("Content-Type: text/html; charset=UTF-8");
 require_once '../core/functions.php';
 require_once '../core/DBBuilder.php';
 
-$db = new DBBuilder();
+$db = new DBBuilder('forum');
 $db->addIndex('forum_id');
 
 $id = $_GET['id'] ?? null;
 $result = $db->find($id);
 $html = '';
-if (!$result) echo 'Diskusi tidak ditemukan.';
+if (!$result) die('Diskusi tidak ditemukan.');
 $html .= '<div class="card card-body border-primary mb-2">
             <div class="d-flex justify-content-between">
               <div>
