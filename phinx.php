@@ -1,4 +1,5 @@
 <?php
+require_once 'core/config.php';
 
 return
     [
@@ -8,31 +9,31 @@ return
         ],
         'environments' => [
             'default_migration_table' => 'phinxlog',
-            'default_environment' => 'development',
+            'default_environment' => ENV,
             'production' => [
                 'adapter' => 'mysql',
-                'host' => 'localhost',
-                'name' => 'production_db',
-                'user' => 'root',
-                'pass' => '',
+                'host' => DB_SERVER,
+                'name' => DB_NAME,
+                'user' => DB_USER,
+                'pass' => DB_PASSWORD,
                 'port' => '3306',
                 'charset' => 'utf8',
             ],
             'development' => [
                 'adapter' => 'mysql',
-                'host' => 'localhost',
-                'name' => 'ppdb',
-                'user' => 'root',
-                'pass' => '',
+                'host' => DB_SERVER,
+                'name' => DB_NAME,
+                'user' => DB_USER,
+                'pass' => DB_PASSWORD,
                 'port' => '3306',
                 'charset' => 'utf8',
             ],
             'testing' => [
                 'adapter' => 'mysql',
-                'host' => 'localhost',
-                'name' => 'testing_db',
-                'user' => 'root',
-                'pass' => '',
+                'host' => DB_SERVER,
+                'name' => DB_SERVER,
+                'user' => DB_NAME,
+                'pass' => DB_PASSWORD,
                 'port' => '3306',
                 'charset' => 'utf8',
             ]

@@ -1,6 +1,12 @@
 <?php
 
 /**
+ * environment
+ * development|production|testing
+ */
+define('ENV', 'development');
+
+/**
  * Set timezone
  */
 date_default_timezone_set('Asia/Jakarta');
