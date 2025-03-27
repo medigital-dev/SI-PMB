@@ -1,24 +1,23 @@
 <?php
 session_start();
 header('Content-Type: application/json; charset=utf-8');
+
 require_once '../core/functions.php';
 require_once '../core/DBBuilder.php';
 
-global $conn;
-$db = new DBBuilder();
-$table = $db->table('admin');
+$db = new DBBuilder('admin');
 
 $method = $_SERVER['REQUEST_METHOD'];
 
-$key = isset($_GET['key']) ? mysqli_real_escape_string($conn, $_GET['key']) : null;
-$by = isset($_GET['by']) ? mysqli_real_escape_string($conn, $_GET['by']) : null;
-$type = isset($_GET['type']) ? mysqli_real_escape_string($conn, $_GET['type']) : null;
+$key = $_GET['key'] ?? null;
+$by = $_GET['by'] ?? null;
+$type = $_GET['type'] ?? null;
 
 switch ($method) {
     case 'GET':
         if ($by === 'id' || $by === 'username') {
             $column = $by === 'id' ? 'id' : 'username';
-            $data = $table->select('username, password, name, created_at as tanggal')
+            $data = $db->select('username, password, name, created_at as tanggal')
                 ->where($column, $key)
                 ->first();
 
@@ -31,7 +30,7 @@ switch ($method) {
             exit;
         }
 
-        $result = $table->select('username, password, name, created_at as tanggal')->findAll();
+        $result = $db->select('username, password, name, created_at as tanggal')->findAll();
         echo json_encode($result, JSON_PRETTY_PRINT);
         break;
 
@@ -42,8 +41,7 @@ switch ($method) {
         $name = $_POST['name'] ?? null;
 
         if ($type == 'login') {
-            $result = mysqli_query($conn, "SELECT * FROM `admin` WHERE username = '$username'");
-            $result = $table->where('username', $username)->first();
+            $result = $db->where('username', $username)->first();
 
             if ($result) {
                 if (password_verify($password, $result["password"])) {
@@ -70,10 +68,10 @@ switch ($method) {
             $password = password_hash($password, PASSWORD_DEFAULT);
             $timestamp = date('Y-m-d H:i:s');
 
-            $result = $table->set(['username' => $username, 'password' => $password, 'name' => $name, 'created_at' => $timestamp])->insert();
+            $result = $db->set(['username' => $username, 'password' => $password, 'name' => $name, 'created_at' => $timestamp])->insert();
             if (!$result) {
                 http_response_code(500);
-                echo json_encode(['message' => 'Database error.', 'error' => mysqli_error($conn)]);
+                echo json_encode(['message' => 'Database error.', 'error' => $db->getLastError()]);
                 die;
             }
 
@@ -89,7 +87,7 @@ switch ($method) {
         } else if ($type == 'update') {
             requireLogin();
 
-            $data = $table->where('id', $key)->first();
+            $data = $db->where('id', $key)->first();
             if (!$data) {
                 http_response_code(404);
                 echo json_encode(['message' => 'Item not found']);
@@ -120,9 +118,9 @@ switch ($method) {
                 }
             }
 
-            if (!$table->save($set)) {
+            if (!$db->save($set)) {
                 http_response_code(500);
-                echo json_encode(['message' => 'Database error.', 'error' => $table->getLastError()]);
+                echo json_encode(['message' => 'Database error.', 'error' => $db->getLastError()]);
                 die;
             }
 
@@ -131,7 +129,7 @@ switch ($method) {
                 'message' => 'Profil admin berhasil disimpan.',
                 'data' => [
                     'username' => $username,
-                    'affected' => $table->getAffectedRows(),
+                    'affected' => $db->getAffectedRows(),
                 ]
             ];
 

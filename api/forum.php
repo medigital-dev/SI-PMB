@@ -1,37 +1,34 @@
 <?php
 session_start();
-
 header('Content-Type: application/json; charset=utf-8');
+
 require_once '../core/functions.php';
 require_once '../auth/filter.php';
 require_once '../core/DBBuilder.php';
 
-$db = new DBBuilder();
-$table = $db->table('forum');
-
-global $conn;
+$db = new DBBuilder('forum');
 
 $method = $_SERVER['REQUEST_METHOD'];
 
-$id = isset($_GET['id']) ? mysqli_real_escape_string($conn, $_GET['id']) : null;
+$id = $_GET['id'] ?? null;
 
 switch ($method) {
     case 'GET':
         if ($id == null) {
-            $result = $table
+            $result = $db
                 ->select('forum_id as id, parent_id as parent, nama, isi, aktif, created_at as tanggal, dibaca')
                 ->where('parent_id', null)
                 ->orderBy('created_at', 'DESC')
                 ->findAll();
             $response = [];
             foreach ($result as $row) {
-                $row['balasan'] = count($table->where('parent_id', $row['id'])->findAll());
+                $row['balasan'] = count($db->where('parent_id', $row['id'])->findAll());
                 $response[] = $row;
             }
 
             echo json_encode($response, JSON_PRETTY_PRINT);
         } else {
-            $data = $table->where('forum_id', $id)->first();
+            $data = $db->where('forum_id', $id)->first();
 
             if ($data) {
                 echo json_encode($data, JSON_PRETTY_PRINT);
@@ -49,11 +46,11 @@ switch ($method) {
         if (!$id) {
             do {
                 $unique = random_string();
-            } while ($table->where('forum_id', $unique)->first());
+            } while ($db->where('forum_id', $unique)->first());
             $set['forum_id'] = $unique;
             http_response_code(201);
         } else {
-            $data = $table->where('forum_id', $id)->first();
+            $data = $db->where('forum_id', $id)->first();
             if (!$data) {
                 http_response_code(404);
                 echo json_encode(['message' => 'Item not found']);
@@ -62,14 +59,13 @@ switch ($method) {
             $set['updated_at'] = $timestamp;
             http_response_code(200);
         }
-
         if (isset($set['parent_id']) && $set['parent_id'] !== null)
-            $table->where('forum_id', $set['parent_id'])->set(['dibaca' => 0])->update();
+            $db->where('forum_id', $set['parent_id'])->set(['dibaca' => 0])->update();
 
-        $result = $table->set($set)->save();
+        $result = $db->save($set);
         if (!$result) {
             http_response_code(500);
-            echo json_encode(['message' => 'Database error.', 'error' => $table->getLastError()]);
+            echo json_encode(['message' => 'Database error.', 'error' => $db->getLastError()]);
             die;
         }
 
@@ -78,6 +74,7 @@ switch ($method) {
             'message' => 'Data berhasil disimpan.',
             'data' => [
                 'id' => $unique ?? $id,
+                'parent' => $set['parent_id'] ?? null,
             ]
         ];
 
@@ -92,7 +89,7 @@ switch ($method) {
             die;
         }
 
-        $result = $table->where('forum_id', $id)->delete();
+        $result = $db->where('forum_id', $id)->delete();
 
         if (!$result) {
             http_response_code(404);

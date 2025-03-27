@@ -7,17 +7,16 @@ require_once '../core/functions.php';
 require_once '../auth/filter.php';
 require_once '../core/DBBuilder.php';
 
-$builder = new DBBuilder();
-$model = $builder->table('identitas');
+$db = new DBBuilder('identitas');
 
 $method = $_SERVER['REQUEST_METHOD'];
 
-$id = isset($_GET['id']) ? mysqli_real_escape_string($conn, $_GET['id']) : null;
+$id = $_GET['id'] ?? null;
 
 switch ($method) {
     case 'GET':
         if ($id == null) {
-            $result = $model->select([
+            $result = $db->select([
                 'identitas_id as id',
                 'nama',
                 'alamat',
@@ -37,7 +36,7 @@ switch ($method) {
                 ->findAll();
             echo json_encode($result, JSON_PRETTY_PRINT);
         } else {
-            $result = $model->select([
+            $result = $db->select([
                 'identitas_id as id',
                 'nama',
                 'alamat',
@@ -72,11 +71,11 @@ switch ($method) {
         if (!$id) {
             do {
                 $unique = random_string();
-            } while ($model->where('identitas_id', $unique)->first());
+            } while ($db->where('identitas_id', $unique)->first());
             $set['identitas_id'] = $unique;
             http_response_code(201);
         } else {
-            $data = $model->where('identitas_id', $id)->first();
+            $data = $db->where('identitas_id', $id)->first();
             if (!$data) {
                 http_response_code(404);
                 echo json_encode(['message' => 'Data jalur tidak ditemukan.']);
@@ -86,7 +85,7 @@ switch ($method) {
             http_response_code(200);
         }
 
-        $result = $model->set($set)->save();
+        $result = $db->set($set)->save();
         if (!$result) {
             http_response_code(500);
             echo json_encode(['message' => 'Database error.', 'error' => mysqli_error($conn)]);

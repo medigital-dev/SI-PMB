@@ -12,7 +12,7 @@ $db->addIndex('syarat_id');
 
 $method = $_SERVER['REQUEST_METHOD'];
 
-$id = isset($_GET['id']) ? mysqli_real_escape_string($conn, $_GET['id']) : null;
+$id = $_GET['id'] ?? null;
 
 switch ($method) {
     case 'GET':
@@ -56,7 +56,7 @@ switch ($method) {
         $result = $db->save($set);
         if (!$result) {
             http_response_code(500);
-            echo json_encode(['message' => 'Database error.', 'error' => mysqli_error($conn)]);
+            echo json_encode(['message' => 'Database error.', 'error' => $db->getLastError()]);
             die;
         }
 

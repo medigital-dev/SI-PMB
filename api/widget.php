@@ -5,7 +5,6 @@ if ($_SERVER['REQUEST_METHOD'] !== 'GET')
 
 header('Content-Type: application/json; charset=utf-8');
 
-
 require_once '../auth/filter.php';
 require_once '../core/DBBuilder.php';
 

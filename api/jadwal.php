@@ -5,15 +5,14 @@ header('Content-Type: application/json; charset=utf-8');
 require_once '../core/functions.php';
 require_once '../auth/filter.php';
 require_once '../core/DBBuilder.php';
+
 $db = new DBBuilder();
 $db->addIndex('jadwal_id');
 $table = $db->table('jadwal');
 
-global $conn;
-
 $method = $_SERVER['REQUEST_METHOD'];
 
-$id = isset($_GET['id']) ? mysqli_real_escape_string($conn, $_GET['id']) : null;
+$id = $_GET['id'] ?? null;
 
 switch ($method) {
     case 'GET':
@@ -59,7 +58,7 @@ switch ($method) {
 
         if (!$table->save($set)) {
             http_response_code(500);
-            echo json_encode(['message' => 'Database error.', 'error' => mysqli_error($conn)]);
+            echo json_encode(['message' => 'Database error.', 'error' => $table->getLastError()]);
             die;
         }
 

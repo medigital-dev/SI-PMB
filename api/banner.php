@@ -1,27 +1,26 @@
 <?php
 session_start();
 header('Content-Type: application/json; charset=utf-8');
+
 require_once '../core/functions.php';
 require_once '../auth/filter.php';
 require_once '../core/DBBuilder.php';
-$db = new DBBuilder();
-$table = $db->table('banner');
 
-global $conn;
+$db = new DBBuilder('banner');
 
 $method = $_SERVER['REQUEST_METHOD'];
 
-$id = isset($_GET['id']) ? mysqli_real_escape_string($conn, $_GET['id']) : null;
+$id = $_GET['id'] ?? null;
 
 switch ($method) {
     case 'GET':
         if ($id == null) {
-            $result = $table
+            $result = $db
                 ->select('banner_id as id, title, description, created_at as tanggal, berkas_id')
                 ->findAll();
             echo json_encode($result, JSON_PRETTY_PRINT);
         } else {
-            $data = $table
+            $data = $db
                 ->select('banner_id as id, title, description, created_at as tanggal, berkas_id')
                 ->where('banner_id', $id)
                 ->first();
@@ -41,11 +40,11 @@ switch ($method) {
         if ($id == null) {
             do {
                 $unique = random_string();
-            } while ($table->where('banner_id', $unique)->first());
+            } while ($db->where('banner_id', $unique)->first());
             $set['banner_id'] = $unique;
             http_response_code(201);
         } else {
-            $data = $table->where('banner_id', $id)->first();
+            $data = $db->where('banner_id', $id)->first();
             if (!$data) {
                 http_response_code(404);
                 echo json_encode(['message' => 'Item not found']);
@@ -55,9 +54,9 @@ switch ($method) {
             http_response_code(200);
         }
 
-        if (!$table->save($set)) {
+        if (!$db->save($set)) {
             http_response_code(500);
-            echo json_encode(['message' => 'Database error.', 'error' => $table->getLastError()]);
+            echo json_encode(['message' => 'Database error.', 'error' => $db->getLastError()]);
             die;
         }
 
@@ -77,14 +76,14 @@ switch ($method) {
             echo json_encode(['message' => 'ID tidak boleh kosong.']);
             die;
         }
-        $data = $table->where('banner_id', $id)->first();
+        $data = $db->where('banner_id', $id)->first();
         if (!$data) {
             http_response_code(404);
             echo json_encode(['message' => 'Item not found']);
             die;
         }
 
-        if (!$table->delete($data['id'])) {
+        if (!$db->delete($data['id'])) {
             http_response_code(404);
             echo json_encode(['message' => 'Data banner gagal dihapus.']);
             die;

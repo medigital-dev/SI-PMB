@@ -1,30 +1,29 @@
 <?php
 session_start();
 header('Content-Type: application/json; charset=utf-8');
+
 require_once '../core/functions.php';
 require_once '../auth/filter.php';
 require_once '../core/DBBuilder.php';
-$db = new DBBuilder();
-$table = $db->table('berkas');
 
-global $conn;
+$db = new DBBuilder('berkas');
 
 $method = $_SERVER['REQUEST_METHOD'];
 
-$id = isset($_GET['id']) ? mysqli_real_escape_string($conn, $_GET['id']) : null;
-$status = isset($_GET['s']) ? mysqli_real_escape_string($conn, $_GET['s']) : null;
+$id = $_GET['id'] ?? null;
+$status = $_GET['s'] ?? null;
 
 switch ($method) {
     case 'GET':
         if ($id == null) {
-            $table->select('berkas_id as id, created_at as tanggal, filename, title, type, src, size, status');
-            if ($status) $table->where('status', $status);
-            $result = $table
+            $db->select('berkas_id as id, created_at as tanggal, filename, title, type, src, size, status');
+            if ($status) $db->where('status', $status);
+            $result = $db
                 ->orderBy('created_at', 'DESC')
                 ->findAll();
             echo json_encode($result, JSON_PRETTY_PRINT);
         } else {
-            $data = $table
+            $data = $db
                 ->select('berkas_id as id, created_at as tanggal, filename, title, type, src, size, status')
                 ->where('berkas_id', $id)
                 ->first();
@@ -73,11 +72,11 @@ switch ($method) {
         if ($id == null) {
             do {
                 $unique = random_string();
-            } while ($table->where('berkas_id', $unique)->first());
+            } while ($db->where('berkas_id', $unique)->first());
             $set['berkas_id'] = $unique;
             http_response_code(201);
         } else {
-            $data = $table->where('berkas_id', $id)->first();
+            $data = $db->where('berkas_id', $id)->first();
             if (!$data) {
                 http_response_code(404);
                 echo json_encode(['message' => 'Berkas tidak ditemukan']);
@@ -87,9 +86,9 @@ switch ($method) {
             http_response_code(200);
         }
 
-        if (!$table->save($set)) {
+        if (!$db->save($set)) {
             http_response_code(500);
-            echo json_encode(['message' => 'Database error.', 'error' => $table->getLastError()]);
+            echo json_encode(['message' => 'Database error.', 'error' => $db->getLastError()]);
             die;
         }
 
@@ -111,16 +110,16 @@ switch ($method) {
             echo json_encode(['message' => 'ID tidak boleh kosong']);
             die;
         }
-        $data = $table->where('berkas_id', $id)->first();
+        $data = $db->where('berkas_id', $id)->first();
         if (!$data) {
             http_response_code(404);
             echo json_encode(['message' => 'Berkas tidak ditemukan']);
             die;
         }
 
-        if (!$table->delete($data['id'])) {
+        if (!$db->delete($data['id'])) {
             http_response_code(500);
-            echo json_encode(['message' => 'Database error.', 'error' => mysqli_error($conn)]);
+            echo json_encode(['message' => 'Database error.', 'error' => $db->getLastError()]);
             die;
         }
 

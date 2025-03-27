@@ -1,28 +1,27 @@
 <?php
 session_start();
 header('Content-Type: application/json; charset=utf-8');
+
 require_once '../core/functions.php';
 require_once '../auth/filter.php';
 require_once '../core/DBBuilder.php';
-$db = new DBBuilder();
-$table = $db->table('event');
 
-global $conn;
+$db = new DBBuilder('event');
 
 $method = $_SERVER['REQUEST_METHOD'];
 
-$id = isset($_GET['id']) ? mysqli_real_escape_string($conn, $_GET['id']) : null;
+$id = $_GET['id'] ?? null;
 
 switch ($method) {
     case 'GET':
         if ($id == null) {
-            $result = $table
+            $result = $db
                 ->select('event_id as id, tanggal, status, name, created_at')
                 ->orderBy('created_at')
                 ->findAll();
             echo json_encode($result, JSON_PRETTY_PRINT);
         } else {
-            $data = $table
+            $data = $db
                 ->select('event_id as id, tanggal, status, name, created_at')
                 ->where('event_id', $id)
                 ->first();
@@ -43,7 +42,7 @@ switch ($method) {
             die;
         }
 
-        $data = $table->where('event_id', $id)
+        $data = $db->where('event_id', $id)
             ->first();
         if (!$data) {
             http_response_code(404);
@@ -51,7 +50,7 @@ switch ($method) {
             die;
         }
 
-        if (!$table->delete($data['id'])) {
+        if (!$db->delete($data['id'])) {
             http_response_code(400);
             echo json_encode(['message' => 'Data gagal dihapus.']);
             die;
@@ -75,11 +74,11 @@ switch ($method) {
         if ($id == null) {
             do {
                 $unique = random_string();
-            } while ($table->where('event_id', $id)->first());
+            } while ($db->where('event_id', $id)->first());
             $set['event_id'] = $unique;
             http_response_code(201);
         } else {
-            $data = $table->where('event_id', $id)->first();
+            $data = $db->where('event_id', $id)->first();
             if (!$data) {
                 http_response_code(404);
                 echo json_encode(['message' => 'Data tidak ditemukan.']);
@@ -90,9 +89,9 @@ switch ($method) {
             http_response_code(200);
         }
 
-        if (!$table->save($set)) {
+        if (!$db->save($set)) {
             http_response_code(500);
-            echo json_encode(['message' => 'Database error.', 'error' => $table->getLastError()]);
+            echo json_encode(['message' => 'Database error.', 'error' => $db->getLastError()]);
             die;
         }
 

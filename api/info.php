@@ -6,23 +6,20 @@ require_once '../core/functions.php';
 require_once '../auth/filter.php';
 require_once '../core/DBBuilder.php';
 
-$builder = new DBBuilder();
-$model = $builder->table('informasi');
-
-global $conn;
+$db = new DBBuilder('informasi');
 
 $method = $_SERVER['REQUEST_METHOD'];
 
-$id = isset($_GET['id']) ? mysqli_real_escape_string($conn, $_GET['id']) : null;
+$id = $_GET['id'] ?? null;
 
 switch ($method) {
     case 'GET':
         if ($id == null) {
-            $result = $model->select('info_id as id, created_at as tanggal, judul, isi, updated_at')
+            $result = $db->select('info_id as id, created_at as tanggal, judul, isi, updated_at')
                 ->findAll();
             echo json_encode($result, JSON_PRETTY_PRINT);
         } else {
-            $data = $model->select('info_id as id, created_at as tanggal, judul, isi, updated_at')
+            $data = $db->select('info_id as id, created_at as tanggal, judul, isi, updated_at')
                 ->where('info_id', $id)
                 ->first();
             if ($data) {
@@ -41,11 +38,11 @@ switch ($method) {
         if ($id == null) {
             do {
                 $unique = random_string();
-            } while ($model->where('info_id', $unique)->first());
+            } while ($db->where('info_id', $unique)->first());
             $set['info_id'] = $unique;
             http_response_code(201);
         } else {
-            $data = $model->where('info_id', $id)->first();
+            $data = $db->where('info_id', $id)->first();
             if (!$data) {
                 http_response_code(404);
                 echo json_encode(['message' => 'Data tidak ditemukan.']);
@@ -56,10 +53,10 @@ switch ($method) {
             http_response_code(200);
         }
 
-        $result = $model->save($set);
+        $result = $db->save($set);
         if (!$result) {
             http_response_code(500);
-            echo json_encode(['message' => 'Database error.', 'error' => mysqli_error($conn)]);
+            echo json_encode(['message' => 'Database error.', 'error' => $db->save()]);
             die;
         }
 
@@ -82,14 +79,14 @@ switch ($method) {
             die;
         }
 
-        $data = $model->where('info_id', $id)->first();
+        $data = $db->where('info_id', $id)->first();
         if (!$data) {
             http_response_code(404);
             echo json_encode(['message' => 'Data tidak ditemukan.']);
             die;
         }
 
-        $result = $model->delete($data['id']);
+        $result = $db->delete($data['id']);
 
         if (!$result) {
             http_response_code(404);
