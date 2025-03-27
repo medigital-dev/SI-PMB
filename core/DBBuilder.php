@@ -89,17 +89,25 @@ class DBBuilder
         }
 
         $field = $this->escapeColumn($field);
-        $prefix = (empty($this->where) || end($this->where) === '(') ? '' : " $type ";
+
+        $condition = '';
 
         if (is_null($value)) {
-            $this->where[] = "$prefix$field IS NULL";
+            $condition = "$field IS NULL";
         } elseif (is_bool($value)) {
-            $this->where[] = "$field = " . (int)$value;
+            $condition = "$field = " . (int)$value;
         } elseif (is_numeric($value)) {
-            $this->where[] = "$prefix$field = $value";
-        } elseif (!empty($value)) {
+            $condition = "$field = $value";
+        } else {
             $escapedValue = mysqli_real_escape_string($this->conn, trim($value));
-            $this->where[] = "$prefix$field = '$escapedValue'";
+            $condition = "$field = '$escapedValue'";
+        }
+
+        // Tambahkan kondisi ke dalam array
+        if (!empty($this->where)) {
+            $this->where[] = "$type $condition";
+        } else {
+            $this->where[] = $condition;
         }
 
         return $this;
@@ -168,7 +176,7 @@ class DBBuilder
             $sql .= " " . implode(' ', $this->joins);
         }
         if (!empty($this->where)) {
-            $sql .= " WHERE " . implode(' AND ', $this->where);
+            $sql .= " WHERE " . implode(' ', $this->where);
         }
         if (!empty($this->orderBy)) {
             $sql .= " ORDER BY " . implode(', ', $this->orderBy);
