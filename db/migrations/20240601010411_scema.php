@@ -94,7 +94,7 @@ final class scema extends AbstractMigration
             ->addColumn('dibaca', 'boolean', ['default' => false, 'null' => false])
             ->addColumn('created_at', 'timestamp', ['default' => 'CURRENT_TIMESTAMP', 'null' => false])
             ->addColumn('updated_at', 'timestamp', ['default' => 'CURRENT_TIMESTAMP', 'null' => false])
-            ->addIndex('parent_id', ['unique' => true])
+            ->addIndex('forum_id', ['unique' => true])
             ->create();
 
         $table = $this->table('logo');
