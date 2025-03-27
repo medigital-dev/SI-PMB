@@ -157,34 +157,21 @@ if (!function_exists('db_delete')) {
 }
 
 if (!function_exists('timeAgo')) {
-    function timeAgo($datetime, $full = false): string
+    function timeAgo($datetime): string
     {
         $now = new DateTime;
         $ago = new DateTime($datetime);
         $diff = date_diff($now, $ago);
 
-        $diff->w = floor($diff->d / 7);
-        $diff->d -= $diff->w * 7;
-
-        $string = [
-            'y' => 'tahun',
-            'm' => 'bulan',
-            'w' => 'minggu',
-            'd' => 'hari',
-            'h' => 'jam',
-            'i' => 'menit',
-            's' => 'detik',
-        ];
-        foreach ($string as $k => &$v) {
-            if ($diff->$k) {
-                $v = $diff->$k . ' ' . $v;
-            } else {
-                unset($string[$k]);
-            }
+        if ($diff->s < 60 && $diff->i === 0 && $diff->h === 0 && $diff->d === 0) {
+            return 'baru saja';
+        } elseif ($diff->i < 60 && $diff->h === 0 && $diff->d === 0) {
+            return $diff->i . ' menit yang lalu';
+        } elseif ($diff->h < 24 && $diff->d === 0) {
+            return $diff->h . ' jam yang lalu';
+        } else {
+            return $diff->d . ' hari yang lalu';
         }
-
-        if (!$full) $string = array_slice($string, 0, 1);
-        return $string ? implode(', ', $string) . ' yang lalu' : 'baru saja';
     }
 }
 
