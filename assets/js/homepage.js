@@ -113,7 +113,7 @@ $(document).ready(function () {
             '<div class="d-flex justify-content-between">' +
             '<span class="text-muted small"><i class="bi bi-calendar-date-fill me-1"></i>' +
             tanggal(rows.tanggal, "d F Y H:i WIB") +
-            ' - <i class="bi bi-person-circle me-1"></i>' +
+            " - " +
             rows.nama +
             "</span>" +
             "<div>" +
@@ -136,6 +136,7 @@ $(document).ready(function () {
         url: "/panel/detail-forum.php?id=" + id,
         dataType: "html",
       });
+      $("#idIndukPublic").val(id);
       $("#jawaban").html(html);
       $("#modalDetailForumPublic").modal("show");
 
@@ -144,14 +145,15 @@ $(document).ready(function () {
         $("#idForumPublic").val(id);
         const data = await fetchData("/api/forum.php?id=" + id);
         if (!data) return;
-        const code = "<p><b>@" + data.nama + "</b>:&nbsp;</p>";
-        $("#pertanyaanAndaBalasan").summernote("code", code);
+        const code = "@" + data.nama + ": ";
+        $("#pertanyaanAndaBalasan").val(code).focus();
         $("#collapse-balas").collapse("show");
       });
     });
   });
 
   $("#btnKirimBalasan").on("click", async function () {
+    const induk = $("#idIndukPublic");
     const parent = $("#idForumPublic");
     const nama = $("#namaAndaBalasan");
     const isi = $("#pertanyaanAndaBalasan");
@@ -166,14 +168,14 @@ $(document).ready(function () {
       url: "/api/forum.php",
       data: {
         parent_id: parent.val(),
-        isi: isi.summernote("code"),
-        nama: '<i class="bi bi-person-fill"></i> ' + nama.val(),
+        isi: isi.val(),
+        nama: nama.val(),
       },
       method: "POST",
     });
     if (!set) return;
     toast("Balasan anda berhasil di tambahkan.", "success");
-    isi.summernote("code", "");
+    isi.val("");
     $("#collapse-balas").collapse("hide");
     tabelForumPublic.ajax.reload(null, false);
     $("#jawaban").html(
@@ -183,7 +185,7 @@ $(document).ready(function () {
         "</div>"
     );
     const html = await fetchData({
-      url: "/panel/detail-forum.php?id=" + parent.val(),
+      url: "/panel/detail-forum.php?id=" + induk.val(),
       dataType: "html",
     });
     $("#jawaban").html(html);
@@ -193,59 +195,58 @@ $(document).ready(function () {
       $("#idForumPublic").val(id);
       const data = await fetchData("/api/forum.php?id=" + id);
       if (!data) return;
-      const code = "<p><b>@" + data.nama + "</b>&nbsp;<br></p>";
-      $("#pertanyaanAndaBalasan").summernote("code", code);
+      const code = "@" + data.nama + ": ";
+      $("#pertanyaanAndaBalasan").val(code).focus();
       $("#collapse-balas").collapse("show");
     });
   });
 
-  $("#pertanyaanAnda").summernote({
-    height: 200,
-    placeholder: "Pertanyaan anda",
-    dialogsInBody: true,
-    toolbar: [
-      ["style", ["bold", "italic", "underline"]],
-      ["insert", ["link", "file"]],
-      ["view", ["fullscreen", "help"]],
-    ],
-    callbacks: {
-      onFileUpload: (file) => {
-        for (let i = 0; i < file.length; i++) {
-          uploadMedia(file[i], "#pertanyaanAnda");
-        }
-      },
-      onMediaDelete: (file) => deleteMedia(file[0]),
-    },
-  });
+  // $("#pertanyaanAnda").summernote({
+  //   height: 200,
+  //   placeholder: "Pertanyaan anda",
+  //   dialogsInBody: true,
+  //   toolbar: [
+  //     ["style", ["bold", "italic", "underline"]],
+  //     ["insert", ["link", "file"]],
+  //     ["view", ["fullscreen", "help"]],
+  //   ],
+  //   callbacks: {
+  //     onFileUpload: (file) => {
+  //       for (let i = 0; i < file.length; i++) {
+  //         uploadMedia(file[i], "#pertanyaanAnda");
+  //       }
+  //     },
+  //     onMediaDelete: (file) => deleteMedia(file[0]),
+  //   },
+  // });
 
-  $("#pertanyaanAndaBalasan").summernote({
-    height: 100,
-    placeholder: "Pertanyaan anda",
-    dialogsInBody: true,
-    toolbar: [
-      ["style", ["bold", "italic", "underline"]],
-      ["insert", ["link", "file"]],
-      ["view", ["fullscreen", "help"]],
-    ],
-    callbacks: {
-      onFileUpload: (file) => {
-        for (let i = 0; i < file.length; i++) {
-          uploadMedia(file[i], "#pertanyaanAndaBalasan");
-        }
-      },
-      onMediaDelete: (file) => deleteMedia(file[0]),
-    },
-  });
+  // $("#pertanyaanAndaBalasan").summernote({
+  //   height: 100,
+  //   placeholder: "Pertanyaan anda",
+  //   dialogsInBody: true,
+  //   toolbar: [
+  //     ["style", ["bold", "italic", "underline"]],
+  //     ["insert", ["link", "file"]],
+  //     ["view", ["fullscreen", "help"]],
+  //   ],
+  //   callbacks: {
+  //     onFileUpload: (file) => {
+  //       for (let i = 0; i < file.length; i++) {
+  //         uploadMedia(file[i], "#pertanyaanAndaBalasan");
+  //       }
+  //     },
+  //     onMediaDelete: (file) => deleteMedia(file[0]),
+  //   },
+  // });
 
   $("#btnKirimPertanyaan").on("click", async function () {
     const nama = $("#namaAnda");
     const isiElm = $("#pertanyaanAnda");
-    const isiVal = isiElm.summernote("code");
 
-    if (!nama.val().trim() || isiVal == "<p><br></p>") {
+    if (!nama.val().trim() || !isiElm.val().trim()) {
       if (!nama.val().trim()) nama.addClass("is-invalid");
       else nama.removeClass("is-invalid");
-      if (isiVal == "<p><br></p>") isiElm.addClass("is-invalid");
+      if (!isiElm.val().trim()) isiElm.addClass("is-invalid");
       else isiElm.removeClass("is-invalid");
 
       toast("Nama dan pertanyaan wajib diisi.", "error");
@@ -256,8 +257,8 @@ $(document).ready(function () {
     const set = await fetchData({
       url: "/api/forum.php",
       data: {
-        nama: '<i class="bi bi-person-fill"></i> ' + nama.val(),
-        isi: isiVal,
+        nama: nama.val(),
+        isi: isiElm.val(),
       },
       method: "POST",
     });
@@ -271,7 +272,7 @@ $(document).ready(function () {
       "success"
     );
     nama.val("");
-    isiElm.summernote("code", "");
+    isiElm.val("");
     toggleButton($(this), "Kirim");
     tabelForumPublic.ajax.reload(null, false);
   });

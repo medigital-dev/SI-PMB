@@ -296,7 +296,8 @@ view('./view/templates/toogle-theme.php')
           <label for="namaAnda">Nama Anda</label>
         </div>
         <div class="form-floating mb-2">
-          <textarea class="form-control pertanyaanAnda" placeholder="Pertanyaan anda" id="pertanyaanAnda"></textarea>
+          <textarea class="form-control pertanyaanAnda" placeholder="Pertanyaan anda" id="pertanyaanAnda" style="height: 100px;"></textarea>
+          <label for="pertanyaanAnda">Pertanyaan anda.</label>
           <div class="invalid-feedback">Wajib.</div>
         </div>
         <button type="button" class="btn btn-sm btn-primary" id="btnKirimPertanyaan">Kirim</button>
@@ -396,12 +397,14 @@ view('./view/templates/toogle-theme.php')
           <div class="collapse" id="collapse-balas">
             <div class="card card-body border-primary shadow">
               <input type="hidden" id="idForumPublic">
+              <input type="hidden" id="idIndukPublic">
               <div class="form-floating mb-2">
                 <input type="text" class="form-control" id="namaAndaBalasan" placeholder="Nama Anda">
                 <label for="namaAndaBalasan">Nama Anda</label>
               </div>
               <div class="form-floating mb-2">
                 <textarea class="form-control pertanyaanAnda" placeholder="Pertanyaan anda" id="pertanyaanAndaBalasan"></textarea>
+                <label for="pertanyaanAndaBalasan">Balasan Anda</label>
                 <div class="invalid-feedback">Wajib.</div>
               </div>
               <div>
