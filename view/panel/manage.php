@@ -718,7 +718,7 @@
             <div class="modal-body">
                 <div class="card card-body mb-3">
                     <input type="hidden" id="parentForum">
-                    <input type="hidden" id="namaAdmin" value="<i class='bi bi-person-fill-gear'></i> <?= $admin['name']; ?>">
+                    <input type="hidden" id="namaAdmin" value="<?= $admin['name']; ?>">
                     <h6 class="card-title m-0" id="namaForum"></h6>
                     <span class="small text-muted mb-2" id="tanggalForum"></span>
                     <p class="card-text" id="isiForum"></p>
@@ -753,7 +753,7 @@
                     <div class="collapse" id="collapse-balas">
                         <div class="card card-body border-primary shadow">
                             <input type="hidden" id="idForumPublic">
-                            <input type="hidden" class="form-control" id="namaAndaBalasan" placeholder="Nama Anda" value="<i class='bi bi-person-fill-gear'></i>  <?= $admin['name']; ?>">
+                            <input type="hidden" class="form-control" id="namaAndaBalasan" placeholder="Nama Anda" value="<?= $admin['name']; ?>">
                             <div class="form-floating mb-2">
                                 <textarea class="form-control pertanyaanAnda" placeholder="Pertanyaan anda" id="pertanyaanAndaBalasan"></textarea>
                                 <div class="invalid-feedback">Wajib.</div>
