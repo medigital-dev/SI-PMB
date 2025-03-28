@@ -223,6 +223,7 @@ class DBBuilder
             return false;
         }
 
+        $this->data['created_at'] = date('Y-m-d H:i:s');
         $columns = implode(', ', array_map([$this, 'escapeColumn'], array_keys($this->data)));
         $values = implode(', ', array_map([$this, 'prepareValue'], array_values($this->data)));
 
@@ -254,6 +255,7 @@ class DBBuilder
             return false;
         }
 
+        $this->data['updated_at'] = date('Y-m-d H:i:s');
         $set = implode(', ', array_map(function ($key, $val) {
             return $this->escapeColumn($key) . " = " . $this->prepareValue($val);
         }, array_keys($this->data), array_values($this->data)));
