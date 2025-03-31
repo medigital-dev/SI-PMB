@@ -20,13 +20,14 @@ SI-PMB adalah sebuah Sistem Informasi Penerimaan Murid Baru. Konten yang ada did
 - MySQL / Maria DB
 - Composer
 
-# Instalasi
+# Instalasi/Update
 
 - Download pada halaman release
 - Ekstract ke root folder
-- Setting database pada file `Core/config.php`
+- Copy `core/config-default.php` ke `core/config.php`
+- Sesuaikan parameter yang ada termasuk kofigurasi database
 - Jalankan `composer install` pada root direktori
-- Jalankan migrasi database `vendor/bin/phinx migrate -e development`
+- Jalankan migrasi database `vendor/bin/phinx migrate -e production`
 - Done
 
 # Base System
