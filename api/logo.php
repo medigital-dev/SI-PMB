@@ -38,7 +38,7 @@ switch ($method) {
 
         if ($file) {
             $ext = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
-            $filename = 'logo-' . $type . '.' . $ext;
+            $filename = 'logo-' . random_string() . '.' . $ext;
             $dir = '../assets/brand/';
             if (!file_exists($dir)) {
                 mkdir($dir, 0777, true);
