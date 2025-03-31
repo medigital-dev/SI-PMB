@@ -19,6 +19,9 @@ class DBBuilder
     protected $lastError;
     protected $groupStarted = false;
     protected $indexKey = [];
+    protected $useTimestamp = true;
+    protected $createdField = 'created_at';
+    protected $updatedField = 'updated_at';
 
     public function __construct($tableName = null)
     {
@@ -29,7 +32,17 @@ class DBBuilder
         $this->table = $tableName;
     }
 
-    public function setDebug($debug = false)
+    /**
+     * @param boolean $status
+     * 
+     * Default true
+     */
+    public function setTimestamp(bool $status)
+    {
+        $this->useTimestamp = $status;
+    }
+
+    public function setDebug($debug)
     {
         $this->debug = $debug;
     }
@@ -223,7 +236,11 @@ class DBBuilder
             return false;
         }
 
-        $this->data['created_at'] = date('Y-m-d H:i:s');
+        if ($this->useTimestamp) {
+            $this->data[$this->createdField] = date('Y-m-d H:i:s');
+            $this->data[$this->updatedField] = date('Y-m-d H:i:s');
+        }
+
         $columns = implode(', ', array_map([$this, 'escapeColumn'], array_keys($this->data)));
         $values = implode(', ', array_map([$this, 'prepareValue'], array_values($this->data)));
 
@@ -255,7 +272,9 @@ class DBBuilder
             return false;
         }
 
-        $this->data['updated_at'] = date('Y-m-d H:i:s');
+        if ($this->useTimestamp)
+            $this->data[$this->updatedField] = date('Y-m-d H:i:s');
+
         $set = implode(', ', array_map(function ($key, $val) {
             return $this->escapeColumn($key) . " = " . $this->prepareValue($val);
         }, array_keys($this->data), array_values($this->data)));
@@ -481,7 +500,7 @@ class DBBuilder
 
     public function addIndex($key)
     {
-        $this->indexKey[] = $this->escapeColumn($key);
+        $this->indexKey[] = $key;
     }
 
     public function find($value)
@@ -492,22 +511,16 @@ class DBBuilder
         }
 
         $escapedValue = mysqli_real_escape_string($this->conn, trim($value));
+        $result = $this->where($this->primaryKey, $escapedValue)->first();
 
-        // Cek apakah data ditemukan berdasarkan primary key
-        $sql = "SELECT * FROM $this->table WHERE $this->primaryKey = '$escapedValue' LIMIT 1";
-        $result = mysqli_query($this->conn, $sql);
-
-        if ($result && $row = mysqli_fetch_assoc($result)) {
-            return $row; // Langsung return jika ditemukan
+        if ($result) {
+            return $result;
         }
 
-        // Jika tidak ditemukan, coba cari berdasarkan index key
         foreach ($this->indexKey as $index) {
-            $sql = "SELECT * FROM $this->table WHERE $index = '$escapedValue' LIMIT 1";
-            $result = mysqli_query($this->conn, $sql);
-
-            if ($result && $row = mysqli_fetch_assoc($result)) {
-                return $row; // Return jika ditemukan berdasarkan index key
+            $result = $this->where($index, $escapedValue)->first();
+            if ($result) {
+                return $result;
             }
         }
 
