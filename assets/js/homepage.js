@@ -201,44 +201,6 @@ $(document).ready(function () {
     });
   });
 
-  // $("#pertanyaanAnda").summernote({
-  //   height: 200,
-  //   placeholder: "Pertanyaan anda",
-  //   dialogsInBody: true,
-  //   toolbar: [
-  //     ["style", ["bold", "italic", "underline"]],
-  //     ["insert", ["link", "file"]],
-  //     ["view", ["fullscreen", "help"]],
-  //   ],
-  //   callbacks: {
-  //     onFileUpload: (file) => {
-  //       for (let i = 0; i < file.length; i++) {
-  //         uploadMedia(file[i], "#pertanyaanAnda");
-  //       }
-  //     },
-  //     onMediaDelete: (file) => deleteMedia(file[0]),
-  //   },
-  // });
-
-  // $("#pertanyaanAndaBalasan").summernote({
-  //   height: 100,
-  //   placeholder: "Pertanyaan anda",
-  //   dialogsInBody: true,
-  //   toolbar: [
-  //     ["style", ["bold", "italic", "underline"]],
-  //     ["insert", ["link", "file"]],
-  //     ["view", ["fullscreen", "help"]],
-  //   ],
-  //   callbacks: {
-  //     onFileUpload: (file) => {
-  //       for (let i = 0; i < file.length; i++) {
-  //         uploadMedia(file[i], "#pertanyaanAndaBalasan");
-  //       }
-  //     },
-  //     onMediaDelete: (file) => deleteMedia(file[0]),
-  //   },
-  // });
-
   $("#btnKirimPertanyaan").on("click", async function () {
     const nama = $("#namaAnda");
     const isiElm = $("#pertanyaanAnda");
