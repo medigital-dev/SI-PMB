@@ -6,9 +6,8 @@ require_once '../core/functions.php';
 require_once '../auth/filter.php';
 require_once '../core/DBBuilder.php';
 
-$db = new DBBuilder();
+$db = new DBBuilder('jadwal');
 $db->addIndex('jadwal_id');
-$table = $db->table('jadwal');
 
 $method = $_SERVER['REQUEST_METHOD'];
 
@@ -17,12 +16,12 @@ $id = $_GET['id'] ?? null;
 switch ($method) {
     case 'GET':
         if ($id == null) {
-            $result = $table
+            $result = $db
                 ->select(["jadwal_id as id", 'title', 'content', 'created_at as tanggal', 'aktif', 'updated_at'])
                 ->findAll();
             echo json_encode($result, JSON_PRETTY_PRINT);
         } else {
-            $data = $table
+            $data = $db
                 ->select(["jadwal_id as id", 'title', 'content', 'created_at as tanggal', 'aktif', 'updated_at'])
                 ->find($id);
 
@@ -42,11 +41,11 @@ switch ($method) {
         if ($id == null) {
             do {
                 $unique = random_string();
-            } while ($table->find($unique));
+            } while ($db->find($unique));
             $set['jadwal_id'] = $unique;
             http_response_code(201);
         } else {
-            $data = $table->find($id);
+            $data = $db->find($id);
             if (!$data) {
                 http_response_code(404);
                 echo json_encode(['message' => 'Data tidak ditemukan.']);
@@ -56,9 +55,9 @@ switch ($method) {
             http_response_code(200);
         }
 
-        if (!$table->save($set)) {
+        if (!$db->save($set)) {
             http_response_code(500);
-            echo json_encode(['message' => 'Database error.', 'error' => $table->getLastError()]);
+            echo json_encode(['message' => 'Database error.', 'error' => $db->getLastError()]);
             die;
         }
 
@@ -66,7 +65,7 @@ switch ($method) {
             'status' => true,
             'message' => 'Jadwal berhasil disimpan.',
             'data' => [
-                'id' => $unique,
+                'id' => $unique ?? $id,
             ]
         ];
 
@@ -81,7 +80,7 @@ switch ($method) {
             die;
         }
 
-        $result = $table->delete($id);
+        $result = $db->delete($id);
 
         if (!$result) {
             http_response_code(404);
