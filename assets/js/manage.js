@@ -840,7 +840,7 @@ $(document).ready(function () {
       const res = await fetchData({
         url: "/api/tautan.php?id=" + id,
         data: {
-          aktif: aktif,
+          aktif: aktif ? 1 : 0,
         },
         method: "POST",
       });
@@ -855,7 +855,7 @@ $(document).ready(function () {
       const res = await fetchData({
         url: "/api/tautan.php?id=" + id,
         data: {
-          on_menu: aktif,
+          on_menu: aktif ? 1 : 0,
         },
         method: "POST",
       });
@@ -1477,8 +1477,6 @@ $(document).ready(function () {
       const resp = await fetchData({
         url: "/api/jadwal.php?id=" + id,
         data: {
-          title: data.title,
-          content: data.content,
           aktif: $(this).is(":checked") ? 1 : 0,
         },
         method: "POST",
