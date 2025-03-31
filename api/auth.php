@@ -6,6 +6,7 @@ require_once '../core/functions.php';
 require_once '../core/DBBuilder.php';
 
 $db = new DBBuilder('admin');
+$db->setTimestamp(false);
 
 $method = $_SERVER['REQUEST_METHOD'];
 
