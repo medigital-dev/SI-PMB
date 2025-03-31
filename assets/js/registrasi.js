@@ -49,7 +49,6 @@ $(document).ready(function () {
       return;
     }
     toast({
-      title: "Registrasi Sukses.",
       icon: "success",
       message:
         "Username: <strong>" +
