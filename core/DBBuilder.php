@@ -116,7 +116,6 @@ class DBBuilder
             $condition = "$field = '$escapedValue'";
         }
 
-        // Tambahkan kondisi ke dalam array
         if (!empty($this->where)) {
             $this->where[] = "$type $condition";
         } else {
