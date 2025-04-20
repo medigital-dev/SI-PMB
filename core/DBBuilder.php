@@ -214,14 +214,14 @@ class DBBuilder
         }
 
         $data = mysqli_fetch_all($result, MYSQLI_ASSOC);
-        if ($reset) $this->resetQuery(); // Reset setelah query dieksekusi
+        if ($reset) $this->resetQuery();
         return $data;
     }
 
     public function first($reset = true)
     {
         $this->limit(1);
-        $data = $this->findAll(false); // Jangan reset dua kali
+        $data = $this->findAll(false);
         if ($reset) $this->resetQuery();
         return $data[0] ?? null;
     }
@@ -295,7 +295,7 @@ class DBBuilder
     {
         if (strpos($column, '.') !== false) {
             list($table, $col) = explode('.', $column, 2);
-            return "`$table`.`$col`";  // ✅ Format yang benar: `table`.`column`
+            return "`$table`.`$col`";
         }
         return "`$column`";
     }
@@ -342,15 +342,12 @@ class DBBuilder
 
         $escapedValue = mysqli_real_escape_string($this->conn, trim($id));
 
-        // Coba cari data berdasarkan primary key dulu
         $checkQuery = "SELECT * FROM $this->table WHERE $this->primaryKey = '$escapedValue' LIMIT 1";
         $checkResult = mysqli_query($this->conn, $checkQuery);
 
         if ($checkResult && mysqli_num_rows($checkResult) > 0) {
-            // Data ditemukan berdasarkan primary key, hapus berdasarkan primary key
             $sql = "DELETE FROM $this->table WHERE $this->primaryKey = '$escapedValue'";
         } else {
-            // Jika ID tidak ditemukan, coba cari berdasarkan index key
             $conditions = [];
             foreach ($this->indexKey as $index) {
                 $conditions[] = "$index = '$escapedValue'";
@@ -369,7 +366,7 @@ class DBBuilder
         }
 
         $result = mysqli_query($this->conn, $sql);
-        $this->resetQuery(); // Reset query setelah eksekusi
+        $this->resetQuery();
 
         if (!$result) {
             $this->lastError = mysqli_error($this->conn);
@@ -410,7 +407,7 @@ class DBBuilder
         $result = mysqli_query($this->conn, $sql);
         if ($result) {
             $row = mysqli_fetch_assoc($result);
-            $this->resetQuery(); // Reset setelah eksekusi countAll
+            $this->resetQuery();
             return (int) $row['total'];
         }
 
