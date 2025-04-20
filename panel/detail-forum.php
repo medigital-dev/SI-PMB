@@ -5,11 +5,8 @@
 
   .comment-item {
     border-left: 3px solid #ccc;
-    /* Tambahkan border kiri */
     padding-left: 15px;
-    /* Beri ruang antara border dan konten */
     margin-bottom: 10px;
-    /* Beri jarak antar komentar */
   }
 </style>
 
@@ -58,7 +55,7 @@ if (!function_exists('renderChildrenComments')) {
         $html .= '<h6 class="mb-1 me-1">' . htmlspecialchars($comment['nama']) . '</h6>';
         $html .= '<small class="text-muted"> - ' . htmlspecialchars(timeAgo($comment['created_at'])) . '</small>';
         $html .= '</div>';
-        $html .= '<p class="mb-0">' . htmlspecialchars($comment['isi']) . '</p>';
+        $html .= '<div class="mb-0">' . $comment['isi'] . '</div>';
         $html .= '<a type="button" class="mb-2 small text-decoration-none btnBalasDiskusi" data-id="' . $comment['id'] . '">Balas</a> | <a type="button" class="text-decoration-none small mb-2" data-bs-toggle="collapse" data-bs-target="#replies-' . $comment['id'] . '">' . $countChild . ' Balasan</a>';
 
         if ($replies !== '<ul class="list-unstyled"></ul>') {
