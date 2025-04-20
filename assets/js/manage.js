@@ -1755,6 +1755,7 @@ $(document).ready(function () {
   });
 
   $("#btnSimpanIdentitas").on("click", async function () {
+    const id = $("#idIdentitas");
     const form = $("#formIdentitas");
     const data = form.serializeArray();
     let set = {};
@@ -1763,7 +1764,7 @@ $(document).ready(function () {
     });
 
     const resp = await fetchData({
-      url: "/api/identitas.php",
+      url: "/api/identitas.php" + (id.length > 0 ? "?id=" + id.val() : ""),
       data: set,
       method: "POST",
     });
