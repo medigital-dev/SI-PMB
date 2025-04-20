@@ -252,6 +252,7 @@
                                 </div>
                                 <div class="tab-content w-100" id="v-pills-tabContent">
                                     <div class="tab-pane fade show active" id="v-pills-identitas" role="tabpanel" aria-labelledby="v-pills-identitas-tab" tabindex="0">
+                                        <input type="hidden" id="idIdentitas" value="<?= $data['identitas'] ? $data['identitas']['identitas_id'] : '' ?>">
                                         <form id="formIdentitas">
                                             <div class="row mb-3">
                                                 <label for="namaIndentitas" class="col-sm-2 col-form-label">Nama Sekolah</label>
