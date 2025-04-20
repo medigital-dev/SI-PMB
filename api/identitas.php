@@ -96,7 +96,7 @@ switch ($method) {
             'status' => true,
             'message' => 'Data identitas sekolah berhasil disimpan.',
             'data' => [
-                'identitas_id' => $unique,
+                'identitas_id' => $unique ?? $id,
             ]
         ];
 
