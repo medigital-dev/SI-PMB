@@ -372,10 +372,10 @@ view('./view/templates/toogle-theme.php')
 
   <footer class="pt-5 my-5 px-5 text-body-secondary border-top d-flex flex-column flex-lg-row justify-content-between align-items-center text-center text-lg-start">
     <span class="m-0">
-      &copy; 2024 Dibuat dan dikembangkan oleh
+      &copy; 2025 Dibuat dan dikembangkan oleh
       <a href="https://muhsaidlg.my.id" target="_blank" class="text-decoration-none">Muhammad Said Latif Ghofari</a>
     </span>
-    <a href="https://github.com/medigital-dev/PPDB_SMP-2-Wonosari" target="_blank" class="text-muted text-center text-lg-end text-decoration-none small"><i class="bi bi-github me-1"></i>v2.1.03_beta1</a>
+    <a href="https://github.com/medigital-dev/PPDB_SMP-2-Wonosari" target="_blank" class="text-muted text-center text-lg-end text-decoration-none small"><i class="bi bi-github me-1"></i>v2.1.04</a>
   </footer>
 </div>
 
