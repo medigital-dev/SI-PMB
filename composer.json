@@ -1,5 +1,6 @@
 {
-  "require-dev": {
-    "robmorgan/phinx": "^0.16.0"
+  "require": {
+    "codeigniter4/framework": "^4.6",
+    "myth/auth": "^1.2"
   }
 }
