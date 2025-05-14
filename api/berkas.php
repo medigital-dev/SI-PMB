@@ -2,6 +2,7 @@
 session_start();
 header('Content-Type: application/json; charset=utf-8');
 
+require_once '../config.php';
 require_once '../core/functions.php';
 require_once '../auth/filter.php';
 require_once '../core/DBBuilder.php';
@@ -64,7 +65,7 @@ switch ($method) {
                 die;
             }
             $set['filename'] = $filename;
-            $set['src'] = $loc;
+            $set['src'] = base_url($loc);
             $set['type'] = $mime_type;
             $set['size'] = $size;
         }

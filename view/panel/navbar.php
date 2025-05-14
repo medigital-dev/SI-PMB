@@ -3,19 +3,19 @@
         <span style="height: 40px;" class="me-2">
             <img src="" alt="" id="logo" class="img-fluid h-100">
         </span>
-        <a class="navbar-brand" href="/panel/manage.php">CMS-Info PPDB</a>
+        <a class="navbar-brand" href="<?= base_url('panel/manage.php'); ?>">CMS-Info PPDB</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#main-menu" aria-controls="main-menu" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="main-menu">
             <ul class="navbar-nav">
                 <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="/panel/manage.php">Manage</a>
+                    <a class="nav-link active" aria-current="page" href="<?= base_url('panel/manage.php'); ?>">Manage</a>
                 </li>
             </ul>
             <div class="ms-auto">
                 <div class="btn-group btn-group-sm">
-                    <a href="/" target="_blank" class="btn btn-outline-primary btn-sm" title="Homepage"><i class="bi bi-box-arrow-up-right me-1 me-sm-0"></i><span class="d-lg-none">Homepage</span></a>
+                    <a href="<?= base_url(); ?>" target="_blank" class="btn btn-outline-primary btn-sm" title="Homepage"><i class="bi bi-box-arrow-up-right me-1 me-sm-0"></i><span class="d-lg-none">Homepage</span></a>
                     <a class="btn btn-outline-primary btn-sm dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                         <i class="bi bi-person-circle me-1 me-sm-0"></i>
                         <span class="d-lg-none">
@@ -30,7 +30,7 @@
                         <li>
                             <hr class="dropdown-divider">
                         </li>
-                        <li><a class="dropdown-item" href="/auth/logout.php">Logout</a></li>
+                        <li><a class="dropdown-item" href="<?= base_url('auth/logout.php'); ?>">Logout</a></li>
                     </ul>
                 </div>
             </div>

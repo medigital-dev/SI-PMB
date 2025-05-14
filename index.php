@@ -1,4 +1,5 @@
 <?php
+require_once 'config.php';
 require_once './core/functions.php';
 require_once './core/DBBuilder.php';
 $db = new DBBuilder();
@@ -29,6 +30,11 @@ $data['favicon'] =
   ->table('logo')
   ->where('type', 'favicon')
   ->first();
+$data['logo'] =
+  $db
+  ->table('logo')
+  ->where('type', 'default')
+  ->first();
 $data['heroes'] =
   $db
   ->table('heroes')
@@ -57,17 +63,17 @@ $data['identitas'] =
 view('./view/templates/head.php', [
   'title' => 'Informasi PPDB SMPN 2 Wonosari 2025',
   'style' => [
-    '/plugins/bootstrap/bootstrap.min.css',
-    '/plugins/bootstrap-icon/bootstrap-icons.css',
-    '/plugins/summernote/summernote-bs4.css',
-    '/plugins/fancybox/fancybox.css',
-    '/plugins/datatables/datatables.min.css',
-    '/assets/css/style.css'
+    './plugins/bootstrap/bootstrap.min.css',
+    './plugins/bootstrap-icon/bootstrap-icons.css',
+    './plugins/summernote/summernote-bs4.css',
+    './plugins/fancybox/fancybox.css',
+    './plugins/datatables/datatables.min.css',
+    './assets/css/style.css'
   ],
   'body' => [
     'className' => 'bg-body'
   ],
-  'favicon' => [$data['favicon'] ? $data['favicon']['src'] : '']
+  'favicon' => [$data['favicon'] ? base_url($data['favicon']['src']) : '']
 ]);
 view('./view/templates/toogle-theme.php')
 
@@ -76,8 +82,8 @@ view('./view/templates/toogle-theme.php')
 <section class="sticky-top" id="mainHeader">
   <div class="col-lg-8 mx-auto bg-body shadow">
     <header class="d-flex p-3 align-items-center justify-content-between border-bottom">
-      <a href="./" class="d-flex align-items-center text-body-emphasis text-decoration-none">
-        <img src="" id="logo" alt="Logo SMPN 2 Wonosari" width="60" class="img-fluid h-100 me-2" />
+      <a href="<?= base_url(); ?>" class="d-flex align-items-center text-body-emphasis text-decoration-none">
+        <img src="<?= $data['logo'] ? base_url($data['logo']['src']) : '' ?>" id="logo" alt="Logo SMPN 2 Wonosari" width="60" class="img-fluid h-100 me-2" />
         <div class="m-0 p-0 lh-1">
           <?= $data['header'] ? $data['header']['isi'] : '' ?>
         </div>
@@ -108,7 +114,7 @@ view('./view/templates/toogle-theme.php')
           <li>
             <hr class="dropdown-divider">
           </li>
-          <li><a class="dropdown-item" href="./auth/login.php">Sign In</a></li>
+          <li><a class="dropdown-item" href="<?= base_url('auth/login.php'); ?>">Sign In</a></li>
         </ul>
       </div>
     </header>
@@ -122,8 +128,8 @@ view('./view/templates/toogle-theme.php')
           <?php $i = 0;
           foreach ($data['banner'] as $banner) : ?>
             <div class="carousel-item <?= $i == 0 ? 'active' : ''; ?>">
-              <a href="<?= $banner['src']; ?>" data-fancybox="banner-hero">
-                <img src="<?= $banner['src']; ?>" class="d-block img-fluid" />
+              <a href="<?= base_url($banner['src']); ?>" data-fancybox="banner-hero">
+                <img src="<?= base_url($banner['src']); ?>" class="d-block img-fluid" />
               </a>
             </div>
             <?php $i++; ?>
@@ -426,15 +432,15 @@ view('./view/templates/toogle-theme.php')
   'script' => [
     './plugins/jquery/jquery.min.js',
     './plugins/bootstrap/bootstrap.bundle.min.js',
-    '/plugins/summernote/summernote-bs4.js',
-    '/plugins/summernote/summernote-file.js',
-    '/plugins/datatables/datatables.min.js',
+    './plugins/summernote/summernote-bs4.js',
+    './plugins/summernote/summernote-file.js',
+    './plugins/datatables/datatables.min.js',
     './plugins/fancybox/fancybox.umd.js',
-    '/plugins/fetchData/fetchData.js',
-    '/plugins/simple-toast/toast.js',
-    '/assets/js/functions.js',
-    '/assets/js/global.js',
-    '/assets/js/homepage.js',
-    '/assets/js/header-autohide.js'
+    './plugins/fetchData/fetchData.js',
+    './plugins/simple-toast/toast.js',
+    './assets/js/functions.js',
+    './assets/js/global.js',
+    './assets/js/homepage.js',
+    './assets/js/header-autohide.js'
   ]
 ]); ?>

@@ -36,7 +36,7 @@ $(document).ready(function () {
 
     toggleButton($(this), "Melakukan registrasi...");
     const user = await fetchData({
-      url: "/api/auth.php?type=registrasi",
+      url: "./api/auth.php?type=registrasi",
       data: {
         username: username.val(),
         password: password.val(),
@@ -58,7 +58,7 @@ $(document).ready(function () {
     });
     toggleButton($(this), "Mengarahkan ke Login...", true);
     setTimeout(() => {
-      window.location.href = "/auth/login.php";
+      window.location.href = "./auth/login.php";
     }, 3000);
   });
 });

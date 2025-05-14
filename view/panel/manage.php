@@ -368,9 +368,9 @@
                                                 <div class="mb-3">
                                                     <label for="fileDark" class="form-label">Mode Gelap</label>
                                                     <div class="border-primary p-4 mb-2 text-center text-bg-dark" id="previewDark" style="height: 200px;">
-                                                        <input type="hidden" id="iddark" value="<?= $data['logo']['dark'] ? $data['logo']['dark']['logo_id'] : ''; ?>">
+                                                        <input type="hidden" id="idDark" value="<?= $data['logo']['dark'] ? $data['logo']['dark']['logo_id'] : ''; ?>">
                                                         <?php if ($data['logo']['dark']) : ?>
-                                                            <img src="<?= $data['logo']['dark']['src'] ?>" alt="Logo dark" class="img-fluid h-100">
+                                                            <img src="<?= base_url($data['logo']['dark']['src']); ?>" alt="Logo dark" class="img-fluid h-100">
                                                         <?php endif; ?>
                                                     </div>
                                                     <input type="file" class="form-control" name="fileDark" id="fileDark" accept="image/*">
@@ -381,9 +381,9 @@
                                                 <div class="mb-3">
                                                     <label for="fileLight" class="form-label">Mode Terang</label>
                                                     <div class="border-primary p-4 mb-2 text-center text-bg-light" id="previewLight" style="height: 200px;">
-                                                        <input type="hidden" id="idlight" value="<?= $data['logo']['light'] ? $data['logo']['light']['logo_id'] : ''; ?>">
+                                                        <input type="hidden" id="idLight" value="<?= $data['logo']['light'] ? $data['logo']['light']['logo_id'] : ''; ?>">
                                                         <?php if ($data['logo']['light']) : ?>
-                                                            <img src="<?= $data['logo']['light']['src'] ?>" alt="Logo light" class="img-fluid h-100">
+                                                            <img src="<?= base_url($data['logo']['light']['src']) ?>" alt="Logo light" class="img-fluid h-100">
                                                         <?php endif; ?>
                                                     </div>
                                                     <input type="file" class="form-control" name="fileLight" id="fileLight" accept="image/*">
@@ -396,7 +396,7 @@
                                                     <div class="border-primary p-4 mb-2 text-center" id="previewDefault" style="height: 200px;">
                                                         <input type="hidden" id="idDefault" value="<?= $data['logo']['default'] ? $data['logo']['default']['logo_id'] : ''; ?>">
                                                         <?php if ($data['logo']['default']) : ?>
-                                                            <img src="<?= $data['logo']['default']['src'] ?>" alt="Logo default" class="img-fluid h-100">
+                                                            <img src="<?= base_url($data['logo']['default']['src']) ?>" alt="Logo default" class="img-fluid h-100">
                                                         <?php endif; ?>
                                                     </div>
                                                     <input type="file" class="form-control" name="fileDefault" id="fileDefault" accept="image/*">
@@ -409,7 +409,7 @@
                                                     <div class="border-primary p-4 mb-2 text-center" id="previewFavicon" style="height: 200px;">
                                                         <input type="hidden" id="idFavicon" value="<?= $data['logo']['favicon'] ? $data['logo']['favicon']['logo_id'] : ''; ?>">
                                                         <?php if ($data['logo']['favicon']) : ?>
-                                                            <img src="<?= $data['logo']['favicon']['src'] ?>" alt="Logo favicon" class="img-fluid h-100">
+                                                            <img src="<?= base_url($data['logo']['favicon']['src']) ?>" alt="Logo favicon" class="img-fluid h-100">
                                                         <?php endif; ?>
                                                     </div>
                                                     <input type="file" class="form-control" name="fileFavicon" id="fileFavicon" accept="image/*">

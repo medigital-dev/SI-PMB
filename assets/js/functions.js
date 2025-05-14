@@ -64,7 +64,7 @@ function getFileIcon(mimeTypeOrExtension) {
     return '<i class="bi ' + icons[mimeTypeOrExtension] + '"></i>';
   }
 
-  const type = mimeTypeOrExtension.split("/")[0];
+  const type = mimeTypeOrExtension.split("./")[0];
 
   return (
     '<i class="bi ' + icons[type] + '"></i>' ||
@@ -73,7 +73,7 @@ function getFileIcon(mimeTypeOrExtension) {
 }
 
 function reloadWidget() {
-  fetchData("/api/widget.php").then((e) => {
+  fetchData("../api/widget.php").then((e) => {
     $("#totalInfo").text(e.info);
     $("#totalBerkas").text(e.berkas);
     $("#totalBanner").text(e.banner);
@@ -88,7 +88,7 @@ async function uploadMedia(file, summernoteElm = "textarea#isi") {
   berkas.append("title", file.name);
   berkas.append("file", file);
   const res = await fetchData({
-    url: "/api/berkas.php",
+    url: "./api/berkas.php",
     data: berkas,
     method: "POST",
   });
@@ -174,7 +174,7 @@ function progressHandlingFunction(e) {
 async function deleteMedia(file) {
   const id = $(file).data("id");
   const res = await fetchData({
-    url: "/api/berkas.php?id=" + id,
+    url: "./api/berkas.php?id=" + id,
     method: "DELETE",
   });
   if (!res) return toast("Berkas gagal dihapus.", "error");
@@ -313,7 +313,7 @@ function toggleButton(buttonElm, text, forceLoading = false) {
 async function counterInner() {
   let dataEvent = [];
   try {
-    const res = await fetchData("/api/event.php");
+    const res = await fetchData("./api/event.php");
     if (!res) return;
     res.forEach((e) => {
       if (e.status == 1) dataEvent.push([e.name, e.tanggal]);

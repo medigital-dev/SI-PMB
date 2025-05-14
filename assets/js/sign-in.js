@@ -1,5 +1,5 @@
 $(document).ready(async function () {
-  const admin = await fetchData("/api/auth.php");
+  const admin = await fetchData("../api/auth.php");
   if (admin.length == 0)
     $("#registrasiElm").html(
       '<div class="alert alert-primary">Administrator tidak ditemukan. Silahkan <a href="registrasi.php">registrasi</a> terlebih dahulu.</div>'
@@ -24,7 +24,7 @@ $(document).ready(async function () {
     toggleButton($(this), "Login...");
 
     const res = await fetchData({
-      url: "/api/auth.php?type=login",
+      url: "../api/auth.php?type=login",
       data: {
         username: username.val(),
         password: password.val(),
@@ -44,7 +44,7 @@ $(document).ready(async function () {
       3000
     );
     setTimeout(() => {
-      window.open("/panel/manage.php", "_self");
+      window.open("../panel/manage.php", "_self");
     }, 3000);
   });
 });

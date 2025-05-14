@@ -1,8 +1,9 @@
 <?php
 session_start();
+require_once '../config.php';
 
 if (!isset($_SESSION["login"])) {
-    header("Location: /auth/login.php");
+    header("Location: " . base_url('auth/login.php'));
     exit;
 }
 
@@ -24,13 +25,13 @@ $data['identitas'] = $db->table('identitas')->first();
 view('../view/templates/head.php', [
     'title' => 'Manage | SI-PPDB',
     'style' => [
-        '/plugins/bootstrap/bootstrap.min.css',
-        '/plugins/bootstrap-icon/bootstrap-icons.css',
-        '/plugins/fancybox/fancybox.css',
-        '/plugins/datatables/datatables.min.css',
-        '/plugins/summernote/summernote-bs4.css',
-        '/assets/css/style.css',
-        '/assets/css/admin.css',
+        base_url('plugins/bootstrap/bootstrap.min.css'),
+        base_url('plugins/bootstrap-icon/bootstrap-icons.css'),
+        base_url('plugins/fancybox/fancybox.css'),
+        base_url('plugins/datatables/datatables.min.css'),
+        base_url('plugins/summernote/summernote-bs4.css'),
+        base_url('assets/css/style.css'),
+        base_url('assets/css/admin.css'),
     ],
     'body' => [
         'className' => 'bg-body-tertiary',
@@ -45,16 +46,16 @@ view('../view/panel/manage.php', $data);
 // end content
 view('../view/templates/footer.php', [
     'script' => [
-        '/plugins/jquery/jquery.min.js',
-        '/plugins/bootstrap/bootstrap.bundle.min.js',
-        '/plugins/datatables/datatables.min.js',
-        '/plugins/fancybox/fancybox.umd.js',
-        '/plugins/summernote/summernote-bs4.js',
-        '/plugins/summernote/summernote-file.js',
-        '/plugins/fetchData/fetchData.js',
-        '/plugins/simple-toast/toast.js',
-        '/assets/js/functions.js',
-        '/assets/js/global.js',
-        '/assets/js/manage.js',
+        base_url('plugins/jquery/jquery.min.js'),
+        base_url('plugins/bootstrap/bootstrap.bundle.min.js'),
+        base_url('plugins/datatables/datatables.min.js'),
+        base_url('plugins/fancybox/fancybox.umd.js'),
+        base_url('plugins/summernote/summernote-bs4.js'),
+        base_url('plugins/summernote/summernote-file.js'),
+        base_url('plugins/fetchData/fetchData.js'),
+        base_url('plugins/simple-toast/toast.js'),
+        base_url('assets/js/functions.js'),
+        base_url('assets/js/global.js'),
+        base_url('assets/js/manage.js'),
     ]
 ]);

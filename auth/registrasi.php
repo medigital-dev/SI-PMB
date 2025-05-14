@@ -1,22 +1,23 @@
 <?php
 session_start();
 
+require_once '../config.php';
 include '../core/functions.php';
 include '../core/DBBuilder.php';
 
 $db = new DBBuilder();
 $table = $db->table('admin');
-if ($table->findAll()) die('Anda tidak diizinkan untuk mengakses halaman ini, silahkan <a href="/auth/login.php">Login</a> atau Kembali ke <a href="/index.php">Homepage</a>');
+if ($table->findAll()) die('Anda tidak diizinkan untuk mengakses halaman ini, silahkan <a href="' . base_url('auth/login.php') . '">Login</a> atau Kembali ke <a href="/index.php">Homepage</a>');
 $table = $db->table('logo');
 $favicon = $table->where('type', 'favicon')->first();
 
 view('../view/templates/head.php', [
     'title' => 'Login ke sistem',
     'style' => [
-        '/plugins/bootstrap/bootstrap.min.css',
-        '/plugins/bootstrap-icon/bootstrap-icons.css',
-        '/assets/css/style.css',
-        '/assets/css/sign-in.css',
+        './plugins/bootstrap/bootstrap.min.css',
+        './plugins/bootstrap-icon/bootstrap-icons.css',
+        './assets/css/style.css',
+        './assets/css/sign-in.css',
     ],
     'favicon' => [$favicon ? $favicon['src'] : ''],
     'body' => [
@@ -70,13 +71,13 @@ view('../view/templates/toogle-theme.php');
 <?php
 view('../view/templates/footer.php', [
     'script' => [
-        '/plugins/jquery/jquery.min.js',
-        '/plugins/bootstrap/bootstrap.bundle.min.js',
-        '/plugins/fetchData/fetchData.js',
-        '/plugins/simple-toast/toast.js',
-        '/assets/js/global.js',
-        '/assets/js/functions.js',
-        '/assets/js/registrasi.js',
+        './plugins/jquery/jquery.min.js',
+        './plugins/bootstrap/bootstrap.bundle.min.js',
+        './plugins/fetchData/fetchData.js',
+        './plugins/simple-toast/toast.js',
+        './assets/js/global.js',
+        './assets/js/functions.js',
+        './assets/js/registrasi.js',
     ]
 ]);
 ?>

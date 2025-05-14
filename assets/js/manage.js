@@ -42,7 +42,7 @@ $(document).ready(function () {
     processing: true,
     pagingType: "simple",
     ajax: {
-      url: "/api/tautan.php",
+      url: "../api/tautan.php",
       dataSrc: "",
     },
     columns: [
@@ -126,7 +126,7 @@ $(document).ready(function () {
     processing: true,
     pagingType: "simple",
     ajax: {
-      url: "/api/info.php",
+      url: "../api/info.php",
       dataSrc: "",
     },
     columns: [
@@ -175,7 +175,7 @@ $(document).ready(function () {
 
     $(".btnEditInfo").on("click", function () {
       const id = $(this).data("id");
-      fetchData("/api/info.php?id=" + id)
+      fetchData("../api/info.php?id=" + id)
         .then((e) => {
           $("#idInformasi").val(e.id);
           $("#judul").val(e.judul);
@@ -187,7 +187,7 @@ $(document).ready(function () {
 
     $(".btnHapusInfo").on("click", async function () {
       const id = $(this).data("id");
-      const data = await fetchData("/api/info.php?id=" + id);
+      const data = await fetchData("../api/info.php?id=" + id);
       if (!data) return;
       const action = await toast({
         title: "Hapus informasi?",
@@ -200,7 +200,7 @@ $(document).ready(function () {
       });
       if (action) {
         const res = await fetchData({
-          url: "/api/info.php?id=" + id,
+          url: "../api/info.php?id=" + id,
           method: "DELETE",
         });
         if (!res) return;
@@ -230,7 +230,7 @@ $(document).ready(function () {
     processing: true,
     pagingType: "simple",
     ajax: {
-      url: "/api/berkas.php",
+      url: "../api/berkas.php",
       dataSrc: "",
     },
     columns: [
@@ -302,7 +302,7 @@ $(document).ready(function () {
 
     $(".btnHapusBerkas").on("click", async function () {
       const id = $(this).data("id");
-      const data = await fetchData("/api/berkas.php?id=" + id);
+      const data = await fetchData("../api/berkas.php?id=" + id);
       if (!data) return;
       const action = await toast({
         title: "Hapus berkas?",
@@ -311,7 +311,7 @@ $(document).ready(function () {
       });
       if (action) {
         const result = await fetchData({
-          url: "/api/berkas.php?id=" + id,
+          url: "../api/berkas.php?id=" + id,
           method: "DELETE",
         });
         if (!result) return;
@@ -327,11 +327,11 @@ $(document).ready(function () {
     $(".btnSwitchBerkas").on("click", async function () {
       const id = $(this).data("id");
       const state = $(this).is(":checked") ? 1 : 0;
-      const data = await fetchData("/api/berkas.php?id=" + id);
+      const data = await fetchData("../api/berkas.php?id=" + id);
       if (!data) return;
 
       const res = await fetchData({
-        url: "/api/berkas.php?id=" + id,
+        url: "../api/berkas.php?id=" + id,
         data: {
           title: data.title,
           status: state,
@@ -390,7 +390,7 @@ $(document).ready(function () {
     data.append("judul", judulElm.val());
     data.append("isi", isiElm.val());
     const res = await fetchData({
-      url: "/api/info.php?id=" + id.val(),
+      url: "../api/info.php?id=" + id.val(),
       data: {
         judul: judulElm.val(),
         isi: isiElm.val(),
@@ -456,7 +456,7 @@ $(document).ready(function () {
     data.append("title", titleElm.val());
     data.append("file", file[0]);
     const res = await fetchData({
-      url: "/api/berkas.php",
+      url: "../api/berkas.php",
       data: data,
       method: "POST",
     });
@@ -483,7 +483,7 @@ $(document).ready(function () {
     processing: true,
     pagingType: "simple",
     ajax: {
-      url: "/api/banner.php",
+      url: "../api/banner.php",
       dataSrc: "",
     },
     deferRender: true,
@@ -527,7 +527,7 @@ $(document).ready(function () {
       const placeholders = $(".placeholder-image");
       placeholders.each(async function () {
         const id = $(this).data("id");
-        const imgData = await fetchData("/api/berkas.php?id=" + id);
+        const imgData = await fetchData("../api/berkas.php?id=" + id);
         if (imgData) {
           $(this)
             .attr("href", imgData.src)
@@ -543,7 +543,7 @@ $(document).ready(function () {
 
     $(".btnHapusBanner").on("click", async function () {
       const id = $(this).data("id");
-      const data = await fetchData("/api/banner.php?id=" + id);
+      const data = await fetchData("../api/banner.php?id=" + id);
       if (!data) return;
       const action = await toast({
         title: "Hapus Banner?",
@@ -552,7 +552,7 @@ $(document).ready(function () {
       });
       if (action) {
         const res = await fetchData({
-          url: "/api/banner.php?id=" + id,
+          url: "../api/banner.php?id=" + id,
           method: "DELETE",
         });
         if (!res) return;
@@ -633,13 +633,13 @@ $(document).ready(function () {
     image.append("title", titleElm.val());
 
     const sendImage = await fetchData({
-      url: "/api/berkas.php",
+      url: "../api/berkas.php",
       data: image,
       method: "POST",
     });
     if (!sendImage) return;
     const setData = await fetchData({
-      url: "/api/banner.php",
+      url: "../api/banner.php",
       data: {
         title: titleElm.val(),
         description: description.val(),
@@ -678,7 +678,7 @@ $(document).ready(function () {
     processing: true,
     pagingType: "simple",
     ajax: {
-      url: "/api/event.php",
+      url: "../api/event.php",
       dataSrc: "",
     },
     columns: [
@@ -739,7 +739,7 @@ $(document).ready(function () {
 
     $(".btnHapusEvent").on("click", async function () {
       const id = $(this).data("id");
-      const data = await fetchData("/api/event.php?id=" + id);
+      const data = await fetchData("../api/event.php?id=" + id);
       if (!data) return;
       const conf = await toast({
         title: "Hapus Event?",
@@ -751,7 +751,7 @@ $(document).ready(function () {
       });
       if (!conf) return;
       const res = await fetchData({
-        url: "/api/event.php?id=" + id,
+        url: "../api/event.php?id=" + id,
         method: "DELETE",
       });
       if (!res) return;
@@ -769,10 +769,10 @@ $(document).ready(function () {
     $(".btnSwitchEvent").on("change", async function () {
       const id = $(this).data("id");
       const state = $(this).is(":checked") ? 1 : 0;
-      const data = await fetchData("/api/event.php?id=" + id);
+      const data = await fetchData("../api/event.php?id=" + id);
       if (!data) return;
       const res = await fetchData({
-        url: "/api/event.php?id=" + id,
+        url: "../api/event.php?id=" + id,
         data: {
           name: data.name,
           tanggal: data.tanggal,
@@ -808,7 +808,7 @@ $(document).ready(function () {
     }
     toggleButton(btn, "Menyimpan...");
     const res = await fetchData({
-      url: "/api/event.php",
+      url: "../api/event.php",
       data: {
         name: nameElm.val(),
         tanggal: tanggalElm.val(),
@@ -838,7 +838,7 @@ $(document).ready(function () {
       const aktif = $(this).is(":checked");
       const id = $(this).data("id");
       const res = await fetchData({
-        url: "/api/tautan.php?id=" + id,
+        url: "../api/tautan.php?id=" + id,
         data: {
           aktif: aktif ? 1 : 0,
         },
@@ -853,7 +853,7 @@ $(document).ready(function () {
       const aktif = $(this).is(":checked");
       const id = $(this).data("id");
       const res = await fetchData({
-        url: "/api/tautan.php?id=" + id,
+        url: "../api/tautan.php?id=" + id,
         data: {
           on_menu: aktif ? 1 : 0,
         },
@@ -866,7 +866,7 @@ $(document).ready(function () {
 
     $(".btnHapusTautan").on("click", async function () {
       const id = $(this).data("id");
-      const data = await fetchData("/api/tautan.php?id=" + id);
+      const data = await fetchData("../api/tautan.php?id=" + id);
       if (!data) return;
       const conf = await toast({
         title: "Hapus tautan?",
@@ -879,7 +879,7 @@ $(document).ready(function () {
       });
       if (conf) {
         const res = await fetchData({
-          url: "/api/tautan.php?id=" + id,
+          url: "../api/tautan.php?id=" + id,
           method: "DELETE",
         });
         if (!res) return;
@@ -905,7 +905,7 @@ $(document).ready(function () {
 
     toggleButton($(this), "Menyimpan...");
     const res = await fetchData({
-      url: "/api/tautan.php",
+      url: "../api/tautan.php",
       data: {
         title: title.val(),
         url: url.val().trim().toLowerCase(),
@@ -956,7 +956,7 @@ $(document).ready(function () {
     processing: true,
     pagingType: "simple",
     ajax: {
-      url: "/api/forum.php",
+      url: "../api/forum.php",
       dataSrc: "",
     },
     rowCallback: (row, data) => {
@@ -1031,7 +1031,7 @@ $(document).ready(function () {
       if (dibaca == 0) {
         const id = $(this).data("id");
         await fetchData({
-          url: "/api/forum.php?id=" + id,
+          url: "../api/forum.php?id=" + id,
           data: {
             dibaca: 1,
           },
@@ -1043,7 +1043,7 @@ $(document).ready(function () {
     $(".btnBalasForum").on("click", async function () {
       const id = $(this).data("id");
       const parent = $(this).data("parent");
-      const data = await fetchData("/api/forum.php?id=" + id);
+      const data = await fetchData("../api/forum.php?id=" + id);
 
       if (!data) return;
       $("#parentForum").val(parent ? parent : id);
@@ -1059,7 +1059,7 @@ $(document).ready(function () {
 
     $(".btnHapusForum").on("click", async function () {
       const id = $(this).data("id");
-      const data = await fetchData("/api/forum.php?id=" + id);
+      const data = await fetchData("../api/forum.php?id=" + id);
       if (!data) return;
       const conf = await toast({
         title: "Hapus forum?",
@@ -1072,7 +1072,7 @@ $(document).ready(function () {
       });
       if (conf) {
         const deleted = await fetchData({
-          url: "/api/forum.php?id=" + id,
+          url: "../api/forum.php?id=" + id,
           method: "DELETE",
         });
         if (!deleted) return;
@@ -1085,7 +1085,7 @@ $(document).ready(function () {
       const id = $(this).data("id");
       const parent = $(this).data("parent");
       const html = await fetchData({
-        url: "/panel/detail-forum.php?id=" + (parent ? parent : id),
+        url: "../panel/detail-forum.php?id=" + (parent ? parent : id),
         dataType: "html",
       });
       if (!html) return;
@@ -1095,7 +1095,7 @@ $(document).ready(function () {
       $(".btnBalasDiskusi").on("click", async function () {
         const id = $(this).data("id");
         $("#idForumPublic").val(id);
-        const data = await fetchData("/api/forum.php?id=" + id);
+        const data = await fetchData("../api/forum.php?id=" + id);
         if (!data) return;
         const code = "<p><b>@" + data.nama + "</b>:&nbsp;</p>";
         $("#pertanyaanAndaBalasan").summernote("code", code);
@@ -1115,7 +1115,7 @@ $(document).ready(function () {
     }
 
     const resp = await fetchData({
-      url: "/api/forum.php",
+      url: "../api/forum.php",
       data: {
         parent_id: parent.val(),
         nama: nama.val(),
@@ -1154,7 +1154,7 @@ $(document).ready(function () {
     $(".is-invalid").removeClass("is-invalid");
 
     const set = await fetchData({
-      url: "/api/forum.php",
+      url: "../api/forum.php",
       data: {
         parent_id: parent.val(),
         isi: isi.summernote("code"),
@@ -1176,7 +1176,7 @@ $(document).ready(function () {
         "</div>"
     );
     const html = await fetchData({
-      url: "/panel/detail-forum.php?id=" + parent.val(),
+      url: "../panel/detail-forum.php?id=" + parent.val(),
       dataType: "html",
     });
     $("#jawaban").html(html);
@@ -1184,7 +1184,7 @@ $(document).ready(function () {
     $(".btnBalasDiskusi").on("click", async function () {
       const id = $(this).data("id");
       $("#idForumPublic").val(id);
-      const data = await fetchData("/api/forum.php?id=" + id);
+      const data = await fetchData("../api/forum.php?id=" + id);
       if (!data) return;
       const code = "<p><b>@" + data.nama + "</b>:&nbsp;</p>";
       $("#pertanyaanAndaBalasan").summernote("code", code);
@@ -1265,7 +1265,7 @@ $(document).ready(function () {
     set.append("file", file.prop("files")[0]);
     set.append("type", "dark");
     const resp = await fetchData({
-      url: "/api/logo.php" + (idDark.length > 0 ? "?id=" + idDark.val() : ""),
+      url: "../api/logo.php" + (idDark.length > 0 ? "?id=" + idDark.val() : ""),
       data: set,
       method: "POST",
     });
@@ -1287,7 +1287,8 @@ $(document).ready(function () {
     set.append("file", file.prop("files")[0]);
     set.append("type", "light");
     const resp = await fetchData({
-      url: "/api/logo.php" + (idLight.length > 0 ? "?id=" + idLight.val() : ""),
+      url:
+        "../api/logo.php" + (idLight.length > 0 ? "?id=" + idLight.val() : ""),
       data: set,
       method: "POST",
     });
@@ -1310,7 +1311,7 @@ $(document).ready(function () {
     set.append("type", "default");
     const resp = await fetchData({
       url:
-        "/api/logo.php" +
+        "../api/logo.php" +
         (idDefault.length > 0 ? "?id=" + idDefault.val() : ""),
       data: set,
       method: "POST",
@@ -1334,7 +1335,7 @@ $(document).ready(function () {
     set.append("type", "favicon");
     const resp = await fetchData({
       url:
-        "/api/logo.php" +
+        "../api/logo.php" +
         (idFavicon.length > 0 ? "?id=" + idFavicon.val() : ""),
       data: set,
       method: "POST",
@@ -1363,7 +1364,7 @@ $(document).ready(function () {
     var markup = $("#isiHeader").summernote("code");
     $("#isiHeader").summernote("destroy");
     const res = fetchData({
-      url: "/api/header.php" + (id == "" ? "" : "?id=" + id),
+      url: "../api/header.php" + (id == "" ? "" : "?id=" + id),
       data: {
         isi: markup.replaceAll("<p", '<p class="m-0"'),
       },
@@ -1392,7 +1393,7 @@ $(document).ready(function () {
     var markup = $("#isiHeroes").summernote("code");
     $("#isiHeroes").summernote("destroy");
     const res = fetchData({
-      url: "/api/heroes.php" + (id == "" ? "" : "?id=" + id),
+      url: "../api/heroes.php" + (id == "" ? "" : "?id=" + id),
       data: {
         content: markup.replaceAll("<p", '<p class="m-0"'),
       },
@@ -1417,7 +1418,7 @@ $(document).ready(function () {
     processing: true,
     pagingType: "simple",
     ajax: {
-      url: "/api/jadwal.php",
+      url: "../api/jadwal.php",
       dataSrc: "",
     },
     columns: [
@@ -1471,11 +1472,11 @@ $(document).ready(function () {
   tabelJadwal.on("draw", function () {
     $(".btnSwitchJadwal").on("click", async function () {
       const id = $(this).data("id");
-      const data = await fetchData("/api/jadwal.php?id=" + id);
+      const data = await fetchData("../api/jadwal.php?id=" + id);
       if (!data) return;
 
       const resp = await fetchData({
-        url: "/api/jadwal.php?id=" + id,
+        url: "../api/jadwal.php?id=" + id,
         data: {
           aktif: $(this).is(":checked") ? 1 : 0,
         },
@@ -1488,7 +1489,7 @@ $(document).ready(function () {
 
     $(".btnHapusJadwal").on("click", async function () {
       const id = $(this).data("id");
-      const data = await fetchData("/api/jadwal.php?id=" + id);
+      const data = await fetchData("../api/jadwal.php?id=" + id);
       if (!data) return;
       const conf = await toast({
         title: "Hapus Jadwal?",
@@ -1501,7 +1502,7 @@ $(document).ready(function () {
       });
       if (conf) {
         const deleted = await fetchData({
-          url: "/api/jadwal.php?id=" + id,
+          url: "../api/jadwal.php?id=" + id,
           method: "DELETE",
         });
         if (!deleted) return;
@@ -1541,7 +1542,7 @@ $(document).ready(function () {
     }
     $(".is-invalid").removeClass("is-invalid");
     const resp = await fetchData({
-      url: "/api/jadwal.php",
+      url: "../api/jadwal.php",
       data: {
         title: title.val(),
         content: content.summernote("code").replaceAll("<p", '<p class="mb-0"'),
@@ -1573,7 +1574,7 @@ $(document).ready(function () {
     processing: true,
     pagingType: "simple",
     ajax: {
-      url: "/api/jalur.php",
+      url: "../api/jalur.php",
       dataSrc: "",
     },
     columns: [
@@ -1613,11 +1614,11 @@ $(document).ready(function () {
   tabelJalur.on("draw", function () {
     $(".btnSwitchJalur").on("click", async function () {
       const id = $(this).data("id");
-      const data = await fetchData("/api/jalur.php?id=" + id);
+      const data = await fetchData("../api/jalur.php?id=" + id);
       if (!data) return;
 
       const resp = await fetchData({
-        url: "/api/jalur.php?id=" + id,
+        url: "../api/jalur.php?id=" + id,
         data: {
           nama: data.nama,
           persen: data.persen,
@@ -1632,7 +1633,7 @@ $(document).ready(function () {
 
     $(".btnHapusJalur").on("click", async function () {
       const id = $(this).data("id");
-      const data = await fetchData("/api/jalur.php?id=" + id);
+      const data = await fetchData("../api/jalur.php?id=" + id);
       if (!data) return;
       const conf = await toast({
         title: "Hapus Jalur?",
@@ -1645,7 +1646,7 @@ $(document).ready(function () {
       });
       if (conf) {
         const deleted = await fetchData({
-          url: "/api/jalur.php?id=" + id,
+          url: "../api/jalur.php?id=" + id,
           method: "DELETE",
         });
         if (!deleted) return;
@@ -1679,7 +1680,7 @@ $(document).ready(function () {
     }
     $(".is-invalid").removeClass("is-invalid");
     const resp = await fetchData({
-      url: "/api/Jalur.php",
+      url: "../api/Jalur.php",
       data: {
         nama: nama.val(),
         persen: persen.val(),
@@ -1716,7 +1717,7 @@ $(document).ready(function () {
     var markup = $("#isiSyarat").summernote("code");
     $("#isiSyarat").summernote("destroy");
     const res = fetchData({
-      url: "/api/syarat.php" + (id == "" ? "" : "?id=" + id),
+      url: "../api/syarat.php" + (id == "" ? "" : "?id=" + id),
       data: {
         content: markup.replaceAll("<p", '<p class="m-0"'),
       },
@@ -1744,7 +1745,7 @@ $(document).ready(function () {
     var markup = $("#isiDokumen").summernote("code");
     $("#isiDokumen").summernote("destroy");
     const res = fetchData({
-      url: "/api/dokumen.php" + (id == "" ? "" : "?id=" + id),
+      url: "../api/dokumen.php" + (id == "" ? "" : "?id=" + id),
       data: {
         content: markup.replaceAll("<p", '<p class="m-0"'),
       },
@@ -1764,7 +1765,7 @@ $(document).ready(function () {
     });
 
     const resp = await fetchData({
-      url: "/api/identitas.php" + (id.length > 0 ? "?id=" + id.val() : ""),
+      url: "../api/identitas.php" + (id.length > 0 ? "?id=" + id.val() : ""),
       data: set,
       method: "POST",
     });
@@ -1780,7 +1781,7 @@ $(document).ready(function () {
     let set = {};
     data.forEach((e) => (set[e.name] = e.value));
     const result = await fetchData({
-      url: "/api/auth.php?type=update&key=" + id,
+      url: "../api/auth.php?type=update&key=" + id,
       data: set,
       method: "POST",
     });
@@ -1789,7 +1790,7 @@ $(document).ready(function () {
     if (result.data.affected !== 0) {
       toast("Session berubah, silahkan login kembali.", "info", "", 3000);
       setTimeout(() => {
-        window.location.href = "/auth/logout.php";
+        window.location.href = "../auth/logout.php";
       }, 3000);
     }
   });

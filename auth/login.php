@@ -1,8 +1,9 @@
 <?php
 session_start();
 
+require_once '../config.php';
 if (isset($_SESSION["login"])) {
-    header("Location: /panel/manage.php");
+    header("Location: " . base_url('panel/manage.php'));
     exit;
 }
 
@@ -15,10 +16,10 @@ $favicon = $db->table('logo')->where('type', 'favicon')->first();
 view('../view/templates/head.php', [
     'title' => 'Login ke sistem',
     'style' => [
-        '/plugins/bootstrap/bootstrap.min.css',
-        '/plugins/bootstrap-icon/bootstrap-icons.css',
-        '/assets/css/style.css',
-        '/assets/css/sign-in.css',
+        base_url('plugins/bootstrap/bootstrap.min.css'),
+        base_url('plugins/bootstrap-icon/bootstrap-icons.css'),
+        base_url('assets/css/style.css'),
+        base_url('assets/css/sign-in.css'),
     ],
     'favicon' => [$favicon ? $favicon['src'] : ''],
     'body' => [
@@ -71,13 +72,13 @@ view('../view/templates/toogle-theme.php'); ?>
 <?php
 view('../view/templates/footer.php', [
     'script' => [
-        '/plugins/jquery/jquery.min.js',
-        '/plugins/bootstrap/bootstrap.bundle.min.js',
-        '/plugins/fetchData/fetchData.js',
-        '/assets/js/functions.js',
-        '/assets/js/global.js',
-        '/plugins/simple-toast/toast.js',
-        '/assets/js/sign-in.js',
+        base_url('plugins/jquery/jquery.min.js'),
+        base_url('plugins/bootstrap/bootstrap.bundle.min.js'),
+        base_url('plugins/fetchData/fetchData.js'),
+        base_url('assets/js/functions.js'),
+        base_url('assets/js/global.js'),
+        base_url('plugins/simple-toast/toast.js'),
+        base_url('assets/js/sign-in.js'),
     ]
 ]);
 ?>

@@ -2,7 +2,7 @@
 <html lang="en" data-bs-theme="auto">
 
 <head>
-    <script src="/assets/js/color-modes.js"></script>
+    <script src="<?= base_url('assets/js/color-modes.js'); ?>"></script>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="description" content="Sistem Informasi Penerimaan Peserta Didik Baru" />
@@ -25,7 +25,7 @@
     <?php endif; ?>
     <!-- Theme -->
     <meta name="theme-color" content="#712cf9" />
-    <link rel="manifest" href="/assets/manifest.json" />
+    <link rel="manifest" href="<?= base_url('assets/manifest.json'); ?>" />
 </head>
 
 <body class="<?= $body['className'] ?? '' ?>" id="<?= $body['id'] ?? ''; ?>">

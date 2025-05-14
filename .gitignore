@@ -57,4 +57,4 @@ uploads/*
 assets/brand/
 !assets/brand/index.html
 
-core/config.php
+config.php

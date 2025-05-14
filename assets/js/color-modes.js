@@ -34,24 +34,24 @@
       document.documentElement.setAttribute("data-bs-theme", theme);
       activeTheme = theme;
     }
-    setLogo(activeTheme);
+    // setLogo(activeTheme);
   };
 
-  const setLogo = (theme) => {
-    fetch("/api/logo.php")
-      .then((response) => response.json())
-      .then((data) => {
-        const logos = data;
-        const logoSrc = logos.find((logo) => logo.type === theme)?.src;
-        const logoElement = document.getElementById("logo");
-        if (logoSrc) {
-          logoElement.src = logoSrc;
-          logoElement.style.display = "block";
-        } else {
-          logoElement.style.display = "none";
-        }
-      });
-  };
+  // const setLogo = (theme) => {
+  //   fetch("./api/logo.php")
+  //     .then((response) => response.json())
+  //     .then((data) => {
+  //       const logos = data;
+  //       const logoSrc = logos.find((logo) => logo.type === theme)?.src;
+  //       const logoElement = document.getElementById("logo");
+  //       if (logoSrc) {
+  //         logoElement.src = logoSrc;
+  //         logoElement.style.display = "block";
+  //       } else {
+  //         logoElement.style.display = "none";
+  //       }
+  //     });
+  // };
 
   setTheme(getPreferredTheme());
 

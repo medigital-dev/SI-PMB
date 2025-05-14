@@ -14,7 +14,7 @@ $(document).ready(function () {
     processing: true,
     pagingType: "simple",
     ajax: {
-      url: "/api/berkas.php?s=1",
+      url: "./api/berkas.php?s=1",
       dataSrc: "",
     },
     columns: [
@@ -51,7 +51,7 @@ $(document).ready(function () {
     processing: true,
     pagingType: "simple",
     ajax: {
-      url: "/api/info.php",
+      url: "./api/info.php",
       dataSrc: "",
     },
     columns: [
@@ -98,7 +98,7 @@ $(document).ready(function () {
     processing: true,
     pagingType: "simple",
     ajax: {
-      url: "/api/forum.php",
+      url: "./api/forum.php",
       dataSrc: "",
     },
     columns: [
@@ -133,7 +133,7 @@ $(document).ready(function () {
     $(".btnDetailForumPublic").on("click", async function () {
       const id = $(this).data("id");
       const html = await fetchData({
-        url: "/panel/detail-forum.php?id=" + id,
+        url: "./panel/detail-forum.php?id=" + id,
         dataType: "html",
       });
       $("#idIndukPublic").val(id);
@@ -143,7 +143,7 @@ $(document).ready(function () {
       $(".btnBalasDiskusi").on("click", async function () {
         const id = $(this).data("id");
         $("#idForumPublic").val(id);
-        const data = await fetchData("/api/forum.php?id=" + id);
+        const data = await fetchData("./api/forum.php?id=" + id);
         if (!data) return;
         const code = "@" + data.nama + ": ";
         $("#pertanyaanAndaBalasan").val(code).focus();
@@ -165,7 +165,7 @@ $(document).ready(function () {
     $(".is-invalid").removeClass("is-invalid");
 
     const set = await fetchData({
-      url: "/api/forum.php",
+      url: "./api/forum.php",
       data: {
         parent_id: parent.val(),
         isi: isi.val(),
@@ -185,7 +185,7 @@ $(document).ready(function () {
         "</div>"
     );
     const html = await fetchData({
-      url: "/panel/detail-forum.php?id=" + induk.val(),
+      url: "./panel/detail-forum.php?id=" + induk.val(),
       dataType: "html",
     });
     $("#jawaban").html(html);
@@ -193,7 +193,7 @@ $(document).ready(function () {
     $(".btnBalasDiskusi").on("click", async function () {
       const id = $(this).data("id");
       $("#idForumPublic").val(id);
-      const data = await fetchData("/api/forum.php?id=" + id);
+      const data = await fetchData("./api/forum.php?id=" + id);
       if (!data) return;
       const code = "@" + data.nama + ": ";
       $("#pertanyaanAndaBalasan").val(code).focus();
@@ -217,7 +217,7 @@ $(document).ready(function () {
     $(".is-invalid").removeClass("is-invalid");
     toggleButton($(this), "Menyimpan...");
     const set = await fetchData({
-      url: "/api/forum.php",
+      url: "./api/forum.php",
       data: {
         nama: nama.val(),
         isi: isiElm.val(),
