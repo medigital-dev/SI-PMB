@@ -45,7 +45,7 @@ final class scema extends AbstractMigration
             ->addColumn('filename', 'string', ['limit' => 64, 'null' => false])
             ->addColumn('title', 'string', ['limit' => 64, 'null' => false])
             ->addColumn('src', 'string', ['limit' => 256, 'null' => false])
-            ->addColumn('type', 'string', ['limit' => 64, 'null' => false])
+            ->addColumn('type', 'string', ['limit' => 256, 'null' => false])
             ->addColumn('size', 'integer', ['null' => false])
             ->addColumn('status', 'boolean', ['default' => false, 'null' => false])
             ->addColumn('created_at', 'timestamp', ['default' => 'CURRENT_TIMESTAMP', 'null' => false])
