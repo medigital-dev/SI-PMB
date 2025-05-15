@@ -1,11 +1,6 @@
 $(document).ready(function () {
   Fancybox.bind("[data-fancybox]");
 
-  $("#showPass").on("click", function () {
-    if ($(this).is(":checked")) $(".password").attr("type", "text");
-    else $(".password").attr("type", "password");
-  });
-
   $("#isi").summernote({
     dialogsInBody: true,
     height: 200,
@@ -187,6 +182,7 @@ $(document).ready(function () {
 
     $(".btnHapusInfo").on("click", async function () {
       const id = $(this).data("id");
+      const btn = $(this);
       const data = await fetchData("../api/info.php?id=" + id);
       if (!data) return;
       const action = await toast({
@@ -202,6 +198,7 @@ $(document).ready(function () {
         const res = await fetchData({
           url: "../api/info.php?id=" + id,
           method: "DELETE",
+          button: btn,
         });
         if (!res) return;
         toast({
@@ -302,6 +299,7 @@ $(document).ready(function () {
 
     $(".btnHapusBerkas").on("click", async function () {
       const id = $(this).data("id");
+      const btn = $(this);
       const data = await fetchData("../api/berkas.php?id=" + id);
       if (!data) return;
       const action = await toast({
@@ -313,6 +311,7 @@ $(document).ready(function () {
         const result = await fetchData({
           url: "../api/berkas.php?id=" + id,
           method: "DELETE",
+          button: btn,
         });
         if (!result) return;
         toast({
@@ -384,8 +383,6 @@ $(document).ready(function () {
     }
 
     $(".is-invalid").removeClass("is-invalid");
-    toggleButton(btnElm, "Menyimpan...");
-    const idVal = id.val();
     let data = new FormData();
     data.append("judul", judulElm.val());
     data.append("isi", isiElm.val());
@@ -396,6 +393,7 @@ $(document).ready(function () {
         isi: isiElm.val(),
       },
       method: "POST",
+      button: btnElm,
     });
     if (!res) return;
     toast({
@@ -407,7 +405,6 @@ $(document).ready(function () {
       delay: 5000,
     });
     tabelInformasi.ajax.reload(null, false);
-    toggleButton(btnElm, "Simpan");
     $("#modalTambahInformasi").modal("hide");
   });
 
@@ -450,7 +447,7 @@ $(document).ready(function () {
       return;
     }
     $("is-invalid").removeClass("is-invalid");
-    toggleButton(btnElm, "Menyimpan...");
+
     const file = fileElm.prop("files");
     let data = new FormData();
     data.append("title", titleElm.val());
@@ -459,9 +456,9 @@ $(document).ready(function () {
       url: "../api/berkas.php",
       data: data,
       method: "POST",
+      button: btnElm,
     });
     if (!res) return;
-    toggleButton(btnElm, "Simpan");
     fileElm.val("");
     titleElm.val("");
     $("#modalTambahBerkas").modal("hide");
@@ -626,7 +623,7 @@ $(document).ready(function () {
       return;
     }
     $(".is-invalid").removeClass("is-invalid");
-    toggleButton(btnElm, "Menyimpan...");
+
     const file = fileElm.prop("files")[0];
     let image = new FormData();
     image.append("file", file);
@@ -636,6 +633,7 @@ $(document).ready(function () {
       url: "../api/berkas.php",
       data: image,
       method: "POST",
+      button: btnElm,
     });
     if (!sendImage) return;
     const setData = await fetchData({
@@ -647,11 +645,8 @@ $(document).ready(function () {
       },
       method: "POST",
     });
-    if (!setData) {
-      toggleButton(btnElm, "Simpan");
-      return;
-    }
-    toggleButton(btnElm, "Simpan");
+    if (!setData) return;
+
     fileElm.val("");
     titleElm.val("");
     $("#modalTambahBanner").modal("hide");
@@ -806,7 +801,7 @@ $(document).ready(function () {
       toast("Lengkapi form terlebih dahulu.");
       return;
     }
-    toggleButton(btn, "Menyimpan...");
+
     const res = await fetchData({
       url: "../api/event.php",
       data: {
@@ -815,12 +810,10 @@ $(document).ready(function () {
         status: 1,
       },
       method: "POST",
+      button: btn,
     });
-    if (!res) {
-      toggleButton(btn, "Simpan");
-      return;
-    }
-    toggleButton(btn, "Simpan");
+    if (!res) return;
+
     nameElm.val("");
     tanggalElm.val("");
     $("#modalTambahEvent").modal("hide");
@@ -892,6 +885,7 @@ $(document).ready(function () {
   $("#btnSimpanTautan").on("click", async function () {
     const title = $("#titleTautan");
     const url = $("#urlTautan");
+    const btn = $(this);
 
     if (!title.val().trim() || !url.val().trim()) {
       if (!title.val().trim()) title.addClass("is-invalid");
@@ -903,7 +897,6 @@ $(document).ready(function () {
     }
     $(".is-invalid").removeClass("is-invalid");
 
-    toggleButton($(this), "Menyimpan...");
     const res = await fetchData({
       url: "../api/tautan.php",
       data: {
@@ -911,13 +904,13 @@ $(document).ready(function () {
         url: url.val().trim().toLowerCase(),
       },
       method: "POST",
+      button: btn,
     });
     if (!res) return;
     toast(res.message, "success", "", 5000);
     title.val("");
     url.val("");
     $("#modalTambahTautan").modal("hide");
-    toggleButton($(this), "Simpan");
     tabelTautan.ajax.reload(null, false);
   });
 
@@ -1108,6 +1101,7 @@ $(document).ready(function () {
     const parent = $("#parentForum");
     const isi = $("#balasForum");
     const nama = $("#namaAdmin");
+    const btn = $(this);
 
     if (isi.summernote("code") == "") {
       toast("Lengkapi form terlebih dahulu.", "info");
@@ -1122,6 +1116,7 @@ $(document).ready(function () {
         isi: isi.summernote("code"),
       },
       method: "POST",
+      button: btn,
     });
 
     if (!resp) return;
@@ -1146,6 +1141,7 @@ $(document).ready(function () {
     const parent = $("#idForumPublic");
     const nama = $("#namaAndaBalasan");
     const isi = $("#pertanyaanAndaBalasan");
+    const btn = $(this);
 
     if (!nama.val().trim()) {
       nama.addClass("is-invalid");
@@ -1163,6 +1159,7 @@ $(document).ready(function () {
         dibaca: 1,
       },
       method: "POST",
+      button: btn,
     });
     if (!set) return;
     toast("Balasan anda berhasil di tambahkan.", "success");
@@ -1253,6 +1250,7 @@ $(document).ready(function () {
   });
 
   $("#btnSimpanLogoDark").on("click", async function () {
+    const btn = $(this);
     const file = $("#fileDark");
     const idDark = $("#idDark");
     if (file.prop("files").length == 0) {
@@ -1265,9 +1263,11 @@ $(document).ready(function () {
     set.append("file", file.prop("files")[0]);
     set.append("type", "dark");
     const resp = await fetchData({
-      url: "../api/logo.php" + (idDark.length > 0 ? "?id=" + idDark.val() : ""),
+      url:
+        "../api/logo.php" + (idDark.val() !== "" ? "?id=" + idDark.val() : ""),
       data: set,
       method: "POST",
+      button: btn,
     });
     if (!resp) return;
     toast("Logo mode gelap berhasil dirubah.", "success");
@@ -1275,6 +1275,7 @@ $(document).ready(function () {
   });
 
   $("#btnSimpanLogoLight").on("click", async function () {
+    const btn = $(this);
     const file = $("#fileLight");
     const idLight = $("#idLight");
     if (file.prop("files").length == 0) {
@@ -1288,9 +1289,11 @@ $(document).ready(function () {
     set.append("type", "light");
     const resp = await fetchData({
       url:
-        "../api/logo.php" + (idLight.length > 0 ? "?id=" + idLight.val() : ""),
+        "../api/logo.php" +
+        (idLight.val() !== "" ? "?id=" + idLight.val() : ""),
       data: set,
       method: "POST",
+      button: btn,
     });
     if (!resp) return;
     toast("Logo mode terang berhasil dirubah.", "success");
@@ -1298,6 +1301,7 @@ $(document).ready(function () {
   });
 
   $("#btnSimpanLogoDefault").on("click", async function () {
+    const btn = $(this);
     const file = $("#fileDefault");
     const idDefault = $("#idDefault");
     if (file.prop("files").length == 0) {
@@ -1312,9 +1316,10 @@ $(document).ready(function () {
     const resp = await fetchData({
       url:
         "../api/logo.php" +
-        (idDefault.length > 0 ? "?id=" + idDefault.val() : ""),
+        (idDefault.val() !== "" ? "?id=" + idDefault.val() : ""),
       data: set,
       method: "POST",
+      button: btn,
     });
     if (!resp) return;
     toast("Logo mode default berhasil dirubah.", "success");
@@ -1322,6 +1327,7 @@ $(document).ready(function () {
   });
 
   $("#btnSimpanLogoFavicon").on("click", async function () {
+    const btn = $(this);
     const file = $("#fileFavicon");
     const idFavicon = $("#idFavicon");
     if (file.prop("files").length == 0) {
@@ -1336,9 +1342,10 @@ $(document).ready(function () {
     const resp = await fetchData({
       url:
         "../api/logo.php" +
-        (idFavicon.length > 0 ? "?id=" + idFavicon.val() : ""),
+        (idFavicon.val() !== "" ? "?id=" + idFavicon.val() : ""),
       data: set,
       method: "POST",
+      button: btn,
     });
     if (!resp) return;
     toast("Logo mode favicon berhasil dirubah.", "success");
@@ -1360,6 +1367,7 @@ $(document).ready(function () {
   });
 
   $("#btnSaveHeader").on("click", async function () {
+    const btn = $(this);
     const id = $("#idHeader").val();
     var markup = $("#isiHeader").summernote("code");
     $("#isiHeader").summernote("destroy");
@@ -1369,6 +1377,7 @@ $(document).ready(function () {
         isi: markup.replaceAll("<p", '<p class="m-0"'),
       },
       method: "POST",
+      button: btn,
     });
     if (!res) return;
     toast("Header berhasil disimpan.", "success");
@@ -1389,6 +1398,7 @@ $(document).ready(function () {
   });
 
   $("#btnSaveHeroes").on("click", async function () {
+    const btn = $(this);
     const id = $("#idHeroes").val();
     var markup = $("#isiHeroes").summernote("code");
     $("#isiHeroes").summernote("destroy");
@@ -1398,6 +1408,7 @@ $(document).ready(function () {
         content: markup.replaceAll("<p", '<p class="m-0"'),
       },
       method: "POST",
+      button: btn,
     });
     if (!res) return;
     toast("Heroes berhasil disimpan.", "success");
@@ -1530,6 +1541,7 @@ $(document).ready(function () {
   );
 
   $("#btnSimpanJadwal").on("click", async function () {
+    const btn = $(this);
     const title = $("#titleJadwal");
     const content = $("#contentJadwal");
     if (!title.val().trim() || content.summernote("isEmpty")) {
@@ -1549,6 +1561,7 @@ $(document).ready(function () {
         aktif: 1,
       },
       method: "POST",
+      button: btn,
     });
     if (!resp) return;
 
@@ -1665,6 +1678,7 @@ $(document).ready(function () {
   );
 
   $("#btnSimpanJalur").on("click", async function () {
+    const btn = $(this);
     const nama = $("#namaJalur");
     const persen = $("#persenJalur");
     const jumlah = $("#jumlahPdJalur");
@@ -1687,6 +1701,7 @@ $(document).ready(function () {
         jumlah: jumlah.val(),
       },
       method: "POST",
+      button: btn,
     });
     if (!resp) return;
 
@@ -1713,6 +1728,7 @@ $(document).ready(function () {
   });
 
   $("#btnSaveSyarat").on("click", async function () {
+    const btn = $(this);
     const id = $("#idSyarat").val();
     var markup = $("#isiSyarat").summernote("code");
     $("#isiSyarat").summernote("destroy");
@@ -1722,6 +1738,7 @@ $(document).ready(function () {
         content: markup.replaceAll("<p", '<p class="m-0"'),
       },
       method: "POST",
+      button: btn,
     });
     if (!res) return;
     toast("Syarat berhasil disimpan.", "success");
@@ -1742,6 +1759,7 @@ $(document).ready(function () {
 
   $("#btnSaveDokumen").on("click", async function () {
     const id = $("#idDokumen").val();
+    const btn = $(this);
     var markup = $("#isiDokumen").summernote("code");
     $("#isiDokumen").summernote("destroy");
     const res = fetchData({
@@ -1750,12 +1768,14 @@ $(document).ready(function () {
         content: markup.replaceAll("<p", '<p class="m-0"'),
       },
       method: "POST",
+      button: btn,
     });
     if (!res) return;
     toast("Dokumen kelengkapan berhasil disimpan.", "success");
   });
 
   $("#btnSimpanIdentitas").on("click", async function () {
+    const btn = $(this);
     const id = $("#idIdentitas");
     const form = $("#formIdentitas");
     const data = form.serializeArray();
@@ -1765,9 +1785,10 @@ $(document).ready(function () {
     });
 
     const resp = await fetchData({
-      url: "../api/identitas.php" + (id.length > 0 ? "?id=" + id.val() : ""),
+      url: "../api/identitas.php" + (id.val() !== "" ? "?id=" + id.val() : ""),
       data: set,
       method: "POST",
+      button: btn,
     });
     if (!resp) return;
     toast(resp.message, "success");
@@ -1775,6 +1796,7 @@ $(document).ready(function () {
 
   $("#btnSaveProfil").on("click", async function (e) {
     e.preventDefault();
+    const btn = $(this);
     const id = $("#idAdmin").val();
     const form = $("#formProfil");
     const data = form.serializeArray();
@@ -1784,6 +1806,7 @@ $(document).ready(function () {
       url: "../api/auth.php?type=update&key=" + id,
       data: set,
       method: "POST",
+      button: btn,
     });
     if (!result) return;
     toast(result.message, "success");
