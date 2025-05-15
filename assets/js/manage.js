@@ -1729,11 +1729,11 @@ $(document).ready(function () {
 
   $("#btnSaveSyarat").on("click", async function () {
     const btn = $(this);
-    const id = $("#idSyarat").val();
+    const id = $("#idSyarat");
     var markup = $("#isiSyarat").summernote("code");
     $("#isiSyarat").summernote("destroy");
-    const res = fetchData({
-      url: "../api/syarat.php" + (id == "" ? "" : "?id=" + id),
+    const res = await fetchData({
+      url: "../api/syarat.php" + (id.val() == "" ? "" : "?id=" + id.val()),
       data: {
         content: markup.replaceAll("<p", '<p class="m-0"'),
       },
@@ -1741,6 +1741,7 @@ $(document).ready(function () {
       button: btn,
     });
     if (!res) return;
+    id.val(res.data.id);
     toast("Syarat berhasil disimpan.", "success");
   });
 
@@ -1758,12 +1759,12 @@ $(document).ready(function () {
   });
 
   $("#btnSaveDokumen").on("click", async function () {
-    const id = $("#idDokumen").val();
+    const id = $("#idDokumen");
     const btn = $(this);
     var markup = $("#isiDokumen").summernote("code");
     $("#isiDokumen").summernote("destroy");
-    const res = fetchData({
-      url: "../api/dokumen.php" + (id == "" ? "" : "?id=" + id),
+    const res = await fetchData({
+      url: "../api/dokumen.php" + (id.val() == "" ? "" : "?id=" + id.val()),
       data: {
         content: markup.replaceAll("<p", '<p class="m-0"'),
       },
@@ -1771,6 +1772,7 @@ $(document).ready(function () {
       button: btn,
     });
     if (!res) return;
+    id.val(res.data.id);
     toast("Dokumen kelengkapan berhasil disimpan.", "success");
   });
 
