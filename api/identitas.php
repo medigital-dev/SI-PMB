@@ -9,6 +9,7 @@ require_once '../auth/filter.php';
 require_once '../core/DBBuilder.php';
 
 $db = new DBBuilder('identitas');
+$db->addIndex('identitas_id');
 
 $method = $_SERVER['REQUEST_METHOD'];
 

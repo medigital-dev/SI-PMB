@@ -8,6 +8,7 @@ require_once '../auth/filter.php';
 require_once '../core/DBBuilder.php';
 
 $db = new DBBuilder('banner');
+$db->addIndex('banner_id');
 
 $method = $_SERVER['REQUEST_METHOD'];
 

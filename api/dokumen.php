@@ -8,6 +8,7 @@ require_once '../auth/filter.php';
 require_once '../core/DBBuilder.php';
 
 $db = new DBBuilder('dokumen');
+$db->addIndex('dokumen_id');
 
 $method = $_SERVER['REQUEST_METHOD'];
 

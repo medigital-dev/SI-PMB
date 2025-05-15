@@ -8,6 +8,7 @@ require_once '../auth/filter.php';
 require_once '../core/DBBuilder.php';
 
 $table = new DBBuilder('header');
+$table->addIndex('header_id');
 
 $method = $_SERVER['REQUEST_METHOD'];
 
