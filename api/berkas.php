@@ -101,7 +101,7 @@ switch ($method) {
             ]
         ];
 
-        echo json_encode($response);
+        echo json_encode($response, JSON_PRETTY_PRINT);
         break;
 
     case 'DELETE':
@@ -135,7 +135,7 @@ switch ($method) {
             'data' => ['id' => $id]
         ];
 
-        echo json_encode($response);
+        echo json_encode($response, JSON_PRETTY_PRINT);
         break;
 
     default:
