@@ -8,6 +8,7 @@ require_once '../auth/filter.php';
 require_once '../core/DBBuilder.php';
 
 $db = new DBBuilder('heroes');
+$db->addIndex('hero_id');
 
 global $conn;
 
@@ -64,7 +65,7 @@ switch ($method) {
             'status' => true,
             'message' => 'Heroes berhasil disimpan.',
             'data' => [
-                'id' => $unique,
+                'id' => $unique ?? $id,
             ]
         ];
 
