@@ -381,7 +381,7 @@ view('./view/templates/toogle-theme.php')
       &copy; 2025 Dibuat dan dikembangkan oleh
       <a href="https://muhsaidlg.my.id" target="_blank" class="text-decoration-none">Muhammad Said Latif Ghofari</a>
     </span>
-    <a href="https://github.com/medigital-dev/PPDB_SMP-2-Wonosari" target="_blank" class="text-muted text-center text-lg-end text-decoration-none small"><i class="bi bi-github me-1"></i>v2.1.04</a>
+    <a href="https://github.com/medigital-dev/PPDB_SMP-2-Wonosari" target="_blank" class="text-muted text-center text-lg-end text-decoration-none small"><i class="bi bi-github me-1"></i>v2.1.05_Beta</a>
   </footer>
 </div>
 
