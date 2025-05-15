@@ -23,6 +23,7 @@ async function fetchData(urlOrConfig, ...restParams) {
       data: urlOrConfig.data || {},
       dataType: urlOrConfig.dataType || "json",
       method: urlOrConfig.method || "GET",
+      button: urlOrConfig.button || null,
     };
   } else {
     config = {
@@ -33,6 +34,15 @@ async function fetchData(urlOrConfig, ...restParams) {
     };
   }
 
+  const btnText = config.button ? config.button.html() : null;
+
+  if (config.button) {
+    config.button.prop("disabled", true)
+      .html(`<div class="spinner-border spinner-border-sm" role="status">
+              <span class="visually-hidden">Loading...</span>
+            </div>`);
+  }
+
   try {
     let isFormData = config.data instanceof FormData;
 
@@ -41,7 +51,9 @@ async function fetchData(urlOrConfig, ...restParams) {
       method: config.method,
       dataType: config.dataType,
       cache: false,
-      headers: { "X-Requested-With": "XMLHttpRequest" },
+      headers: {
+        "X-Requested-With": "XMLHttpRequest",
+      },
     };
 
     if (isFormData) {
@@ -56,7 +68,11 @@ async function fetchData(urlOrConfig, ...restParams) {
     return await $.ajax(options);
   } catch (error) {
     console.log(error);
-    toast(error.responseJSON.message, "error", "", 0);
+    errorHandle(error);
     return false;
+  } finally {
+    if (config.button) {
+      config.button.prop("disabled", false).text(btnText);
+    }
   }
 }
