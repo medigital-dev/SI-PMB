@@ -8,9 +8,8 @@ require_once '../core/functions.php';
 require_once '../auth/filter.php';
 require_once '../core/DBBuilder.php';
 
-$builder = new DBBuilder();
-$builder->addIndex('jalur_id');
-$model = $builder->table('jalur');
+$model = new DBBuilder('jalur');
+$model->addIndex('jalur_id');
 
 $method = $_SERVER['REQUEST_METHOD'];
 
