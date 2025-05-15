@@ -54,7 +54,7 @@ switch ($method) {
                 echo json_encode(['message' => 'Upload error', 'status' => false]);
                 die;
             }
-            $set['src'] = $loc;
+            $set['src'] = base_url($loc);
         }
 
         if ($id == null) {
