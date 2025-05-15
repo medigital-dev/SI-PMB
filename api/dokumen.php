@@ -41,10 +41,10 @@ switch ($method) {
             do {
                 $unique = random_string();
             } while ($db->where('dokumen_id', $unique)->first());
-            $set['dokument_id'] = $unique;
+            $set['dokumen_id'] = $unique;
             http_response_code(201);
         } else {
-            $data = $db->where('dokument_id', $id)->first();
+            $data = $db->where('dokumen_id', $id)->first();
             if (!$data) {
                 http_response_code(404);
                 echo json_encode(['message' => 'Data tidak ditemukan.']);
@@ -65,7 +65,7 @@ switch ($method) {
             'status' => true,
             'message' => 'Dokumen kelengkapan pendaftaran berhasil disimpan.',
             'data' => [
-                'id' => $unique,
+                'id' => $unique ?? $id,
             ]
         ];
 
