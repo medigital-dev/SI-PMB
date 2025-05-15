@@ -1694,7 +1694,7 @@ $(document).ready(function () {
     }
     $(".is-invalid").removeClass("is-invalid");
     const resp = await fetchData({
-      url: "../api/Jalur.php",
+      url: "../api/jalur.php",
       data: {
         nama: nama.val(),
         persen: persen.val(),
