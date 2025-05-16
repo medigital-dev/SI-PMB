@@ -88,7 +88,7 @@ async function uploadMedia(file, summernoteElm = "textarea#isi") {
   berkas.append("title", file.name);
   berkas.append("file", file);
   const res = await fetchData({
-    url: "./api/berkas.php",
+    url: "../api/berkas.php",
     data: berkas,
     method: "POST",
   });
@@ -174,7 +174,7 @@ function progressHandlingFunction(e) {
 async function deleteMedia(file) {
   const id = $(file).data("id");
   const res = await fetchData({
-    url: "./api/berkas.php?id=" + id,
+    url: "../api/berkas.php?id=" + id,
     method: "DELETE",
   });
   if (!res) return toast("Berkas gagal dihapus.", "error");
