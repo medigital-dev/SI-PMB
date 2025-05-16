@@ -657,6 +657,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
+                <input type="hidden" id="idEvent">
                 <div class="row mb-3">
                     <label for="namaEvent" class="col-form-label col-sm-3">Nama Event</label>
                     <div class="col-sm-9">
@@ -781,6 +782,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
+                <input type="hidden" id="idJadwal">
                 <div class="row mb-3">
                     <label for="title" class="col-sm-3 col-form-label">Judul</label>
                     <div class="col-sm-9">
@@ -810,6 +812,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
+                <input type="hidden" id="idJalur">
                 <div class="row mb-3">
                     <label for="namaJalur" class="col-sm-3 col-form-label">Nama</label>
                     <div class="col-sm-9">
