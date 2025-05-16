@@ -13,6 +13,8 @@ SI-PMB adalah sebuah Sistem Informasi Penerimaan Murid Baru. Konten yang ada did
 - Syarat Pendaftaran
 - Berkas Pendaftaran
 - Forum Diskusi
+- Link
+- Informasi Sekolah
 
 # Sistem yang dibutuhkan
 
@@ -22,12 +24,13 @@ SI-PMB adalah sebuah Sistem Informasi Penerimaan Murid Baru. Konten yang ada did
 
 # Instalasi/Update
 
-- Download pada halaman release
-- Ekstract ke root folder
-- Copy `core/config-default.php` ke `core/config.php`
-- Sesuaikan parameter yang ada termasuk kofigurasi database
-- Jalankan `composer install` pada root direktori
+- Download versi terakhir pada halaman release
+- Ekstract ke root folder (Replace untuk update)
+- Ubah nama atau copy `config-default.php` ke `config.php`
+- Buka config.php dan sesuaikan parameter yang ada termasuk kofigurasi database dan Base URL
+- Jalankan `composer update` pada root direktori
 - Jalankan migrasi database `vendor/bin/phinx migrate -e production`
+- Jalankan aplikasi dengan browser
 - Done
 
 # Base System
@@ -35,6 +38,10 @@ SI-PMB adalah sebuah Sistem Informasi Penerimaan Murid Baru. Konten yang ada did
 - PHP Native
 - [Bootstrap](https://getbootstrap.com)
 - [Phinx DB Migration](https://phinx.org/)
+
+# Issue/Error
+
+Silahkan [Kontak](#kontak) saya
 
 # Kontak
 
@@ -52,3 +59,4 @@ Support saya di:
 - [Trakteer.id](https://trakteer.id/mesaidlg/tip)
 - [ko-fi.com](https://ko-fi.com/mesaidlg)
 - [buymeacofee.com](https://buymeacoffee.com/mesaidlg)
+- e-Wallet **087839301572**
