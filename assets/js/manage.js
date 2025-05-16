@@ -1368,11 +1368,11 @@ $(document).ready(function () {
 
   $("#btnSaveHeader").on("click", async function () {
     const btn = $(this);
-    const id = $("#idHeader").val();
+    const id = $("#idHeader");
     var markup = $("#isiHeader").summernote("code");
     $("#isiHeader").summernote("destroy");
-    const res = fetchData({
-      url: "../api/header.php" + (id == "" ? "" : "?id=" + id),
+    const res = await fetchData({
+      url: "../api/header.php" + (id.val() == "" ? "" : "?id=" + id.val()),
       data: {
         isi: markup.replaceAll("<p", '<p class="m-0"'),
       },
@@ -1380,6 +1380,7 @@ $(document).ready(function () {
       button: btn,
     });
     if (!res) return;
+    id.val(res.data.id);
     toast("Header berhasil disimpan.", "success");
   });
 
@@ -1399,11 +1400,11 @@ $(document).ready(function () {
 
   $("#btnSaveHeroes").on("click", async function () {
     const btn = $(this);
-    const id = $("#idHeroes").val();
+    const id = $("#idHeroes");
     var markup = $("#isiHeroes").summernote("code");
     $("#isiHeroes").summernote("destroy");
-    const res = fetchData({
-      url: "../api/heroes.php" + (id == "" ? "" : "?id=" + id),
+    const res = await fetchData({
+      url: "../api/heroes.php" + (id.val() == "" ? "" : "?id=" + id.val()),
       data: {
         content: markup.replaceAll("<p", '<p class="m-0"'),
       },
@@ -1411,6 +1412,7 @@ $(document).ready(function () {
       button: btn,
     });
     if (!res) return;
+    id.val(res.data.id);
     toast("Heroes berhasil disimpan.", "success");
   });
 
