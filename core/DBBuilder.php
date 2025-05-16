@@ -298,7 +298,6 @@ class DBBuilder
         return "`$column`";
     }
 
-
     private function prepareValue($value)
     {
         return is_null($value) ? "NULL" : (is_numeric($value) ? $value : "'" . mysqli_real_escape_string($this->conn, $value) . "'");
@@ -495,30 +494,5 @@ class DBBuilder
     public function addIndex($key)
     {
         $this->indexKey[] = $key;
-    }
-
-    public function find($value)
-    {
-        if (empty($this->table)) {
-            $this->lastError = "Error: Table name is required";
-            return false;
-        }
-
-        $escapedValue = mysqli_real_escape_string($this->conn, trim($value));
-        $result = $this->where($this->primaryKey, $escapedValue)->first();
-
-        if ($result) {
-            return $result;
-        }
-
-        foreach ($this->indexKey as $index) {
-            $result = $this->where($index, $escapedValue)->first();
-            if ($result) {
-                return $result;
-            }
-        }
-
-        $this->lastError = "Data not found";
-        return false;
     }
 }
