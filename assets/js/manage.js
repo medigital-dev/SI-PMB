@@ -1,5 +1,10 @@
 $(document).ready(function () {
   Fancybox.bind("[data-fancybox]");
+  $(".modal").on("hide.bs.modal", (e) => {
+    const elm = $(e.target);
+    elm.find("input").val("");
+    elm.find("textarea.form-control").summernote("code", "");
+  });
 
   $("#isi").summernote({
     dialogsInBody: true,
@@ -719,6 +724,9 @@ $(document).ready(function () {
         render: (data, type, rows, meta) => {
           return (
             '<div class="btn-group btn-group-sm">' +
+            '<button type="button" class="btn btn-warning btnEditEvent" data-id="' +
+            data +
+            '" title="Edit Event"><i class="bi bi-pencil-fill"></i></button>' +
             '<button type="button" class="btn btn-danger btnHapusEvent" data-id="' +
             data +
             '" title="Hapus Event"><i class="bi bi-trash-fill"></i></button>' +
@@ -731,6 +739,19 @@ $(document).ready(function () {
 
   tabelEvent.on("draw", function () {
     reloadWidget();
+
+    $(".btnEditEvent").on("click", async function () {
+      const id = $(this).data("id");
+      const idElm = $("#idEvent");
+      const nameElm = $("#namaEvent");
+      const tanggalElm = $("#tanggalEvent");
+      const data = await fetchData("../api/event.php?id=" + id);
+      if (!data) return;
+      idElm.val(data.id);
+      nameElm.val(data.name);
+      tanggalElm.val(data.tanggal);
+      $("#modalTambahEvent").modal("show");
+    });
 
     $(".btnHapusEvent").on("click", async function () {
       const id = $(this).data("id");
@@ -791,6 +812,7 @@ $(document).ready(function () {
 
   $("#btnSaveEvent").on("click", async function () {
     const btn = $(this);
+    const id = $("#idEvent");
     const nameElm = $("#namaEvent");
     const tanggalElm = $("#tanggalEvent");
     if (!nameElm.val().trim() || !tanggalElm.val().trim()) {
@@ -803,7 +825,7 @@ $(document).ready(function () {
     }
 
     const res = await fetchData({
-      url: "../api/event.php",
+      url: "../api/event.php" + (id.val() == "" ? "" : "?id=" + id.val()),
       data: {
         name: nameElm.val(),
         tanggal: tanggalElm.val(),
@@ -813,7 +835,7 @@ $(document).ready(function () {
       button: btn,
     });
     if (!res) return;
-
+    id.val("");
     nameElm.val("");
     tanggalElm.val("");
     $("#modalTambahEvent").modal("hide");
@@ -1474,6 +1496,9 @@ $(document).ready(function () {
         render: (data, type, rows, meta) => {
           return (
             '<div class="btn-group btn-group-sm">' +
+            '<button type="button" class="btn btn-warning btnEditJadwal" data-id="' +
+            data +
+            '"><i class="bi bi-pencil-fill"></i></button>' +
             '<button type="button" class="btn btn-danger btnHapusJadwal" data-id="' +
             data +
             '"><i class="bi bi-trash-fill"></i></button>' +
@@ -1485,6 +1510,16 @@ $(document).ready(function () {
   });
 
   tabelJadwal.on("draw", function () {
+    $(".btnEditJadwal").on("click", async function () {
+      const id = $(this).data("id");
+      const data = await fetchData("../api/jadwal.php?id=" + id);
+      if (!data) return;
+      $("#idJadwal").val(data.id);
+      $("#titleJadwal").val(data.title);
+      $("#contentJadwal").summernote("code", data.content);
+      $("#modalTambahJadwal").modal("show");
+    });
+
     $(".btnSwitchJadwal").on("click", async function () {
       const id = $(this).data("id");
       const data = await fetchData("../api/jadwal.php?id=" + id);
@@ -1532,8 +1567,8 @@ $(document).ready(function () {
     dialogsInBody: true,
     toolbar: [
       ["style", ["bold", "italic", "underline"]],
-      ["view", ["fullscreen", "help"]],
       ["insert", ["link"]],
+      ["view", ["fullscreen", "help"]],
     ],
   });
 
@@ -1547,6 +1582,7 @@ $(document).ready(function () {
 
   $("#btnSimpanJadwal").on("click", async function () {
     const btn = $(this);
+    const id = $("#idJadwal");
     const title = $("#titleJadwal");
     const content = $("#contentJadwal");
     if (!title.val().trim() || content.summernote("isEmpty")) {
@@ -1559,7 +1595,7 @@ $(document).ready(function () {
     }
     $(".is-invalid").removeClass("is-invalid");
     const resp = await fetchData({
-      url: "../api/jadwal.php",
+      url: "../api/jadwal.php" + (id.val() == "" ? "" : "?id=" + id.val()),
       data: {
         title: title.val(),
         content: content.summernote("code").replaceAll("<p", '<p class="mb-0"'),
@@ -1569,12 +1605,12 @@ $(document).ready(function () {
       button: btn,
     });
     if (!resp) return;
-
-    toast("Data jadwal pelaksanaan PPDB berhasil ditambahkan.", "success");
+    id.val("");
     title.val("");
     content.summernote("code", "");
-    tabelJadwal.ajax.reload(null, false);
     $("#modalTambahJadwal").modal("hide");
+    tabelJadwal.ajax.reload(null, false);
+    toast("Data jadwal pelaksanaan PPDB berhasil ditambahkan.", "success");
   });
 
   const tabelJalur = $("#tabelJalur").DataTable({
@@ -1619,6 +1655,9 @@ $(document).ready(function () {
         render: (data, type, rows, meta) => {
           return (
             '<div class="btn-group btn-group-sm">' +
+            '<button type="button" class="btn btn-warning btnEditJalur" data-id="' +
+            data +
+            '"><i class="bi bi-pencil-fill"></i></button>' +
             '<button type="button" class="btn btn-danger btnHapusJalur" data-id="' +
             data +
             '"><i class="bi bi-trash-fill"></i></button>' +
@@ -1630,23 +1669,15 @@ $(document).ready(function () {
   });
 
   tabelJalur.on("draw", function () {
-    $(".btnSwitchJalur").on("click", async function () {
+    $(".btnEditJalur").on("click", async function () {
       const id = $(this).data("id");
       const data = await fetchData("../api/jalur.php?id=" + id);
       if (!data) return;
-
-      const resp = await fetchData({
-        url: "../api/jalur.php?id=" + id,
-        data: {
-          nama: data.nama,
-          persen: data.persen,
-          jumlah: data.jumlah,
-        },
-        method: "POST",
-      });
-      if (!resp) return;
-      toast("Data jalur pendaftaran berhasil dirubah.", "success");
-      tabelJalur.ajax.reload(null, false);
+      $("#idJalur").val(data.id);
+      $("#namaJalur").val(data.nama);
+      $("#persenJalur").val(data.persen);
+      $("#jumlahPdJalur").val(data.jumlah);
+      $("#modalTambahJalur").modal("show");
     });
 
     $(".btnHapusJalur").on("click", async function () {
@@ -1684,6 +1715,7 @@ $(document).ready(function () {
 
   $("#btnSimpanJalur").on("click", async function () {
     const btn = $(this);
+    const id = $("#idJalur");
     const nama = $("#namaJalur");
     const persen = $("#persenJalur");
     const jumlah = $("#jumlahPdJalur");
@@ -1699,7 +1731,7 @@ $(document).ready(function () {
     }
     $(".is-invalid").removeClass("is-invalid");
     const resp = await fetchData({
-      url: "../api/jalur.php",
+      url: "../api/jalur.php" + (id.val() == "" ? "" : "?id=" + id.val()),
       data: {
         nama: nama.val(),
         persen: persen.val(),
@@ -1710,13 +1742,13 @@ $(document).ready(function () {
     });
     if (!resp) return;
 
-    toast("Data Jalur pelaksanaan PPDB berhasil ditambahkan.", "success");
+    id.val("");
     nama.val("");
     persen.val("");
     jumlah.val("");
-
     tabelJalur.ajax.reload(null, false);
     $("#modalTambahJalur").modal("hide");
+    toast("Data Jalur pelaksanaan PPDB berhasil ditambahkan.", "success");
   });
 
   $("#btnEditSyarat").on("click", function () {
