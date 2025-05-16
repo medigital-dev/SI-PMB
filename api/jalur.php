@@ -23,8 +23,10 @@ switch ($method) {
                 ->findAll();
             echo json_encode($result, JSON_PRETTY_PRINT);
         } else {
-            $result = $model->select('jalur_id as id, nama, persen, jumlah')
-                ->find($id);
+            $result = $model
+                ->select(['jalur_id as id', 'nama', 'persen', 'jumlah'])
+                ->where('jalur_id', $id)
+                ->first();
             if ($result) {
                 echo json_encode($result, JSON_PRETTY_PRINT);
             } else {
@@ -41,11 +43,11 @@ switch ($method) {
         if ($id == null) {
             do {
                 $unique = random_string();
-            } while ($model->find($unique));
+            } while ($model->where('jalur_id', $unique)->first());
             $set['jalur_id'] = $unique;
             http_response_code(201);
         } else {
-            $data = $model->find($id);
+            $data = $model->where('jalur_id', $unique)->first();
             if (!$data) {
                 http_response_code(404);
                 echo json_encode(['message' => 'Data jalur tidak ditemukan.']);

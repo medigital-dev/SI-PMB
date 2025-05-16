@@ -24,7 +24,8 @@ switch ($method) {
         } else {
             $data = $db
                 ->select(["jadwal_id as id", 'title', 'content', 'created_at as tanggal', 'aktif', 'updated_at'])
-                ->find($id);
+                ->where('jadwal_id', $id)
+                ->first();
 
             if ($data) {
                 echo json_encode($data, JSON_PRETTY_PRINT);
@@ -42,11 +43,11 @@ switch ($method) {
         if ($id == null) {
             do {
                 $unique = random_string();
-            } while ($db->find($unique));
+            } while ($db->where('jadwal_id', $id)->first());
             $set['jadwal_id'] = $unique;
             http_response_code(201);
         } else {
-            $data = $db->find($id);
+            $data = $db->where('jadwal_id', $id)->first();
             if (!$data) {
                 http_response_code(404);
                 echo json_encode(['message' => 'Data tidak ditemukan.']);

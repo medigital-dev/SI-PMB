@@ -22,7 +22,7 @@ switch ($method) {
             echo json_encode($result, JSON_PRETTY_PRINT);
         } else {
             $result = $db->select(['syarat_id as id', 'content', 'created_at', 'updated_at'])
-                ->find($id);
+                ->where('syarat_id', $id)->first();
             if ($result) {
                 echo json_encode($result, JSON_PRETTY_PRINT);
             } else {
@@ -39,11 +39,11 @@ switch ($method) {
         if ($id == null) {
             do {
                 $unique = random_string();
-            } while ($db->find($unique));
+            } while ($db->where('syarat_id', $unique)->first());
             $set['syarat_id'] = $unique;
             http_response_code(201);
         } else {
-            $data = $db->find($id);
+            $data = $db->where('syarat_id', $id)->first();
             if (!$data) {
                 http_response_code(404);
                 echo json_encode(['message' => 'Data tidak ditemukan.']);

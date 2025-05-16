@@ -22,7 +22,7 @@ switch ($method) {
             echo json_encode($result, JSON_PRETTY_PRINT);
         } else {
             $data = $db->select('logo_id as id, created_at as tanggal, src,type, updated_at')
-                ->find($id);
+                ->where('logo_id', $id)->first();
             if ($data) {
                 echo json_encode($data, JSON_PRETTY_PRINT);
             } else {
@@ -60,11 +60,11 @@ switch ($method) {
         if ($id == null) {
             do {
                 $unique = random_string();
-            } while ($db->find($unique));
+            } while ($db->where('logo_id', $unique)->first());
             $set['logo_id'] = $unique;
             http_response_code(201);
         } else {
-            $data = $db->find($id);
+            $data = $db->where('logo_id', $id)->first();
             if (!$data) {
                 http_response_code(404);
                 echo json_encode(['message' => 'Data logo tidak ditemukan.']);
