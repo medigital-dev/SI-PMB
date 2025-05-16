@@ -219,7 +219,7 @@ view('./view/templates/toogle-theme.php')
       <h2 id="pelaksanaan" class="text-body-emphasis pt-3 mt-3">
         Pelaksanaan
       </h2>
-      <div class="row row-cols-lg-4 row-cols-2 row-cols-sm-3 d-flex g-4 justify-content-center">
+      <div class="row row-cols-md-3 row-cols-lg-4 row-cols-1 row-cols-sm-2 d-flex gx-4 justify-content-center">
         <?php foreach ($data['jadwal'] as $jadwal): ?>
           <div class="col">
             <h5 class="text-body-emphasis"><?= $jadwal['title']; ?></h5>
