@@ -1362,6 +1362,7 @@ $(document).ready(function () {
         ["fontsize", ["fontsize"]],
         ["color", ["color"]],
         ["height", ["height"]],
+        ["insert", ["link"]],
       ],
     });
   });
@@ -1394,6 +1395,7 @@ $(document).ready(function () {
         ["paragraph", ["style", "clear"]],
         ["style", ["bold", "italic", "underline"]],
         ["font", ["fontname", "fontsize"]],
+        ["insert", ["link"]],
       ],
     });
   });
@@ -1531,6 +1533,7 @@ $(document).ready(function () {
     toolbar: [
       ["style", ["bold", "italic", "underline"]],
       ["view", ["fullscreen", "help"]],
+      ["insert", ["link"]],
     ],
   });
 
@@ -1725,6 +1728,7 @@ $(document).ready(function () {
         ["style", ["bold", "italic", "underline"]],
         ["fontsize", ["fontsize"]],
         ["para", ["ul", "ol", "paragraph"]],
+        ["insert", ["link"]],
       ],
     });
   });
@@ -1756,6 +1760,7 @@ $(document).ready(function () {
         ["style", ["bold", "italic", "underline"]],
         ["fontsize", ["fontsize"]],
         ["para", ["ul", "ol", "paragraph"]],
+        ["insert", ["link"]],
       ],
     });
   });
