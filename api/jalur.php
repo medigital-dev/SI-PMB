@@ -47,7 +47,7 @@ switch ($method) {
             $set['jalur_id'] = $unique;
             http_response_code(201);
         } else {
-            $data = $model->where('jalur_id', $unique)->first();
+            $data = $model->where('jalur_id', $id)->first();
             if (!$data) {
                 http_response_code(404);
                 echo json_encode(['message' => 'Data jalur tidak ditemukan.']);
